@@ -1,27 +1,55 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap');
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+
+.embla__viewport {
+  overflow: hidden;
+}
+.embla__container {
+  display: flex;
+}
+.embla__slide {
+  flex: 0 0 100%;
+  min-width: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+
+
+body{
+  height: 100%;
+  background-color: #F8F5EC;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.loginButton {
+  @apply w-[126px] h-[45px] border px-6 py-2 bg-customGreen rounded-[40px] text-white font-mono text-[20px] hover:bg-[#4E8A5A] active:bg-[#335C3D] flex items-center justify-center ; 
 }
+
+.signupButton{
+  @apply w-[150px] h-[45px] border px-6 py-2 bg-customGreen rounded-[40px] text-white font-mono text-[20px] hover:bg-[#4E8A5A] active:bg-[#335C3D] flex items-center justify-center;
+}
+
+.email, .password {
+  @apply w-[400px] border border-gray-200 py-2 px-6 bg-customGray rounded-[40px] placeholder-gray-500 font-mono;
+}
+
+.username {
+  @apply w-full border border-gray-200 py-2 px-6 bg-customGray rounded-[40px] placeholder-gray-500 font-mono;
+}
+
+.google {
+  @apply w-[115px] rounded-[40px] bg-customGray hover:bg-[#B3B3B3] active:bg-[#999999] font-mono text-[13px] flex items-center justify-center px-3 py-2;
+}
+.facebook {
+  @apply w-[115px] rounded-[40px] bg-customGray hover:bg-[#B3B3B3] active:bg-[#999999] font-mono text-[13px] flex items-center justify-center px-3 py-2;
+}
+.instagram {
+  @apply w-[115px] h-[41px] rounded-[40px] hover:bg-[#B3B3B3] active:bg-[#999999] bg-customGray font-mono text-[13px] flex items-center justify-center px-3 py-2;
+}
+
+.generalButton{
+  @apply  rounded-[30px] px-4 py-2 bg-customGreen font-mono hover:bg-[#4E8A5A] active:bg-[#335C3D];
+}
+
+
