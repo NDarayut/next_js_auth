@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs"
 
 export const authOptions = {
     providers: [
+        
         CredentialsProvider({
             name: "credentials",
             credentials: {},
@@ -34,7 +35,8 @@ export const authOptions = {
 
                 }
                 catch (error){
-                    console.log(error)
+                    console.log("Authorization error:", error)
+                    return null
 
                 }
             }
@@ -63,7 +65,7 @@ export const authOptions = {
                 session.user.email = token.email;
                 session.user.role = token.role;
             }
-
+            console.log("Session in next auth: ", session)
             return session;
         }
     },

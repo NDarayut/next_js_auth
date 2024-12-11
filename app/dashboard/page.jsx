@@ -7,13 +7,20 @@ export default function Dashboard(){
 
     const { data: session, status } = useSession(); // Fetch session using useSession hook
     const router = useRouter();
+  
+
+    // If session is still loading, you can return a loading state
+    if (status === "loading") {
+        return <div>Loading...</div>;
+    }
 
     // Check if the user is not authenticated or not an admin
     if (!session || session.user.role !== "admin") {
         router.push("/"); // Redirect to home or login page if not authenticated or not admin
         return null;
     }
-
+    
+    console.log(session)
     // if it is admin, show this
     return(
         <div>
