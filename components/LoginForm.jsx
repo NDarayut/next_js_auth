@@ -40,8 +40,8 @@ export default function LoginForm(){
             <div className="flex flex-col items-center border-[1px] border-black p-5 rounded-[30px] bg-customYellow w-[455px]">
 
                 <div className="flex flex-col justify-center items-center w-[300px] mb-[20px]">
-                    <h1 className="text-[60px] font-bold font-mono my-1 text-customGreen">Login</h1>
-                    <h2 className="text-[20px] font-mono text-center">Enter the details to get login to your account</h2>
+                    <h1 className="text-[60px] font-bold font-jura my-1 text-customGreen">Login</h1>
+                    <h2 className="text-[20px] font-jura text-center">Enter the details to get login to your account</h2>
                 </div>
                 
 
@@ -66,14 +66,14 @@ export default function LoginForm(){
 
                     <div className="items-center flex justify-center">
                         <hr className="border-gray-400 w-1/4 mr-[10px]" />
-                        <span className="font-mono text-[14px]">or login with</span>
+                        <span className="font-jura text-[14px]">or login with</span>
                         <hr className="border-gray-400 w-1/4 ml-[10px]" />
                     </div>
 
                     
                 </form>
 
-                <div className="flex justify-center gap-[25px] mt-[20px]">
+                <div className="flex justify-center gap-[25px] mt-[20px] font-jura">
                         <button className="google"><img src="/google.ico" className="w-4 h-4 mr-[10px]" />Gmail</button>
                         <button className="facebook"><img src="/facebook.ico" className="w-6 h-6 mr-[5px]" />Facebook</button>
                         <button className="instagram"><img src="/instagram.ico" className="w-6 h-6" />Instagram</button>

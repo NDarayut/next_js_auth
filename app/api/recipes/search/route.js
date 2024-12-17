@@ -4,7 +4,7 @@ import axios from 'axios';  // Use for HTTP request
 export async function GET(req) {
   const { searchParams } = new URL(req.url); // Convert request URL into a URL object
   const query = searchParams.get('query'); // Extract 'query' parameter e,g,. ?query=pasta to query="pasta"
-
+  /*
   // Mock Recipe Data
   const mockRecipes = [
     {
@@ -100,10 +100,10 @@ export async function GET(req) {
   );
 
   return new Response(JSON.stringify(filteredRecipes), { status: 200 });
+  */
   
-  /*
   const apiKey = process.env.SPOONACULAR_API_KEY; // api key stored in env
-  const apiUrl = `https://api.spoonacular.com/recipes/complexSearch?query=${query}&number=10&apiKey=${apiKey}`; // pass in query parameter
+  const apiUrl = `https://api.spoonacular.com/recipes/complexSearch?query=${query}&number=20&apiKey=${apiKey}`; // pass in query parameter
 
   try {
     // Use axios to make the HTTP GET request from the spoonacular api
@@ -117,7 +117,7 @@ export async function GET(req) {
     console.error(error); // Optionally log the error for debugging
     return new Response(JSON.stringify({ error: "Failed to fetch recipes" }), { status: 500 });
   }
-    */
+    
 
 
 }

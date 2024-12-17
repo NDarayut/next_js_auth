@@ -95,8 +95,8 @@ export default function RegisterForm(){
             <div className="flex flex-col items-center border-[1px] border-black p-5 rounded-[30px] bg-customYellow w-[455px]">
 
                 <div className="flex flex-col justify-center items-center w-[300px] mb-[20px]">
-                    <h1 className="text-[60px] font-bold font-mono my-1 text-customGreen">Sign up</h1>
-                    <h2 className="text-[20px] font-mono text-center">Enter the details to get sign up to your account</h2>
+                    <h1 className="text-[60px] font-bold font-jura my-1 text-customGreen">Sign up</h1>
+                    <h2 className="text-[20px] font-jura text-center">Enter the details to get sign up to your account</h2>
                 </div>
                 
 
@@ -132,7 +132,7 @@ export default function RegisterForm(){
 
                     <div className="items-center flex justify-center">
                         <hr className="border-gray-400 w-1/4 mr-[10px]" />
-                        <span className="font-mono text-[14px]">or sign up with</span>
+                        <span className="font-jura text-[14px]">or sign up with</span>
                         <hr className="border-gray-400 w-1/4 ml-[10px]"/>
                     </div>
 
@@ -144,9 +144,9 @@ export default function RegisterForm(){
                         <button className="instagram"><img src="/instagram.ico" className="w-6 h-6" />Instagram</button>
                 </div>
 
-                <Link className="text-[15px] mt-3 flex flex-col text-center gap-[10px] font-mono" href={"/login"}>
+                <Link className="text-[15px] mt-3 flex flex-col text-center gap-[10px] font-jura" href={"/login"}>
                     <span>Have an account? </span>
-                    <span className="underline font-bold hover:text-gray-400 active:text-gray-950">Login now!</span>
+                    <span className="underline font-bold hover:text-gray-400 active:text-gray-950 font-jura">Login now!</span>
                 </Link>
 
             </div>

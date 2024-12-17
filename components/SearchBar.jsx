@@ -21,7 +21,7 @@ export default function SearchBar () {
         const recognition = new SpeechRecognition() // create a method using the SpeechRecognition class
 
 
-        recognition.lang = "en-US" // set language
+        recognition.lang = "en-US" // Use english language first
         recognition.interimResults = false; // Only final results
         recognition.maxAlternatives = 1; // Single result
 

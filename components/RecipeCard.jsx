@@ -2,9 +2,10 @@
 
 import {Card, CardHeader, CardBody, Image, Button} from "@nextui-org/react";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import {useState} from "react"
 
-export default function RecipeCard({recipeId, src, title, isFavorited}) {
+export default function RecipeCard({recipeId, src, title, isFavorited, sourceName, rating}) {
 
   const [favorited, setFavorited] = useState(isFavorited  || false)
   const {data: session, status} = useSession()
@@ -48,30 +49,52 @@ export default function RecipeCard({recipeId, src, title, isFavorited}) {
     }
 
   }
+
+  const renderStars = () => {
+    const stars = Array.from({ length: 5 }, (_, i) => (i < Math.round(rating/20) ? "★" : "☆"));
+    return (
+      <div className="flex items-center space-x-1 text-customOrange">
+        {stars.map((star, index) => (
+          <span key={index} className="text-2xl">
+            {star}
+          </span>
+        ))}
+      </div>
+    );
+  };
+
   return (
-    <Card className="w-[300px] h-[470px] rounded-[5px]  bg-customYellow">
-      <CardHeader className="p-0 relative">
-        <Image  
-              className="rounded-none"
-              src={src}
-              alt={title}
-        />
+    <Link href={`/recipes/${recipeId}`}>
+      <Card className="w-[300px] h-[400px] rounded-[5px]  bg-customYellow transform hover:scale-105 transition-transform duration-300 ease-in-out">
+        <CardHeader className="p-0 relative" >
+          <Image  
+                className="rounded-[5px]"
+                src={src}
+                alt={title}
+          />
 
-        <Button
-            onClick={handleFavorite}
-            className={`absolute top-2 right-2 ${
-              favorited ? "bg-red-500" : "bg-gray-300"
-            } text-white rounded-full p-2 z-10`}
-          >
-            {favorited ? "♥" : "♡"}
-        </Button>
+          <Button
+              onClick={handleFavorite}
+              className={`absolute top-2 right-2 ${
+                favorited ? "bg-red-500" : "bg-gray-300"
+              } text-white rounded-full p-2 z-10`}
+            >
+              {favorited ? "♥" : "♡"}
+          </Button>
 
-      </CardHeader>
-      
-      <CardBody>
-        <h1 className="font-sans font-bold text-left text-[18px]">{title}</h1>
-      </CardBody>
-      {error && <p className="text-red-500 text-sm">{error}</p>} {/* Display error message */}
-    </Card>
+        </CardHeader>
+        
+        <CardBody>
+          <div className= "w-60">
+            <div className="">{renderStars()}</div> {/* Display stars */}
+            <h1 className="font-sans font-bold text-left text-[18px] text-customDarkGreen">{title}</h1>
+            
+            <h1 className="font-sans font-medium text-left text-[14px] text-customDarkGreen">{sourceName}</h1>
+          </div>
+          
+        </CardBody>
+        {error && <p className="text-red-500 text-sm">{error}</p>} {/* Display error message */}
+      </Card>
+    </Link>
   );
 }

@@ -1,3 +1,4 @@
+"use client"
 import Navbar from "@/components/Navbar";
 import LoginBtn from "@/components/LoginBtn";
 import RecipeCard from "@/components/RecipeCard";
@@ -5,10 +6,26 @@ import CustomCarousel from "@/components/CustomCarousel";
 import SearchBar from "@/components/SearchBar";
 import RandomCard from "@/components/RandomCard";
 import LogoutBtn from "@/components/LogoutBtn";
+import { useEffect, useState } from "react";
+import Footer from "@/components/Footer";
 
 
-export default async function Home() {
-
+export default function Home() {
+  const [recipes, setRecipes] = useState([])
+  
+  useEffect(() => {
+    const fetchRecipes = async () =>{
+      try{
+        const response = await fetch("/api/recipes/random")
+        const data = await response.json();
+        setRecipes(data)
+      }
+      catch(error){
+        console.log("Failed to fetch recipe in homepage: ", error)
+      }
+    };
+    fetchRecipes();
+  }, [])
 
   return (
     <>
@@ -24,6 +41,7 @@ export default async function Home() {
     
           <Navbar></Navbar>
       </div>
+
       <main className="px-[60px]">
 
         <div className="mb-11">
@@ -35,21 +53,21 @@ export default async function Home() {
           <CustomCarousel></CustomCarousel>
         </div>
         
-        <h1 className="font-serif text-[40px]">Popular Dishes</h1>
+        <h1 className="font-serif text-[40px] text-customDarkGreen">Popular Dishes</h1>
         <article className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10 p-4 mb-11">
+
+          {recipes.map((recipe) => (
+            
+            <RecipeCard
+              recipeId={recipe.id}
+              src={recipe.image} // Pass image URL dynamically
+              title={recipe.title} // Pass title dynamically
+              isFavorited={false}
+              sourceName={recipe.sourceName}
+              rating={recipe.spoonacularScore}
+            />
+          ))}
           
-          <RecipeCard></RecipeCard>
-          <RecipeCard></RecipeCard>
-          <RecipeCard></RecipeCard>
-          <RecipeCard></RecipeCard>
-          <RecipeCard></RecipeCard>
-          <RecipeCard></RecipeCard>
-          <RecipeCard></RecipeCard>
-          <RecipeCard></RecipeCard>
-          <RecipeCard></RecipeCard>
-          <RecipeCard></RecipeCard>
-          <RecipeCard></RecipeCard>
-          <RecipeCard></RecipeCard>
           
         </article>
 
@@ -63,9 +81,11 @@ export default async function Home() {
           
         </article>
 
-      </main>
+        
 
-      
+      </main>
+      <Footer/>
+
     </>
     
   )
