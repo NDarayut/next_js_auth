@@ -15,7 +15,7 @@ export default function Dashboard(){
     }
 
     // Check if the user is not authenticated or not an admin
-    if (!session || session.user.role !== "admin") {
+    if (!session.user || session.user.role !== "admin") {
         router.push("/"); // Redirect to home or login page if not authenticated or not admin
         return null;
     }

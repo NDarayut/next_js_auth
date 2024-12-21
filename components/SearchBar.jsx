@@ -33,8 +33,9 @@ export default function SearchBar () {
             const transcript = event.results[0][0].transcript; // Get recognized text
             setQuery(transcript); // Update query state
           };
-        recognition.onend = () => {
-        setListening(false);
+        
+          recognition.onend = () => {
+            setListening(false);
         };
     
         recognition.start();

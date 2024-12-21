@@ -2,6 +2,8 @@ import { connectMongoDB } from "@/lib/mongodb";
 import User from "@/models/user";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
+import FacebookProvider from "next-auth/providers/facebook";
 import bcrypt from "bcryptjs"
 
 export const authOptions = {
@@ -15,7 +17,7 @@ export const authOptions = {
                 const { email, password } = credentials
                 try{
                     await connectMongoDB()
-                    const user = await User.findOne({ email})
+                    const user = await User.findOne({email})
 
                     if(!user){
                         return null
@@ -41,7 +43,19 @@ export const authOptions = {
                 }
             }
 
-        })
+        }),
+        // Gmail (Google OAuth)
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        }),
+
+        FacebookProvider({
+            clientId: process.env.FACEBOOK_CLIENT_ID,
+            clientSecret: process.env.FACEBOOK_CLIENT_SECRET
+          })
+
+        
     ],
 
     session: {
@@ -49,11 +63,38 @@ export const authOptions = {
     },
 
     callbacks: {
+
+        async signIn({ user, account, profile }) {
+            try {
+              await connectMongoDB();
+      
+              // Check if the user already exists
+              let existingUser = await User.findOne({ email: user.email });
+      
+              if (!existingUser) {
+                // If user doesn't exist, create a new user with default role
+                const newUser = new User({
+                  name: user.name || "No Name", // Google provides name
+                  email: user.email,
+                  image: user.image || "", // Google profile picture
+                  role: "user", // Assign a default role
+                });
+      
+                await newUser.save();
+              }
+      
+              return true; // Allow sign-in
+            } catch (error) {
+              console.error("Error during sign-in callback:", error);
+              return false; // Deny sign-in on error
+            }
+          },
+      
         async jwt({token, user}){
             if (user){
                 token.id = user.id;
                 token.email = user.email;
-                token.role = user.role;
+                token.role = user.role || "user";
             }
 
             return token;

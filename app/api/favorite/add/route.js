@@ -42,7 +42,8 @@ export async function POST(req) {
     await newFavorite.save();
 
     return NextResponse.json({ message: "Recipe favorited successfully" }, { status: 200 });
-  } catch (error) {
+  } 
+  catch (error) {
     console.error("Error adding favorite:", error);
     return NextResponse.json({ message: "Server error" }, { status: 500 });
   }

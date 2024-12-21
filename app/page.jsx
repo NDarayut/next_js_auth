@@ -8,10 +8,12 @@ import RandomCard from "@/components/RandomCard";
 import LogoutBtn from "@/components/LogoutBtn";
 import { useEffect, useState } from "react";
 import Footer from "@/components/Footer";
+import { useSession } from "next-auth/react";
 
 
 export default function Home() {
   const [recipes, setRecipes] = useState([])
+  const {data: session, status} = useSession()
   
   useEffect(() => {
     const fetchRecipes = async () =>{
@@ -27,17 +29,21 @@ export default function Home() {
     fetchRecipes();
   }, [])
 
+  if (status === "loading") {
+    // Optionally display a loading state while session is being fetched
+    return <div>Loading...</div>;
+  }
+
   return (
     <>
     
       <div className="sticky top-0 bg-customYellow z-50 px-[60px]">
+        {status === "unauthenticated"? (
           <div className="mt-3 flex justify-end">
             <LoginBtn></LoginBtn>
           </div>
-
-          <div className="mt-3 flex justify-end">
-            <LogoutBtn></LogoutBtn> 
-          </div>
+        ):(<p></p>)}
+          
     
           <Navbar></Navbar>
       </div>

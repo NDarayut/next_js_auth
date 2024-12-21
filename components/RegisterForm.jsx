@@ -79,8 +79,9 @@ export default function RegisterForm(){
                 const form = e.target
                 form.reset();
                 setError("") // clear the error
-                router.push("/") // redirect user to login page but they can still go back to register with back button
+                router.push("/login") // redirect user to login page but they can still go back to register with back button
             }
+            
             else{
                 console.log("Registeration failed")
             }

@@ -1,123 +1,59 @@
-import axios from 'axios';  // Use for HTTP request
+import { connectMongoDB } from '@/lib/mongodb';
+import Recipe from '@/models/recipe';
+import axios from 'axios';
 
-// GET request function, req represents incomming HTTP request
 export async function GET(req) {
-  const { searchParams } = new URL(req.url); // Convert request URL into a URL object
-  const query = searchParams.get('query'); // Extract 'query' parameter e,g,. ?query=pasta to query="pasta"
-  /*
-  // Mock Recipe Data
-  const mockRecipes = [
-    {
-      id: 1,
-      title: 'Spaghetti Bolognese',
-      image: 'italian.jpg',
-      summary: 'A classic Italian pasta dish made with a rich, savory meat sauce.',
-      readyInMinutes: 30,
-      servings: 4,
-      instructions: 'Cook the spaghetti and mix with the bolognese sauce.',
-    },
-    {
-      id: 2,
-      title: 'Chicken Alfredo',
-      image: 'https://via.placeholder.com/150',
-      summary: 'Creamy alfredo sauce paired with tender chicken and pasta.',
-      readyInMinutes: 25,
-      servings: 4,
-      instructions: 'Cook the pasta, prepare the alfredo sauce, and serve with grilled chicken.',
-    },
-    {
-      id: 3,
-      title: 'Vegetable Stir Fry',
-      image: 'https://via.placeholder.com/150',
-      summary: 'A healthy mix of colorful vegetables stir-fried with a savory sauce.',
-      readyInMinutes: 20,
-      servings: 2,
-      instructions: 'Stir fry the vegetables in a hot pan with soy sauce and spices.',
-    },
-    {
-      id: 4,
-      title: 'Beef Tacos',
-      image: 'https://via.placeholder.com/150',
-      summary: 'Ground beef cooked with spices and served in soft taco shells.',
-      readyInMinutes: 15,
-      servings: 3,
-      instructions: 'Cook the ground beef, prepare toppings, and assemble the tacos.',
-    },
-    {
-      id: 5,
-      title: 'Vegetarian Pizza',
-      image: 'https://via.placeholder.com/150',
-      summary: 'A pizza topped with fresh vegetables and mozzarella cheese.',
-      readyInMinutes: 25,
-      servings: 4,
-      instructions: 'Top the pizza dough with sauce, vegetables, and cheese, then bake.',
-    },
-
-    {
-      id: 6,
-      title: 'Spaghetti Bolognese',
-      image: 'italian.jpg',
-      summary: 'A classic Italian pasta dish made with a rich, savory meat sauce.',
-      readyInMinutes: 30,
-      servings: 4,
-      instructions: 'Cook the spaghetti and mix with the bolognese sauce.',
-    },
-
-    {
-      id: 7,
-      title: 'Spaghetti Bolognese',
-      image: 'italian.jpg',
-      summary: 'A classic Italian pasta dish made with a rich, savory meat sauce.',
-      readyInMinutes: 30,
-      servings: 4,
-      instructions: 'Cook the spaghetti and mix with the bolognese sauce.',
-    },
-
-    {
-      id: 8,
-      title: 'Spaghetti Bolognese',
-      image: 'italian.jpg',
-      summary: 'A classic Italian pasta dish made with a rich, savory meat sauce.',
-      readyInMinutes: 30,
-      servings: 4,
-      instructions: 'Cook the spaghetti and mix with the bolognese sauce.',
-    },
-
-    {
-      id: 9,
-      title: 'Spaghetti Bolognese',
-      image: 'italian.jpg',
-      summary: 'A classic Italian pasta dish made with a rich, savory meat sauce.',
-      readyInMinutes: 30,
-      servings: 4,
-      instructions: 'Cook the spaghetti and mix with the bolognese sauce.',
-    },
-  ];
-
-
-  const filteredRecipes = mockRecipes.filter(recipe =>
-    recipe.title.toLowerCase().includes(query.toLowerCase())
-  );
-
-  return new Response(JSON.stringify(filteredRecipes), { status: 200 });
-  */
+  const { searchParams } = new URL(req.url); // Query strings from the request URL
+  const query = searchParams.get('query'); // Extract 'query' parameter e.g., ?query=pasta to query="pasta"
+  const dishTypes = searchParams.get('dishTypes'); // Extract 'dishTypes' filter
+  const cuisines = searchParams.get('cuisines'); // Extract 'cuisines' filter
+  const occasions = searchParams.get('occasions'); // Extract 'occasions' filter
+  const diets = searchParams.get('diets'); // Extract 'diets' filter
   
-  const apiKey = process.env.SPOONACULAR_API_KEY; // api key stored in env
-  const apiUrl = `https://api.spoonacular.com/recipes/complexSearch?query=${query}&number=20&apiKey=${apiKey}`; // pass in query parameter
+  const apiKey = process.env.SPOONACULAR_API_KEY; // API key stored in env
+  const apiUrl = `https://api.spoonacular.com/recipes/complexSearch?query=${query}&cuisine=${cuisines}&diet=${diets}&dishtypes=${dishTypes}&occasions=${occasions}&number=20&apiKey=${apiKey}`;
 
   try {
-    // Use axios to make the HTTP GET request from the spoonacular api
-    const response = await axios.get(apiUrl); 
 
-    // Extract recipe from response and return the recipe as a JSON
-    return new Response(JSON.stringify(response.data.results), { status: 200 });
-  } 
-  catch (error) {
-    // Handle any errors and return error response
-    console.error(error); // Optionally log the error for debugging
-    return new Response(JSON.stringify({ error: "Failed to fetch recipes" }), { status: 500 });
-  }
+    await connectMongoDB();
     
+    // A MongoDB query object dynamically built using user-provided filters
+    const filterQuery = {
+      title: { $regex: query, $options: 'i' }, // search for title match with case insensitive
+    };
+    
+    // check for that specific dishtypes in the dishTypes array (e.g., dishTypes:["dessert", "appetizer"])
+    if (dishTypes) {
+      filterQuery.dishTypes = { $in: dishTypes.split(',') };
+    }
+    if (cuisines) {
+      filterQuery.cuisines = { $in: cuisines.split(',') };
+    }
+    if (occasions) {
+      filterQuery.occasions = { $in: occasions.split(',') };
+    }
+    if (diets) {
+      filterQuery.diets = { $in: diets.split(',') };
+    }
 
+    // Search MongoDB for matching recipes
+    const userRecipes = await Recipe.find(filterQuery);
 
+    // Use axios to make the HTTP GET request from the Spoonacular API
+    const response = await axios.get(apiUrl);
+    const spoonacularRecipes = response.data.results;
+
+    // Combine user-created recipes and Spoonacular API results
+    const combinedRecipes = [...userRecipes, ...spoonacularRecipes];
+
+    return new Response(JSON.stringify(combinedRecipes), { status: 200 });
+  } 
+
+  catch (error) {
+    console.error(error); // Optionally log the error for debugging
+    return new Response(
+      JSON.stringify({ error: 'Failed to fetch recipes' }),
+      { status: 500 }
+    );
+  }
 }

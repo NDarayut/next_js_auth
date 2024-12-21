@@ -1,17 +1,85 @@
 "use client"
 import { useRecipes } from "@/app/hook/useRecipes"
-import Image from "next/image"
-import { useEffect } from "react"
+import RecipeCard from "@/components/RecipeCard"
+import { useSession } from "next-auth/react"
+import { useEffect, useState } from "react"
 
 export default function RecipeDetail({params}){
     
     const {id}  = params
+    const {data: session} = useSession()
     console.log(id) // debug to see if ID is defined
     const {recipeDetail, loading, error, fetchRecipeById} = useRecipes()
+    const [similarRecipes, setSimilarRecipes] = useState([])
+
+    const [reviews, setReviews] = useState([]);
+    const [newComment, setNewComment] = useState("");
+    const [newRating, setNewRating] = useState(5);
+    const [errors, setError] = useState("");
     
     useEffect(() =>{
-        fetchRecipeById(id)
+
+        // Fetch related recipe
+        async function fetchSimilarRecipes() {
+            const response = await fetch(`/api/recipes/getsimilar/${id}`)
+            const data = await response.json()
+            setSimilarRecipes(data)
+        }
+
+        // Fetch reviews for the recipe
+        async function fetchReviews() {
+          const res = await fetch(`/api/recipes/${id}/reviews`);
+          const data = await res.json();
+          setReviews(data);
+       
+        }
+
+        fetchReviews();
+        fetchRecipeById(id)  
+        fetchSimilarRecipes()
     }, [id])
+
+
+    async function handleSubmit(e) {
+        e.preventDefault();
+
+        if (!session?.user) {
+            setError("You must be logged in to post a review.");
+            return;
+          }
+    
+        if (!newComment || !newRating) {
+          setError("Rating and comment are required.");
+          return;
+        }
+    
+        try {
+          const res = await fetch(`/api/recipes/${id}/reviews`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                userId: session.user.id, // Replace with actual user ID from authentication
+                rating: newRating,
+                comment: newComment,
+            }),
+          });
+
+          console.log(res)
+    
+          if (!res.ok) {
+            throw new Error("Failed to submit review.");
+          }
+    
+          const newReview = await res.json();
+          setReviews((prev) => [...prev, newReview]);
+          setNewComment("");
+          setNewRating(5);
+          setError("");
+        } catch (errors) {
+          console.error(errors);
+          setError("Failed to submit review.");
+        }
+      }
 
     if(loading){
         return <p>Loading...</p>
@@ -32,7 +100,7 @@ export default function RecipeDetail({params}){
     const recipeImage = recipeDetail.image
     const prepTime = recipeDetail.readyInMinutes
     const calories = recipeDetail.nutrition?.nutrients?.find( (nutrient) => nutrient.name === "Calories")?.amount
-    const numberOfIngredients = recipeDetail.nutrition?.ingredients?.length
+    const numberOfIngredients = recipeDetail.extendedIngredients?.length
     const ingredients = recipeDetail.extendedIngredients
     const instruction = recipeDetail.analyzedInstructions
     const tags = {
@@ -73,7 +141,6 @@ export default function RecipeDetail({params}){
                 <h1>Instructions</h1>
                 {instruction.map((instruction, index) => (
                     <div key={index}>
-                    {instruction.name && <h3>{instruction.name}</h3>}
                     <ol>
                         {instruction.steps.map((step) => (
                         <li key={step.number}>
@@ -119,6 +186,77 @@ export default function RecipeDetail({params}){
                     
                 </div>
             </div>
+
+            {/* Similar Recipes Section */}
+      <div className="mt-8">
+        <h2 className="text-lg font-bold mb-4">Similar Recipes</h2>
+                    
+        {loading && <p>Loading...</p>}
+        {error && <p className="text-red-500">{error}</p>}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10">
+          {similarRecipes.length > 0 ? (
+            similarRecipes.map((recipe) => (
+              <RecipeCard
+                key={recipe.id}
+                recipeId={recipe.id}
+                src={recipe.image} // Image URL
+                title={recipe.title} // Recipe title
+                isFavorited={false} // Pass favorite status
+              />
+            ))
+          ) : (
+            !loading && <p>No similar recipes found.</p>
+          )}
+        </div>
+      </div>
+
+      {/* Reviews List */}
+      <div>
+        <h3>Reviews</h3>
+        {reviews.map((review) => (
+          <div key={review._id} className="review">
+            <p><strong>{review.userId?.username || "Anonymous"}</strong></p>
+            <p>Rating: {review.rating}</p>
+            <p>{review.comment}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Average Rating */}
+      <h2>
+        Average Rating:{" "}
+        {reviews.length > 0
+          ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+          : "No ratings yet"}
+      </h2>
+
+      {/* Add Review Form */}
+      <form onSubmit={handleSubmit}>
+        <h3>Add a Review</h3>
+        {errors && <p style={{ color: "red" }}>{errors}</p>}
+        <div>
+          <label>Rating:</label>
+          <select
+            value={newRating}
+            onChange={(e) => setNewRating(parseInt(e.target.value))}
+          >
+            {[1, 2, 3, 4, 5].map((star) => (
+              <option key={star} value={star}>
+                {star} Star{star > 1 && "s"}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label>Comment:</label>
+          <textarea
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+          />
+        </div>
+        <button type="submit">Submit Review</button>
+      </form>
            
         </div>
     )

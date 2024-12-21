@@ -1,23 +1,26 @@
 "use client";
-import { useSearchParams } from "next/navigation"; // Hook that allow you to read query parameter from the URL
-import { useRecipes } from "@/app/hook/useRecipes"; // Custom hook to fetch recipe
+import { useSearchParams } from "next/navigation"; // Hook to read query parameters from the URL
+import { useRecipes } from "@/app/hook/useRecipes"; // Custom hook to fetch recipes
 import { useEffect } from "react";
 import RecipeCard from "@/components/RecipeCard";
 
 export default function SearchResults() {
+  const searchParams = useSearchParams(); // Read query parameters from the URL
+  const query = searchParams.get("query"); // Extract value from the query parameter
 
-  const searchParams = useSearchParams(); // Reads the cuurent query parameter from the URL
-  const query = searchParams.get("query"); // Extract value from query parameter
+  // Filter parameters
+  const dishTypes = searchParams.get("dishTypes");
+  const cuisines = searchParams.get("cuisines");
+  const occasions = searchParams.get("occasions");
+  const diets = searchParams.get("diets");
 
-  // Destructuring the returned value from the useRecipe hook
   const { recipes, loading, error, searchRecipes } = useRecipes();
 
-  // useEffect trigger the searchRecipes function whenever the query is changes
   useEffect(() => {
     if (query) {
-      searchRecipes(query); // Fetch recipes on page load if query exists
+      searchRecipes(query, { dishTypes, cuisines, occasions, diets }); // Fetch recipes based on query and filters
     }
-  }, [query]);
+  }, [query, dishTypes, cuisines, occasions, diets]);
 
   if (!query) {
     return <p>Please enter a search term.</p>; // Handle empty query case
@@ -27,24 +30,59 @@ export default function SearchResults() {
     <div className="p-4">
       <h1 className="text-xl font-bold mb-4">Search Results for "{query}"</h1>
 
+      {/* Filter Controls */}
+      <div className="mb-4">
+        <select
+          onChange={(e) => searchRecipes(query, { dishTypes: e.target.value })}
+          value={dishTypes || ''}
+        >
+          <option value="">Select Dish Type</option>
+          <option value="dessert">Dessert</option>
+          <option value="main course">Main Course</option>
+        </select>
+        <select
+          onChange={(e) => searchRecipes(query, { cuisines: e.target.value })}
+          value={cuisines || ''}
+        >
+          <option value="">Select Cuisine</option>
+          <option value="Italian">Italian</option>
+          <option value="Mexican">Mexican</option>
+        </select>
+        <select
+          onChange={(e) => searchRecipes(query, { occasions: e.target.value })}
+          value={occasions || ''}
+        >
+          <option value="">Select Occasion</option>
+          <option value="Birthday">Birthday</option>
+          <option value="Holiday">Holiday</option>
+        </select>
+        <select
+          onChange={(e) => searchRecipes(query, { diets: e.target.value })}
+          value={diets || ''}
+        >
+          <option value="">Select Diet</option>
+          <option value="Vegetarian">Vegetarian</option>
+          <option value="Vegan">Vegan</option>
+        </select>
+      </div>
+
       {loading && <p>Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10 p-4 mb-11">
-
-        {/*Check if there is a recipe in the recipes arrays */}
+        {/* Check if there is a recipe in the recipes array */}
         {recipes.length > 0 ? (
-          // Loop through each item in the recipe array and build each card for each recipe
           recipes.map((recipe) => (
             <RecipeCard
-              recipeId={recipe.id}
-              src={recipe.image} // Pass image URL dynamically
-              title={recipe.title} // Pass title dynamically
+              key={recipe.id || recipe._id}
+              recipeId={recipe.id || recipe._id}
+              src={recipe.image}
+              title={recipe.title}
               isFavorited={false}
             />
           ))
         ) : (
-          <p>No recipes found.</p> // Handle no results case
+          <p>No recipes found.</p>
         )}
       </div>
     </div>

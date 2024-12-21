@@ -8,13 +8,18 @@ export const useRecipes = () => {
     const [error, setError] = useState(null);
 
     // Search for recipes based on our search query
-    const searchRecipes = async (query) => {
+    const searchRecipes = async (query, filters = {}) => {
         setLoading(true);
         setError(null);
 
         try {
+            // Build the query string from the filters object
+            const filterParams = new URLSearchParams(filters).toString();
+            // Construct the API URL with the query and filters
+            const apiUrl = `/api/recipes/search?query=${query}&${filterParams}`;
+
             // using the search API we've just created to query recipe
-            const response = await fetch(`/api/recipes/search?query=${query}`);
+            const response = await fetch(apiUrl);
             const data = await response.json(); // convert it to json
             console.log(data) // debug
             setRecipes(data);

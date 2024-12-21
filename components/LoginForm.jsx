@@ -28,7 +28,7 @@ export default function LoginForm(){
                 return
             }
             
-            router.replace("/") // redirect user to dashboard but they cant go back to login with back button
+            router.replace("/") // redirect user to homepage but they cant go back to login with back button
 
         }
         catch (error){
@@ -74,8 +74,8 @@ export default function LoginForm(){
                 </form>
 
                 <div className="flex justify-center gap-[25px] mt-[20px] font-jura">
-                        <button className="google"><img src="/google.ico" className="w-4 h-4 mr-[10px]" />Gmail</button>
-                        <button className="facebook"><img src="/facebook.ico" className="w-6 h-6 mr-[5px]" />Facebook</button>
+                        <button className="google" onClick={() => signIn("google")}><img src="/google.ico" className="w-4 h-4 mr-[10px]" />Gmail</button>
+                        <button className="facebook" onClick={() => signIn("facebook")}><img src="/facebook.ico" className="w-6 h-6 mr-[5px]" />Facebook</button>
                         <button className="instagram"><img src="/instagram.ico" className="w-6 h-6" />Instagram</button>
                 </div>
                 
