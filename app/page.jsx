@@ -37,7 +37,7 @@ export default function Home() {
       <div className="sticky top-0 bg-customYellow z-50">
        
           
-          <Navbar></Navbar>
+          <Navbar/>
       </div>
 
       <main className="px-[60px]">

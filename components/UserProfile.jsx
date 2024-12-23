@@ -12,7 +12,10 @@ export default function UserProfile({ userId }) {
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
+        email: "",
+        profilePicture: "",
     });
+    
 
     const fileInputRef = useRef(null);
 
@@ -34,6 +37,8 @@ export default function UserProfile({ userId }) {
                     setFormData({
                         firstName: data.firstName,
                         lastName: data.lastName,
+                        email: data.email,
+                        profilePicture: data.profilePicture || "", // Add this to handle profile picture
                     });
                 }
             } catch (error) {
@@ -50,10 +55,35 @@ export default function UserProfile({ userId }) {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
+    // Handle file input change (to convert the image to base64)
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setFormData((prev) => ({
+                    ...prev,
+                    profilePicture: reader.result, // Save base64 string
+                }));
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+    
     // Save changes
     const handleSaveChanges = async (e) => {
         e.preventDefault();
         try {
+            // Validate email before submitting
+            if (!validateEmail(formData.email)) {
+                setError("Please enter a valid email address.");
+                return;
+    }
             const response = await fetch(`/api/users/${userId}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
@@ -76,73 +106,138 @@ export default function UserProfile({ userId }) {
     };
 
     const handleCancelChanges = () => {
-        setFormData({ firstName: user.firstName, lastName: user.lastName });
+        setFormData({ firstName: user.firstName, 
+                        lastName: user.lastName, 
+                        email: user.email, 
+                        profilePicture: user.profilePicture,
+                     });
     };
 
     if (error) return <div className="p-6 text-red-500">{error}</div>;
     if (status === "loading" || !user) return <p>Loading...</p>;
 
     return (
-        <div className="p-6">
-            <h1 className="text-2xl font-bold">User Profile</h1>
+        <div className="mx-[100px]">
+            <div className="flex flex-row gap-80 justify-center">
+                {/*Profile picture container */}
+                <div>
+                    {isOwner ? (
+                        <>
+                        <div
+                            className="relative group w-72 h-72 mt-4 cursor-pointer"
+                            onClick={() => fileInputRef.current?.click()} // Trigger file input on click
+                        >
+                            {formData.profilePicture ? (
+                            <img
+                                src={formData.profilePicture}
+                                alt="Profile Preview"
+                                className="w-full h-full rounded-full object-cover"
+                            />
+                            ) : (
+                            <div className="w-full h-full rounded-full bg-gray-200 flex items-center justify-center">
+                                <p>Upload Picture</p>
+                            </div>
+                            )}
 
-            <div>
-                <h2>First name</h2>
-                {isOwner ? (
-                    <input
-                        type="text"
-                        name="firstName"
-                        value={formData.firstName}
-                        onChange={handleInputChange}
-                        className="border rounded p-2 mr-2"
-                    />
-                ) : (
-                    <p className="text-gray-700">{user.firstName}</p>
-                )}
+                            {/* Hover Camera Icon */}
+                            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                                <img src="/upload.png" className="w-12 h-12"/>
+                            </div>
+                        </div>
 
-                <h2>Last name</h2>
-                {isOwner ? (
-                    <input
-                        type="text"
-                        name="lastName"
-                        value={formData.lastName}
-                        onChange={handleInputChange}
-                        className="border rounded p-2"
-                    />
-                ) : (
-                    <p className="text-gray-700">{user.lastName}</p>
-                )}
+                        {/* Hidden File Input */}
+                        <input
+                            type="file"
+                            ref={fileInputRef} // Attach the ref here
+                            onChange={handleFileChange}
+                            className="hidden"
+                        />
+                        </>
+                        ) : user.profilePicture ? (
+                            <img
+                            src={user.profilePicture}
+                            alt="Profile"
+                            className="w-32 h-32 rounded-full object-cover mt-4"
+                            />
+                        ) : (
+                            <p>No profile picture available</p>
+                    )}
+                </div>
+
+                {/*Name and email container*/}
+                <div className="flex flex-col gap-6 items-center">
+                    <div>
+                        <h2>First name</h2>
+                        {isOwner ? (
+                            <input
+                                type="text"
+                                name="firstName"
+                                value={formData.firstName}
+                                onChange={handleInputChange}
+                                className="border border-customDarkGreen rounded-[10px] p-2 mr-2 w-[429px] bg-customYellow"
+                            />
+                        ) : (
+                            <p className="text-gray-700">{user.firstName}</p>
+                        )}
+                    </div>
+
+                    <div>
+                        <h2>Last name</h2>
+                        {isOwner ? (
+                            <input
+                                type="text"
+                                name="lastName"
+                                value={formData.lastName}
+                                onChange={handleInputChange}
+                                className="border border-customDarkGreen rounded-[10px] p-2 w-[429px] bg-customYellow"
+                            />
+                        ) : (
+                            <p className="text-gray-700">{user.lastName}</p>
+                        )}
+                    </div>
+
+                    <div>
+                        <h2>Email</h2>
+                        {isOwner ? (
+                            <input
+                                type="text"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleInputChange}
+                                className="border border-customDarkGreen rounded-[10px] p-2 w-[429px] bg-customYellow"
+                            />
+                        ) : (
+                            <p className="text-gray-700">{user.email}</p>
+                        )}
+                    </div>
+                    
+                    <div>
+                        {isOwner && (
+                            <div className="mt-4">
+                                <button
+                                    onClick={handleSaveChanges}
+                                    className="p-2 bg-customGreen text-white rounded-[10px] w-48"
+                                >
+                                    Save
+                                </button>
+                                <button
+                                    onClick={handleCancelChanges}
+                                    className="ml-2 p-2  text-customDarkGreen rounded-[10px] border-customDarkGreen border-1 w-48"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+                
+                
             </div>
 
-            {isOwner && (
-                <div className="mt-4">
-                    <button
-                        onClick={handleSaveChanges}
-                        className="p-2 bg-green-500 text-white rounded"
-                    >
-                        Save
-                    </button>
-                    <button
-                        onClick={handleCancelChanges}
-                        className="ml-2 p-2 bg-gray-500 text-white rounded"
-                    >
-                        Cancel
-                    </button>
-                </div>
-            )}
-
-            {user.profilePicture ? (
-                <img
-                    src={user.profilePicture}
-                    alt="Profile"
-                    className="w-32 h-32 rounded-full object-cover mt-4"
-                />
-            ) : (
-                <p>No profile picture available</p>
-            )}
+            
 
             {isSuccess && (
-                <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg">
+                <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-customGreen text-white px-4 py-2 rounded-md shadow-lg">
                     Update Successful!
                 </div>
             )}

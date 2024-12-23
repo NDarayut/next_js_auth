@@ -297,40 +297,40 @@ export default function RecipeDetail({params}){
         ))}
       </div>
 
-      {/* Average Rating */}
-      <h2>
-        Average Rating:{" "}
-        {reviews.length > 0
-          ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
-          : "No ratings yet"}
-      </h2>
+          {/* Average Rating */}
+          <h2>
+            Average Rating:{" "}
+            {reviews.length > 0
+              ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+              : "No ratings yet"}
+          </h2>
 
-      {/* Add Review Form */}
-      <form onSubmit={handleSubmit}>
-        <h3>Add a Review</h3>
-        {errors && <p style={{ color: "red" }}>{errors}</p>}
-        <div>
-          <label>Rating:</label>
-          <select
-            value={newRating}
-            onChange={(e) => setNewRating(parseInt(e.target.value))}
-          >
-            {[1, 2, 3, 4, 5].map((star) => (
-              <option key={star} value={star}>
-                {star} Star{star > 1 && "s"}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label>Comment:</label>
-          <textarea
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-          />
-        </div>
-        <button type="submit">Submit Review</button>
-      </form>
+          {/* Add Review Form */}
+          <form onSubmit={handleSubmit}>
+            <h3>Add a Review</h3>
+            {errors && <p style={{ color: "red" }}>{errors}</p>}
+            <div>
+              <label>Rating:</label>
+              <select
+                value={newRating}
+                onChange={(e) => setNewRating(parseInt(e.target.value))}
+              >
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <option key={star} value={star}>
+                    {star} Star{star > 1 && "s"}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label>Comment:</label>
+              <textarea
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+              />
+            </div>
+            <button type="submit">Submit Review</button>
+          </form>
            
         </div>
     )
