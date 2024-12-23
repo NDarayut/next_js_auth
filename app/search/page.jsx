@@ -3,6 +3,8 @@ import { useSearchParams } from "next/navigation"; // Hook to read query paramet
 import { useRecipes } from "@/app/hook/useRecipes"; // Custom hook to fetch recipes
 import { useEffect } from "react";
 import RecipeCard from "@/components/RecipeCard";
+import SearchBar from "@/components/SearchBar";
+import Navbar from "@/components/Navbar";
 
 export default function SearchResults() {
   const searchParams = useSearchParams(); // Read query parameters from the URL
@@ -28,8 +30,10 @@ export default function SearchResults() {
 
   return (
     <div className="p-4">
+      <Navbar />
+      <SearchBar/>
       <h1 className="text-xl font-bold mb-4">Search Results for "{query}"</h1>
-
+      
       {/* Filter Controls */}
       <div className="mb-4">
         <select

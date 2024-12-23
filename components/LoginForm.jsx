@@ -75,8 +75,8 @@ export default function LoginForm(){
 
                 <div className="flex justify-center gap-[25px] mt-[20px] font-jura">
                         <button className="google" onClick={() => signIn("google")}><img src="/google.ico" className="w-4 h-4 mr-[10px]" />Gmail</button>
-                        <button className="facebook" onClick={() => signIn("facebook")}><img src="/facebook.ico" className="w-6 h-6 mr-[5px]" />Facebook</button>
-                        <button className="instagram"><img src="/instagram.ico" className="w-6 h-6" />Instagram</button>
+                       {/*  <button className="facebook" onClick={() => signIn("facebook")}><img src="/facebook.ico" className="w-6 h-6 mr-[5px]" />Facebook</button>*/}
+                        {/*<button className="instagram"><img src="/instagram.ico" className="w-6 h-6" />Instagram</button>*/}
                 </div>
                 
                 <Link className="text-[15px] mt-3 flex flex-col text-center gap-[10px] font-mono" href={"/register"}>

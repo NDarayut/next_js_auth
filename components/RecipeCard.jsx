@@ -64,7 +64,7 @@ export default function RecipeCard({recipeId, src, title, isFavorited, sourceNam
   };
 
   return (
-    <Link href={`/recipes/${recipeId}`}>
+    
       <Card className="w-[300px] h-[400px] rounded-[5px]  bg-customYellow transform hover:scale-105 transition-transform duration-300 ease-in-out">
         <CardHeader className="p-0 relative" >
           <Image  
@@ -83,7 +83,7 @@ export default function RecipeCard({recipeId, src, title, isFavorited, sourceNam
           </Button>
 
         </CardHeader>
-        
+        <Link href={`/recipes/${recipeId}`}>
         <CardBody>
           <div className= "w-60">
             <div className="">{renderStars()}</div> {/* Display stars */}
@@ -93,8 +93,9 @@ export default function RecipeCard({recipeId, src, title, isFavorited, sourceNam
           </div>
           
         </CardBody>
+        </Link>
         {error && <p className="text-red-500 text-sm">{error}</p>} {/* Display error message */}
       </Card>
-    </Link>
+    
   );
 }

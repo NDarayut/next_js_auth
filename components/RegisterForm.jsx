@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import {signIn} from "next-auth/react"
 import { useRouter } from "next/navigation";
 
 export default function RegisterForm(){
@@ -140,9 +141,9 @@ export default function RegisterForm(){
                 </form>
 
                 <div className="flex justify-center gap-[25px] mt-[20px]">
-                        <button className="google"><img src="/google.ico" className="w-4 h-4 mr-[10px]" />Gmail</button>
-                        <button className="facebook"><img src="/facebook.ico" className="w-6 h-6 mr-[5px]" />Facebook</button>
-                        <button className="instagram"><img src="/instagram.ico" className="w-6 h-6" />Instagram</button>
+                        <button className="google" onClick={() => signIn("google")}><img src="/google.ico" className="w-4 h-4 mr-[10px]" />Gmail</button>
+                        {/*<button className="facebook"><img src="/facebook.ico" className="w-6 h-6 mr-[5px]" />Facebook</button>*/}
+                         {/*<button className="instagram"><img src="/instagram.ico" className="w-6 h-6" />Instagram</button>*/}
                 </div>
 
                 <Link className="text-[15px] mt-3 flex flex-col text-center gap-[10px] font-jura" href={"/login"}>

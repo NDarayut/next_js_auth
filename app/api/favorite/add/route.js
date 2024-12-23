@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";   // Import NextResponse
 import { authOptions } from "../../auth/[...nextauth]/route";
 import { connectMongoDB } from "@/lib/mongodb";
 
+
 export async function POST(req) {
   try {
     // Get the session on the server-side

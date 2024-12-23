@@ -23,13 +23,153 @@ export default function Dashboard(){
     console.log(session)
     // if it is admin, show this
     return(
-        <div>
-            <h1>This is a dashboard</h1>
-            <button
-                onClick={() => signOut({ callbackUrl: '/login' })}  // Logs the user out and redirects to login page
-                className="bg-red-500 text-white font-bold px-6 py-2 mt-3">
-                Log out
-            </button>
+        <>
+  {/* Main Container */}
+  <div className="flex min-h-screen">
+    {/* Sidebar */}
+    <aside className="w-1/5 bg-white p-6 border-r">
+      <h1 className="text-2xl font-bold mb-6">Bites</h1>
+      <nav>
+        <ul className="space-y-4">
+          <li>
+            <a
+              href="./index.html"
+              className="flex items-center text-green-500 font-semibold"
+            >
+              <span className="material-icons mr-2">
+                <i className="fa-solid fa-house" />
+              </span>
+              Dashboard
+            </a>
+          </li>
+          <li>
+            <a
+              href="../public/pages/recipe.html"
+              className="flex items-center text-gray-600"
+            >
+              <span className="material-icons mr-2">
+                <i className="fa-solid fa-mug-hot" />
+              </span>
+              Recipes
+            </a>
+          </li>
+          <li>
+            <a href="#" className="flex items-center text-gray-600">
+              <span className="material-icons mr-2">
+                <i className="fa-solid fa-users" />
+              </span>
+              User
+            </a>
+          </li>
+          <li>
+            <a href="#" className="flex items-center text-gray-600">
+              <span className="material-icons mr-2">
+                <i className="fa-regular fa-pen-to-square" />
+              </span>
+              Reviews
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+    {/* Main Content */}
+    <main className="flex-1 p-8">
+      {/* Header */}
+      <header className="flex justify-between items-center mb-8">
+        <h2 className="text-xl font-bold">Dashboard</h2>
+        <div className="flex items-center space-x-4">
+          <input
+            type="text"
+            placeholder="Search..."
+            className="border rounded-lg px-4 py-2"
+          />
+          <button className="bg-green-500 text-white px-4 py-2 rounded-lg">
+            Filter
+          </button>
         </div>
+      </header>
+      {/* Dashboard Stats */}
+      <section className="grid grid-cols-3 gap-6 mb-8">
+        <div className="bg-white p-6 rounded-lg shadow">
+          <h3 className="text-lg font-bold">5k</h3>
+          <p>Total Recipes</p>
+        </div>
+        <div className="bg-white p-6 rounded-lg shadow">
+          <h3 className="text-lg font-bold">2k</h3>
+          <p>Users Registered</p>
+        </div>
+        <div className="bg-white p-6 rounded-lg shadow">
+          <h3 className="text-lg font-bold">357</h3>
+          <p>Total Reviews</p>
+        </div>
+      </section>
+      {/* Charts */}
+      <section className="grid grid-cols-2 gap-6 mb-8">
+        <div className="bg-white p-6 rounded-lg shadow">
+          <h3 className="text-lg font-bold mb-4">Pie Chart</h3>
+          <div className="flex justify-center items-center">
+            [Insert Pie Chart]
+          </div>
+        </div>
+        <div className="bg-white p-6 rounded-lg shadow">
+          <h3 className="text-lg font-bold mb-4">User Registration Chart</h3>
+          <div className="flex justify-center items-center">
+            [Insert Line Chart]
+          </div>
+        </div>
+      </section>
+      {/* Customer Reviews */}
+      <section className="bg-white p-6 rounded-lg shadow">
+        <h3 className="text-lg font-bold mb-4">Customer Reviews</h3>
+        <div id="reviews" className="relative">
+          <div className="flex items-center">
+            <button
+              id="prevReview"
+              className="absolute left-0 text-gray-500 bg-gray-200 p-2 rounded-full hover:bg-gray-300"
+            >
+              &lt;
+            </button>
+            <div className="flex-1 flex overflow-hidden">
+              <div className="review hidden flex flex-col items-center text-center flex-shrink-0 w-full">
+                <img
+                  src="../src/img/PFP-1.png"
+                  alt="User"
+                  className="w-16 h-16 rounded-full mb-4"
+                />
+                <h4 className="font-bold">John Sena</h4>
+                <p>"Excellent recipes! Highly recommended."</p>
+              </div>
+              <div className="review hidden flex flex-col items-center text-center flex-shrink-0 w-full">
+                <img
+                  src="../src/img/PFP-1.png"
+                  alt="User"
+                  className="w-16 h-16 rounded-full mb-4"
+                />
+                <h4 className="font-bold">Sofia</h4>
+                <p>"Great user experience and tasty dishes!"</p>
+              </div>
+              <div className="review hidden flex flex-col items-center text-center flex-shrink-0 w-full">
+                <img
+                  src="../src/img/PFP-1.png"
+                  alt="User"
+                  className="w-16 h-16 rounded-full mb-4"
+                />
+                <h4 className="font-bold">Michael</h4>
+                <p>"Love the variety of recipes provided!"</p>
+              </div>
+            </div>
+            <button
+              id="nextReview"
+              className="absolute right-0 text-gray-500 bg-gray-200 p-2 rounded-full hover:bg-gray-300"
+            >
+              &gt;
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</>
+
     )
 }

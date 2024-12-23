@@ -198,7 +198,6 @@ export default function RecipeDetail({params}){
           {similarRecipes.length > 0 ? (
             similarRecipes.map((recipe) => (
               <RecipeCard
-                key={recipe.id}
                 recipeId={recipe.id}
                 src={recipe.image} // Image URL
                 title={recipe.title} // Recipe title
