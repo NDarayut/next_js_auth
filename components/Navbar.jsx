@@ -2,9 +2,22 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import SearchBar from './SearchBar';
 import LoginBtn from './LoginBtn';
+import { useState, useEffect } from 'react';
 
 export default function Navbar() {
   const { data: session, status } = useSession();
+  const [profilePicture, setProfilePicture] = useState("");
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const userId = session.user.id
+      const response = await fetch(`/api/users/${userId}`);
+      const data = await response.json();
+      setProfilePicture(data.profilePicture);
+  };
+  fetchUser();
+  }, [session]);
+
 
   return (
     <nav>
@@ -45,9 +58,9 @@ export default function Navbar() {
           <div className="flex items-center ml-auto mr-4"> {/* Flex alignment for vertical centering */}
             <Link href={`/profile/${session.user.id}`}>
               <img
-                src={session.user.image || "/default.png"} // User profile image or a default one
+                src={profilePicture} // User profile image or a default one
                 alt="User Avatar"
-                className="w-12 h-12 rounded-full cursor-pointer border border-gray-300 hover:border-green-400"
+                className="w-12 h-12 rounded-full cursor-pointer border border-customDarkGreen"
               />
             </Link>
           </div>

@@ -21,8 +21,7 @@ const userSchema = new Schema({
     },
 
     profilePicture: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: " fs.files",
+        type: String,
     },
 
     role: {

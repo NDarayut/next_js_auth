@@ -12,6 +12,7 @@ export default function UserProfile({ userId }) {
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
+        profilePicture: "",
     });
 
     const fileInputRef = useRef(null);
@@ -34,6 +35,7 @@ export default function UserProfile({ userId }) {
                     setFormData({
                         firstName: data.firstName,
                         lastName: data.lastName,
+                        profilePicture: data.profilePicture || "", // Add this to handle profile picture
                     });
                 }
             } catch (error) {
@@ -48,6 +50,21 @@ export default function UserProfile({ userId }) {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    // Handle file input change (to convert the image to base64)
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setFormData((prev) => ({
+                    ...prev,
+                    profilePicture: reader.result, // Save base64 string
+                }));
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
     // Save changes
@@ -76,7 +93,7 @@ export default function UserProfile({ userId }) {
     };
 
     const handleCancelChanges = () => {
-        setFormData({ firstName: user.firstName, lastName: user.lastName });
+        setFormData({ firstName: user.firstName, lastName: user.lastName, profilePicture: user.profilePicture });
     };
 
     if (error) return <div className="p-6 text-red-500">{error}</div>;
@@ -112,6 +129,35 @@ export default function UserProfile({ userId }) {
                 ) : (
                     <p className="text-gray-700">{user.lastName}</p>
                 )}
+
+                <h2>Profile Picture</h2>
+                {isOwner ? (
+                    <>
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={handleFileChange}
+                            className="border rounded p-2 mr-2"
+                        />
+                        {formData.profilePicture && (
+                            <img
+                                src={formData.profilePicture}
+                                alt="Profile Preview"
+                                className="w-32 h-32 rounded-full object-cover mt-4"
+                            />
+                        )}
+                    </>
+                ) : (
+                    user.profilePicture ? (
+                        <img
+                            src={user.profilePicture}
+                            alt="Profile"
+                            className="w-32 h-32 rounded-full object-cover mt-4"
+                        />
+                    ) : (
+                        <p>No profile picture available</p>
+                    )
+                )}
             </div>
 
             {isOwner && (
@@ -129,16 +175,6 @@ export default function UserProfile({ userId }) {
                         Cancel
                     </button>
                 </div>
-            )}
-
-            {user.profilePicture ? (
-                <img
-                    src={user.profilePicture}
-                    alt="Profile"
-                    className="w-32 h-32 rounded-full object-cover mt-4"
-                />
-            ) : (
-                <p>No profile picture available</p>
             )}
 
             {isSuccess && (

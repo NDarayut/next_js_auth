@@ -188,75 +188,75 @@ export default function RecipeDetail({params}){
             </div>
 
             {/* Similar Recipes Section */}
-      <div className="mt-8">
-        <h2 className="font-[700] text-[25px] mb-2">Similar Recipes</h2>
-                    
-        {loading && <p>Loading...</p>}
-        {error && <p className="text-red-500">{error}</p>}
+          <div className="mt-8">
+            <h2 className="font-[700] text-[25px] mb-2">Similar Recipes</h2>
+                        
+            {loading && <p>Loading...</p>}
+            {error && <p className="text-red-500">{error}</p>}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-40 gap-y-20">
-          {similarRecipes.length > 0 ? (
-            similarRecipes.map((recipe) => (
-              <RecipeCard
-                key={recipe.id}
-                recipeId={recipe.id}
-                src={recipe.image} // Image URL
-                title={recipe.title} // Recipe title
-                isFavorited={false} // Pass favorite status
-              />
-            ))
-          ) : (
-            !loading && <p>No similar recipes found.</p>
-          )}
-        </div>
-      </div>
-
-      {/* Reviews List */}
-      <div>
-        <h3 className="font-[700] text-[25px] my-2">Reviews</h3>
-        {reviews.map((review) => (
-          <div key={review._id} className="review">
-            <p><strong>{review.userId?.username || "Anonymous"}</strong></p>
-            <p>Rating: {review.rating}</p>
-            <p>{review.comment}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-40 gap-y-20">
+              {similarRecipes.length > 0 ? (
+                similarRecipes.map((recipe) => (
+                  <RecipeCard
+                    key={recipe.id}
+                    recipeId={recipe.id}
+                    src={recipe.image} // Image URL
+                    title={recipe.title} // Recipe title
+                    isFavorited={false} // Pass favorite status
+                  />
+                ))
+              ) : (
+                !loading && <p>No similar recipes found.</p>
+              )}
+            </div>
           </div>
-        ))}
-      </div>
 
-      {/* Average Rating */}
-      <h2>
-        Average Rating:{" "}
-        {reviews.length > 0
-          ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
-          : "No ratings yet"}
-      </h2>
-
-      {/* Add Review Form */}
-      <form onSubmit={handleSubmit}>
-        <h3>Add a Review</h3>
-        {errors && <p style={{ color: "red" }}>{errors}</p>}
-        <div>
-          <label>Rating:</label>
-          <select
-            value={newRating}
-            onChange={(e) => setNewRating(parseInt(e.target.value))}
-          >
-            {[1, 2, 3, 4, 5].map((star) => (
-              <option key={star} value={star}>
-                {star} Star{star > 1 && "s"}
-              </option>
+          {/* Reviews List */}
+          <div>
+            <h3 className="font-[700] text-[25px] my-2">Reviews</h3>
+            {reviews.map((review) => (
+              <div key={review._id} className="review">
+                <p><strong>{review.userId?.username || "Anonymous"}</strong></p>
+                <p>Rating: {review.rating}</p>
+                <p>{review.comment}</p>
+              </div>
             ))}
-          </select>
-        </div>
-        <div>
-          <label>Comment:</label>
-          <textarea
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-          />
-        </div>
-        <button type="submit">Submit Review</button>
-      </form>
+          </div>
+
+          {/* Average Rating */}
+          <h2>
+            Average Rating:{" "}
+            {reviews.length > 0
+              ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+              : "No ratings yet"}
+          </h2>
+
+          {/* Add Review Form */}
+          <form onSubmit={handleSubmit}>
+            <h3>Add a Review</h3>
+            {errors && <p style={{ color: "red" }}>{errors}</p>}
+            <div>
+              <label>Rating:</label>
+              <select
+                value={newRating}
+                onChange={(e) => setNewRating(parseInt(e.target.value))}
+              >
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <option key={star} value={star}>
+                    {star} Star{star > 1 && "s"}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label>Comment:</label>
+              <textarea
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+              />
+            </div>
+            <button type="submit">Submit Review</button>
+          </form>
            
         </div>
     )
