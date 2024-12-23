@@ -1,28 +1,27 @@
 import { connectMongoDB } from '@/lib/mongodb';
 import Recipe from '@/models/recipe';
-import axios from 'axios';
 
 export async function GET(req) {
-  const { searchParams } = new URL(req.url); // Query strings from the request URL
-  const query = searchParams.get('query'); // Extract 'query' parameter e.g., ?query=pasta to query="pasta"
+  const { searchParams } = new URL(req.url); // Parse query strings from the request URL
+  const query = searchParams.get('query'); // Extract the search query (e.g., ?query=pasta)
   const dishTypes = searchParams.get('dishTypes'); // Extract 'dishTypes' filter
   const cuisines = searchParams.get('cuisines'); // Extract 'cuisines' filter
   const occasions = searchParams.get('occasions'); // Extract 'occasions' filter
   const diets = searchParams.get('diets'); // Extract 'diets' filter
-  
-  const apiKey = process.env.SPOONACULAR_API_KEY; // API key stored in env
-  const apiUrl = `https://api.spoonacular.com/recipes/complexSearch?query=${query}&cuisine=${cuisines}&diet=${diets}&dishtypes=${dishTypes}&occasions=${occasions}&number=20&apiKey=${apiKey}`;
 
   try {
-
+    // Connect to MongoDB
     await connectMongoDB();
-    
-    // A MongoDB query object dynamically built using user-provided filters
-    const filterQuery = {
-      title: { $regex: query, $options: 'i' }, // search for title match with case insensitive
-    };
-    
-    // check for that specific dishtypes in the dishTypes array (e.g., dishTypes:["dessert", "appetizer"])
+
+    // Start with a base query
+    let filterQuery = {};
+
+    // If there's a query, search by title
+    if (query) {
+      filterQuery.title = { $regex: query, $options: 'i' }; // Case-insensitive substring match
+    }
+
+    // Apply additional filters only if they are present
     if (dishTypes) {
       filterQuery.dishTypes = { $in: dishTypes.split(',') };
     }
@@ -36,21 +35,16 @@ export async function GET(req) {
       filterQuery.diets = { $in: diets.split(',') };
     }
 
-    // Search MongoDB for matching recipes
+    // Fetch recipes based on the constructed query
     const userRecipes = await Recipe.find(filterQuery);
 
-    // Use axios to make the HTTP GET request from the Spoonacular API
-    const response = await axios.get(apiUrl);
-    const spoonacularRecipes = response.data.results;
+    // Return the matching recipes as a JSON response
+    return new Response(JSON.stringify(userRecipes), { status: 200 });
+  } catch (error) {
+    // Log the error for debugging
+    console.error('Search API Error:', error);
 
-    // Combine user-created recipes and Spoonacular API results
-    const combinedRecipes = [...userRecipes, ...spoonacularRecipes];
-
-    return new Response(JSON.stringify(combinedRecipes), { status: 200 });
-  } 
-
-  catch (error) {
-    console.error(error); // Optionally log the error for debugging
+    // Return an error response
     return new Response(
       JSON.stringify({ error: 'Failed to fetch recipes' }),
       { status: 500 }

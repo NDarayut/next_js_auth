@@ -6,7 +6,10 @@ const recipeSchema = new Schema({
         type: String,
         required: true
     },
-
+    score: {
+        type: Number,
+        required: false,
+    },
     sourceName: {
         type: String,
         required: true

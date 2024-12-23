@@ -127,7 +127,6 @@ export default function Dashboard(){
               id="prevReview"
               className="absolute left-0 text-gray-500 bg-gray-200 p-2 rounded-full hover:bg-gray-300"
             >
-              &lt;
             </button>
             <div className="flex-1 flex overflow-hidden">
               <div className="review hidden flex flex-col items-center text-center flex-shrink-0 w-full">
@@ -137,7 +136,7 @@ export default function Dashboard(){
                   className="w-16 h-16 rounded-full mb-4"
                 />
                 <h4 className="font-bold">John Sena</h4>
-                <p>"Excellent recipes! Highly recommended."</p>
+                <p>&quot;Excellent recipes! Highly recommended.&quot;</p>
               </div>
               <div className="review hidden flex flex-col items-center text-center flex-shrink-0 w-full">
                 <img
@@ -146,7 +145,7 @@ export default function Dashboard(){
                   className="w-16 h-16 rounded-full mb-4"
                 />
                 <h4 className="font-bold">Sofia</h4>
-                <p>"Great user experience and tasty dishes!"</p>
+                <p>&quot;Great user experience and tasty dishes!&quot;</p>
               </div>
               <div className="review hidden flex flex-col items-center text-center flex-shrink-0 w-full">
                 <img
@@ -155,7 +154,7 @@ export default function Dashboard(){
                   className="w-16 h-16 rounded-full mb-4"
                 />
                 <h4 className="font-bold">Michael</h4>
-                <p>"Love the variety of recipes provided!"</p>
+                <p>&quot;Love the variety of recipes provided!&quot;</p>
               </div>
             </div>
             <button

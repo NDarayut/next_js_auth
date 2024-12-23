@@ -3,12 +3,12 @@ export default function ContactUs(){
         <div className="flex justify-center items-center gap-48">
             <div className="w-96">
                 <h1 className="font-jura font-bold text-4xl mb-4">Contact Us</h1>
-                <h1 className="font-jura font-bold text-xl">Have questions or need assistance? Fill out the form, and we'll get back to you as soon as possible!</h1>
+                <h1 className="font-jura font-bold text-xl">Have questions or need assistance? Fill out the form, and we&apos;ll get back to you as soon as possible!</h1>
             </div>
 
             <div className="w-[500px]">
                 <h1 className="text-4xl font-bold text-center text-customDarkGreen mb-6 font-jura">Get In Touch</h1>
-                <form className=" flex justify-center flex-col ">
+                <form className=" flex justify-center flex-col">
                     {/* Name Field */}
                     <div className="mb-4">
                     <input

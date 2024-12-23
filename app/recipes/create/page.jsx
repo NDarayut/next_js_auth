@@ -403,7 +403,7 @@ export default function CreateRecipe() {
         <span className="font-bold">HAVE FUN!</span>
       </p>
       <p className="text-lg mb-4">
-        I don't think there are bad cooks, just bad recipes.
+        I don&apos;t think there are bad cooks, just bad recipes.
       </p>
     </div>
   </div>

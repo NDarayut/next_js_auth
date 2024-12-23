@@ -1,11 +1,8 @@
 "use client"
 import Navbar from "@/components/Navbar";
-import LoginBtn from "@/components/LoginBtn";
 import RecipeCard from "@/components/RecipeCard";
 import CustomCarousel from "@/components/CustomCarousel";
-import SearchBar from "@/components/SearchBar";
 import RandomCard from "@/components/RandomCard";
-import LogoutBtn from "@/components/LogoutBtn";
 import { useEffect, useState } from "react";
 import Footer from "@/components/Footer";
 import { useSession } from "next-auth/react";
@@ -37,23 +34,13 @@ export default function Home() {
   return (
     <>
     
-      <div className="sticky top-0 bg-customYellow z-50 px-[60px]">
-        {status === "unauthenticated"? (
-          <div className="mt-3 flex justify-end">
-            <LoginBtn></LoginBtn>
-          </div>
-        ):(<p></p>)}
+      <div className="sticky top-0 bg-customYellow z-50">
+       
           
-    
           <Navbar></Navbar>
       </div>
 
       <main className="px-[60px]">
-
-        <div className="mb-11">
-          <SearchBar></SearchBar>
-        </div>
-        
 
         <div className="mb-28">
           <CustomCarousel></CustomCarousel>
@@ -65,12 +52,14 @@ export default function Home() {
           {recipes.map((recipe) => (
             
             <RecipeCard
-              recipeId={recipe.id}
+              key={recipe._id}
+              recipeId={recipe._id}
               src={recipe.image} // Pass image URL dynamically
               title={recipe.title} // Pass title dynamically
               isFavorited={false}
               sourceName={recipe.sourceName}
-              rating={recipe.spoonacularScore}
+              rating={recipe.score}
+              readyInMinutes={recipe.readyInMinutes}
             />
           ))}
           

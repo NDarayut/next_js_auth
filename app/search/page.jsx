@@ -1,68 +1,107 @@
 "use client";
-import { useSearchParams } from "next/navigation"; // Hook to read query parameters from the URL
-import { useRecipes } from "@/app/hook/useRecipes"; // Custom hook to fetch recipes
-import { useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import RecipeCard from "@/components/RecipeCard";
-import SearchBar from "@/components/SearchBar";
 import Navbar from "@/components/Navbar";
 
 export default function SearchResults() {
-  const searchParams = useSearchParams(); // Read query parameters from the URL
-  const query = searchParams.get("query"); // Extract value from the query parameter
+  const searchParams = useSearchParams(); // Access URL query parameters
+  const router = useRouter(); // Use router for navigation and updating query parameters
 
-  // Filter parameters
+  const [recipes, setRecipes] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Extract the initial search query and filters from the URL
+  const query = searchParams.get("query");
   const dishTypes = searchParams.get("dishTypes");
   const cuisines = searchParams.get("cuisines");
   const occasions = searchParams.get("occasions");
   const diets = searchParams.get("diets");
 
-  const { recipes, loading, error, searchRecipes } = useRecipes();
-
-  useEffect(() => {
-    if (query) {
-      searchRecipes(query, { dishTypes, cuisines, occasions, diets }); // Fetch recipes based on query and filters
+  // Function to fetch recipes based on current query and filters
+  const fetchRecipes = async (filters = {}) => {
+    setLoading(true);
+    setError(null);
+  
+    try {
+      // Build the filter parameters dynamically and omit empty filters
+      const filterParams = new URLSearchParams();
+      if (dishTypes) filterParams.set("dishTypes", dishTypes);
+      if (cuisines) filterParams.set("cuisines", cuisines);
+      if (occasions) filterParams.set("occasions", occasions);
+      if (diets) filterParams.set("diets", diets);
+  
+      // Construct API URL without encoding query
+      const apiUrl = `/api/recipes/search?query=${query}&${filterParams.toString()}`;
+  
+      console.log('API URL:', apiUrl); // Debugging line
+  
+      const response = await fetch(apiUrl);
+      if (!response.ok) throw new Error("Failed to fetch recipes");
+  
+      const data = await response.json();
+      setRecipes(data); // Update recipes state
+    } catch (err) {
+      console.error("Error Fetching Recipes:", err);
+      setError("Failed to fetch recipes.");
+    } finally {
+      setLoading(false);
     }
+  };
+  
+
+  // Fetch recipes initially and whenever filters change
+  useEffect(() => {
+    const filters = { dishTypes, cuisines, occasions, diets }; // Collect filters from URL
+    fetchRecipes(filters);
   }, [query, dishTypes, cuisines, occasions, diets]);
 
-  if (!query) {
-    return <p>Please enter a search term.</p>; // Handle empty query case
-  }
+  // Handle filter changes and update the URL
+  const handleFilterChange = (key, value) => {
+    const newParams = new URLSearchParams(searchParams.toString());
+    if (value) {
+      newParams.set(key, value); // Add or update filter
+    } else {
+      newParams.delete(key); // Remove filter if value is empty
+    }
+    router.push(`/search?${newParams.toString()}`); // Update URL
+  };
 
   return (
     <div className="p-4">
       <Navbar />
-      <SearchBar/>
-      <h1 className="text-xl font-bold mb-4">Search Results for "{query}"</h1>
-      
+      <h1 className="text-xl font-bold mb-4">Search Results for &quot;{query}&quot;</h1>
+
       {/* Filter Controls */}
       <div className="mb-4">
         <select
-          onChange={(e) => searchRecipes(query, { dishTypes: e.target.value })}
-          value={dishTypes || ''}
+          onChange={(e) => handleFilterChange("dishTypes", e.target.value)}
+          value={dishTypes || ""}
         >
           <option value="">Select Dish Type</option>
           <option value="dessert">Dessert</option>
           <option value="main course">Main Course</option>
         </select>
         <select
-          onChange={(e) => searchRecipes(query, { cuisines: e.target.value })}
-          value={cuisines || ''}
+          onChange={(e) => handleFilterChange("cuisines", e.target.value)}
+          value={cuisines || ""}
         >
           <option value="">Select Cuisine</option>
           <option value="Italian">Italian</option>
           <option value="Mexican">Mexican</option>
         </select>
         <select
-          onChange={(e) => searchRecipes(query, { occasions: e.target.value })}
-          value={occasions || ''}
+          onChange={(e) => handleFilterChange("occasions", e.target.value)}
+          value={occasions || ""}
         >
           <option value="">Select Occasion</option>
           <option value="Birthday">Birthday</option>
           <option value="Holiday">Holiday</option>
         </select>
         <select
-          onChange={(e) => searchRecipes(query, { diets: e.target.value })}
-          value={diets || ''}
+          onChange={(e) => handleFilterChange("diets", e.target.value)}
+          value={diets || ""}
         >
           <option value="">Select Diet</option>
           <option value="Vegetarian">Vegetarian</option>
@@ -73,16 +112,18 @@ export default function SearchResults() {
       {loading && <p>Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
 
+      {/* Display Recipes */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10 p-4 mb-11">
-        {/* Check if there is a recipe in the recipes array */}
         {recipes.length > 0 ? (
           recipes.map((recipe) => (
             <RecipeCard
-              key={recipe.id || recipe._id}
-              recipeId={recipe.id || recipe._id}
+              recipeId={recipe._id}
               src={recipe.image}
               title={recipe.title}
               isFavorited={false}
+              sourceName={recipe.sourceName}
+              rating={recipe.score}
+              readyInMinutes={recipe.readyInMinutes}
             />
           ))
         ) : (
