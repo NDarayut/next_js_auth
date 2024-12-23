@@ -9,15 +9,24 @@ export default function Navbar() {
   const [profilePicture, setProfilePicture] = useState("");
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const userId = session.user.id
-      const response = await fetch(`/api/users/${userId}`);
-      const data = await response.json();
-      setProfilePicture(data.profilePicture);
-  };
-  fetchUser();
+    if (session?.user?.id) {
+      const fetchUser = async () => {
+        try {
+          const userId = session.user.id;
+          const response = await fetch(`/api/users/${userId}`);
+          if (response.ok) {
+            const data = await response.json();
+            setProfilePicture(data.profilePicture || "");
+          } else {
+            console.error("Failed to fetch user data");
+          }
+        } catch (error) {
+          console.error("Error fetching user profile:", error);
+        }
+      };
+      fetchUser();
+    }
   }, [session]);
-
 
   return (
     <nav>
@@ -47,18 +56,18 @@ export default function Navbar() {
           <SearchBar />
         </div>
 
-        {status === "unauthenticated"? (
+        {status === "unauthenticated" ? (
           <div className="flex justify-end">
             <LoginBtn />
           </div>
-        ):(<p></p>)}
+        ) : null}
 
         {/* Avatar Section */}
-        {status === "authenticated" && (
+        {status === "authenticated" && session?.user && (
           <div className="flex items-center ml-auto mr-4"> {/* Flex alignment for vertical centering */}
             <Link href={`/profile/${session.user.id}`}>
               <img
-                src={profilePicture} // User profile image or a default one
+                src={profilePicture || "/default-avatar.png"} // Fallback to a default avatar if profilePicture is unavailable
                 alt="User Avatar"
                 className="w-12 h-12 rounded-full cursor-pointer border border-customDarkGreen"
               />

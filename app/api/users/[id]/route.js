@@ -17,6 +17,7 @@ export async function GET(req, { params }) {
         return NextResponse.json({
             firstName: user.firstName,
             lastName: user.lastName,
+            email: user.email,
             profilePicture: user.profilePicture,
         });
     } catch (error) {
@@ -30,13 +31,13 @@ export async function GET(req, { params }) {
 
 export async function PATCH(req, { params }) {
     const { id } = params;
-    const { firstName, lastName, profilePicture } = await req.json(); // Retrieve updated data
+    const { firstName, lastName, email, profilePicture } = await req.json(); // Retrieve updated data
 
     try {
         await connectMongoDB();
 
         // Find the user by ID and update their details, including the profile picture if provided
-        const updateFields = { firstName, lastName };
+        const updateFields = { firstName, lastName, email };
 
         if (profilePicture) {
             updateFields.profilePicture = profilePicture; // Only update profile picture if provided
@@ -51,6 +52,7 @@ export async function PATCH(req, { params }) {
         return NextResponse.json({
             firstName: user.firstName,
             lastName: user.lastName,
+            email: user.email,
             profilePicture: user.profilePicture,
         });
     } catch (error) {
