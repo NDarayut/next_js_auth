@@ -110,35 +110,109 @@ export default function RecipeDetail({params}){
     }
 
     return(
-        <div className="font-kodchasan px-[120px]">
-           <h1 className="font-[500] text-[60px]">{title}</h1>
-           <h1 className="font-[1000] text-[18px]">Created by: {author}</h1>
-           <section>
-            <p className="text-[20px]" dangerouslySetInnerHTML={{__html:description}} />
-           </section>
-           
-           <img 
-            src={recipeImage}
-            className="w-[400px] h-full object-cover"/>
-            <div className="flex flex-row">
+        <div className="font-sans mx-[100px]">
+           <h1 className="font-serif text-[60px]">{title}</h1>
+           <h1 className="font-normal font-sans text-[18px] mb-4">Created by: {author}</h1>
+           <section className="flex items-start gap-6 mb-4">
+              <img
+                src={recipeImage}
+                className="rounded-small w-[600px] h-auto object-cover" 
+                alt="Recipe"
+              />
+              <p 
+                className="ml-3 text-[20px] text-justify" 
+                dangerouslySetInnerHTML={{ __html: description }} 
+              />
+          </section>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Left Column: Ingredients and Instructions */}
+            <div>
+              {/* Ingredients Section */}
+              <h1 className="font-[700] font-serif text-[25px] my-2">Ingredients</h1>
+              <ul className="pl-5 space-y-3">
+                {ingredients.map((ingredient, index) => (
+                  <li key={index} className="flex items-center">
+                    <span 
+                      className="mr-3 w-5 h-5 flex items-center justify-center border-2 border-gray-500 rounded-full"
+                    ></span>
+                    <span 
+                      className={`${ingredient.completed ? 'line-through text-gray-400' : ''}`}
+                    >
+                      {ingredient.amount} {ingredient.unit} of {ingredient.name}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+
+              {/* Instructions Section */}
+              <div className="mt-8">
+                <h1 className="font-[700] font-serif text-[25px]">Instructions</h1>
+                {instruction.map((instruction, index) => (
+                  <div key={index}>
+                    <ol>
+                      {instruction.steps.map((step) => (
+                        <li key={step.number}>
+                          <span className="font-bold">Step {step.number}:</span>{" "}
+                          <span dangerouslySetInnerHTML={{ __html: step.step }} />
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Column: Similar Recipes */}
+            <div>
+              <h2 className="font-[700] font-serif text-[25px] mb-2">Similar Recipes</h2>
+              {loading && <p>Loading...</p>}
+              {error && <p className="text-red-500">{error}</p>}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-8">
+                {similarRecipes.length > 0 ? (
+                  similarRecipes.map((recipe) => (
+                    <RecipeCard
+                      key={recipe.id}
+                      recipeId={recipe.id}
+                      src={recipe.image} // Image URL
+                      title={recipe.title} // Recipe title
+                      isFavorited={false} // Pass favorite status
+                    />
+                  ))
+                ) : (
+                  !loading && <p>No similar recipes found.</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+            {/* <div className="flex flex-row">
                 <p className="mr-3">Prep time: {prepTime}</p>
                 <p className="mr-3">Ingredients: {numberOfIngredients}</p>
                 <p>Calories: {calories}</p>
             </div>
             
             <div>
-                <h1 className="font-[700] text-[25px] my-2">Ingredients</h1>
-                <ul className="list-disc pl-5">
-                    {ingredients.map((ingredient, index) => (
-                        <li key={index}>
-                            {ingredient.amount} {ingredient.unit} of {ingredient.name}
-                        </li>
-                    ))}
+                <h1 className="font-[700] font-serif text-[25px] my-2">Ingredients</h1>
+                <ul className="pl-5 space-y-3">
+                  {ingredients.map((ingredient, index) => (
+                    <li key={index} className="flex items-center">
+                      <span 
+                        className="mr-3 w-5 h-5 flex items-center justify-center border-2 border-gray-500 rounded-full"
+                      ></span>
+                      <span 
+                        className={`${ingredient.completed ? 'line-through text-gray-400' : ''}`}
+                      >
+                        {ingredient.amount} {ingredient.unit} of {ingredient.name}
+                      </span>
+                    </li>
+                  ))}
                 </ul>
+
             </div>
 
             <div>
-                <h1 className="font-[700] text-[25px] my-2">Instructions</h1>
+                <h1 className="font-[700] font-serif text-[25px] my-2">Instructions</h1>
                 {instruction.map((instruction, index) => (
                     <div key={index}>
                     <ol>
@@ -152,10 +226,10 @@ export default function RecipeDetail({params}){
                     </div>
                 ))}
                 
-            </div>
-            
+            </div> */}
+
             <div>
-                <h2 className="font-[700] text-[25px] my-2">Recipe Tags</h2>
+                <h2 className="font-[700] font-serif text-[25px] my-2">Recipe Tags</h2>
                 <div className="flex flex-wrap gap-2">
                     {tags.dishTypes.map((tag, index) => (
                     <span
@@ -188,8 +262,8 @@ export default function RecipeDetail({params}){
             </div>
 
             {/* Similar Recipes Section */}
-      <div className="mt-8">
-        <h2 className="font-[700] text-[25px] mb-2">Similar Recipes</h2>
+      {/* <div className="mt-8">
+        <h2 className="font-[700] font-serif text-[25px] mb-2">Similar Recipes</h2>
                     
         {loading && <p>Loading...</p>}
         {error && <p className="text-red-500">{error}</p>}
@@ -209,11 +283,11 @@ export default function RecipeDetail({params}){
             !loading && <p>No similar recipes found.</p>
           )}
         </div>
-      </div>
+      </div> */}
 
       {/* Reviews List */}
       <div>
-        <h3 className="font-[700] text-[25px] my-2">Reviews</h3>
+        <h3 className="font-[700] font-serif text-[25px] my-2">Reviews</h3>
         {reviews.map((review) => (
           <div key={review._id} className="review">
             <p><strong>{review.userId?.username || "Anonymous"}</strong></p>
