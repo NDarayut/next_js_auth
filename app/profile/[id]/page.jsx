@@ -2,9 +2,10 @@
 
 import { useParams } from "next/navigation"
 import UserProfile from "@/components/UserProfile"
-import LogoutBtn from "@/components/LogoutBtn"
 import { useSession } from "next-auth/react"
 import Navbar from "@/components/Navbar"
+import FavoriteRecipes from "@/components/FavoriteRecipes"
+import Footer from "@/components/Footer"
 
 export default function ProfilePage() {
     const { id } = useParams()
@@ -15,13 +16,26 @@ export default function ProfilePage() {
         return <p>Loading...</p>
     }
 
-    const isOwner = session?.user?.id === id;
-
     return (
         <div className="bg-customYellow min-h-screen">
-            <Navbar />
-            <UserProfile userId={id} />
-            {isOwner && <LogoutBtn />}
+            <div className="sticky top-0 bg-customYellow z-50 mb-20">
+                <Navbar />
+            </div>
+            
+            <div className="mx-44 mb-20">
+                <div className="mb-28">
+                    <UserProfile userId={id} />
+                </div>
+                
+                <div>
+                    <h1 className="font-serif text-[40px] text-customDarkGreen">Favorite Recipes</h1>
+                    <FavoriteRecipes userId={id}/>
+                </div>
+            </div>
+
+            <Footer />
+            
+            
         </div>
     )
 }
