@@ -1,5 +1,6 @@
 "use client"
 import { useRecipes } from "@/app/hook/useRecipes"
+import Navbar from "@/components/Navbar"
 import RecipeCard from "@/components/RecipeCard"
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
@@ -110,6 +111,12 @@ export default function RecipeDetail({params}){
     }
 
     return(
+      <div>
+        <div className="sticky top-0 bg-customYellow z-50 mb-20">
+          <Navbar />
+        </div>
+        
+      
         <div className="font-sans mx-[100px]">
            <h1 className="font-serif text-[60px]">{title}</h1>
            <h1 className="font-normal font-sans text-[18px] mb-4">Created by: {author}</h1>
@@ -344,5 +351,6 @@ export default function RecipeDetail({params}){
       </form>
            
         </div>
+      </div>
     )
 }
