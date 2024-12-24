@@ -6,16 +6,12 @@ import Navbar from "@/components/Navbar";
 export default function Contact(){
     return(
         <div className="bg-customYellow min-h-screen">
-            <div className="sticky top-0 bg-customYellow z-50 px-[60px]">
-                <Navbar></Navbar>
+          
+            <div className="sticky top-0 bg-customYellow z-50">
+                    <Navbar />
             </div>
-
-            <div className="p-8 w-full px-[60px]">
-
-               <ContactUs/>
-                
-            </div>
-
+    
+            <ContactUs/>
             <Footer/>
       </div>
     )

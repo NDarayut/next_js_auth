@@ -4,7 +4,7 @@ export default function RandomCard() {
   return (
     <Card className="w-[600px] rounded-[10px]  bg-customYellow">
       <CardHeader className="p-0">
-        <Image  
+        <img  
                 className="rounded-none"
                 src="/chinese.jpg"
             />

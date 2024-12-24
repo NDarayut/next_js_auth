@@ -308,13 +308,13 @@ export default function RecipeDetail({params}){
         ))}
       </div>
 
-      {/* Average Rating */}
-      <h2>
-        Average Rating:{" "}
-        {reviews.length > 0
-          ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
-          : "No ratings yet"}
-      </h2>
+          {/* Average Rating */}
+          <h2>
+            Average Rating:{" "}
+            {reviews.length > 0
+              ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+              : "No ratings yet"}
+          </h2>
 
       {/* Add Review Form */}
       <form onSubmit={handleSubmit}>
@@ -342,7 +342,7 @@ export default function RecipeDetail({params}){
         </div>
         <button type="submit">Submit Review</button>
       </form>
-      
+           
         </div>
     )
 }
