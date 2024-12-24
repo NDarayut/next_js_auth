@@ -14,7 +14,7 @@ export default function Footer(){
                   <h1 className="mb-1 text-customDarkBrown font-bold text-[24px]">Resources</h1>
                   <a href="/" className="hover:text-green-500 font-bold text-[16px]">Home</a>
                   <a href="#" className="hover:text-green-500 font-bold text-[16px]">Categories</a>
-                  <a href="#" className="hover:text-green-500 font-bold text-[16px]">About us</a>
+                  <a href="/about" className="hover:text-green-500 font-bold text-[16px]">About us</a>
                 </div>
                 
                 <div className="flex flex-col gap-2 mt-4 md:mt-0">

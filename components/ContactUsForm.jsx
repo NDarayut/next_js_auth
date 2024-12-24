@@ -1,19 +1,25 @@
 export default function ContactUs() {
     return (
       <div className="relative h-screen flex items-center justify-end bg-customYellow">
-        {/* Background Image */}
-        <div className="absolute inset-0 w-2/3 h-full">
-          <img
-            src="/contact_img.jpg"
-            alt="Contact Us"
-            className="w-full h-full object-cover"
-          />
+        
+
+        {/* Hero Section with Parallax */}
+        <div className="relative h-screen w-2/3 bg-fixed bg-center bg-cover" style={{ backgroundImage: "url('/contact_img.jpg')" }}>
+                {/* Overlay */}
+                <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-center">
+                    <h1 className="text-white text-5xl md:text-7xl font-bold px-4">
+                      Get in Touch with Us!
+                    </h1>
+                    <p className="text-white text-lg md:text-2xl mt-4 px-8">
+                        Whether you have a question, need help, or just want to say hello, we’re here for you.
+                    </p>
+                </div>
         </div>
   
         {/* Contact Form */}
         <div className="relative w-[500px] bg-customYellow p-8 z-10 mr-16">
-          <h1 className="text-4xl font-bold text-center text-customDarkGreen mb-6 font-jura">
-            Get In Touch
+          <h1 className="text-4xl font-bold text-center text-customDarkGreen mb-6">
+            Contact now
           </h1>
           <form className="flex justify-center flex-col">
             {/* Name Field */}
