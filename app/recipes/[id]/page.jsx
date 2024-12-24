@@ -113,16 +113,18 @@ export default function RecipeDetail({params}){
         <div className="font-sans mx-[100px]">
            <h1 className="font-serif text-[60px]">{title}</h1>
            <h1 className="font-normal font-sans text-[18px] mb-4">Created by: {author}</h1>
-           <section className="flex items-start gap-6 mb-4">
+           <div className="border-b-1 border-customDarkGreen"></div>
+           <section className="flex flex-col items-center justify-center gap-6 mt-[50px] mb-4">
+              <p 
+                    className="text-[18px] align-left" 
+                    dangerouslySetInnerHTML={{ __html: description }} 
+                  />
               <img
                 src={recipeImage}
-                className="rounded-small w-[600px] h-auto object-cover" 
+                className="rounded-small w-[900px] h-auto mb-4" 
                 alt="Recipe"
               />
-              <p 
-                className="ml-3 text-[20px] text-justify" 
-                dangerouslySetInnerHTML={{ __html: description }} 
-              />
+              
           </section>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -132,7 +134,7 @@ export default function RecipeDetail({params}){
               <h1 className="font-[700] font-serif text-[25px] my-2">Ingredients</h1>
               <ul className="pl-5 space-y-3">
                 {ingredients.map((ingredient, index) => (
-                  <li key={index} className="flex items-center">
+                  <li key={index} className="flex items-center text-[18px]">
                     <span 
                       className="mr-3 w-5 h-5 flex items-center justify-center border-2 border-gray-500 rounded-full"
                     ></span>
@@ -149,23 +151,32 @@ export default function RecipeDetail({params}){
               <div className="mt-8">
                 <h1 className="font-[700] font-serif text-[25px]">Instructions</h1>
                 {instruction.map((instruction, index) => (
-                  <div key={index}>
+                  <div key={index} className="mt-4">
                     <ol>
                       {instruction.steps.map((step) => (
-                        <li key={step.number}>
-                          <span className="font-bold">Step {step.number}:</span>{" "}
-                          <span dangerouslySetInnerHTML={{ __html: step.step }} />
+                        <li key={step.number} className="flex items-start gap-4 mb-4">
+                          {/* Step Number */}
+                          <div className="flex-shrink-0">
+                            <div className="w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full font-bold">
+                              {step.number}
+                            </div>
+                          </div>
+                          {/* Step Text */}
+                          <div className="flex-grow">
+                            <p className=" text-gray-800 leading-relaxed text-[18px]">{step.step}</p>
+                          </div>
                         </li>
                       ))}
                     </ol>
                   </div>
                 ))}
               </div>
-            </div>
+
+          </div>
 
             {/* Right Column: Similar Recipes */}
             <div>
-              <h2 className="font-[700] font-serif text-[25px] mb-2">Similar Recipes</h2>
+              <h2 className="font-[700] font-serif text-[25px] mb-4">Similar Recipes</h2>
               {loading && <p>Loading...</p>}
               {error && <p className="text-red-500">{error}</p>}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-8">
@@ -229,7 +240,7 @@ export default function RecipeDetail({params}){
             </div> */}
 
             <div>
-                <h2 className="font-[700] font-serif text-[25px] my-2">Recipe Tags</h2>
+                <h2 className="font-[700] font-serif text-[25px] mt-6 mb-2">Recipe Tags</h2>
                 <div className="flex flex-wrap gap-2">
                     {tags.dishTypes.map((tag, index) => (
                     <span
@@ -331,7 +342,7 @@ export default function RecipeDetail({params}){
         </div>
         <button type="submit">Submit Review</button>
       </form>
-           
+      
         </div>
     )
 }
