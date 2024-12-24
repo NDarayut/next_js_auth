@@ -9,7 +9,7 @@ const favoriteSchema = new Schema(
       required: true,
     },
     recipeId: {
-      type: String, // ID of the recipe, assuming the recipe data comes from an external API
+      type: String, // ID of the recipe
       required: true,
     },
   },

@@ -4,8 +4,9 @@ import {Card, CardHeader, CardBody, Image, Button} from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import {useState} from "react"
+import { getSession } from "next-auth/react";
 
-export default function RecipeCard({recipeId, src, title, isFavorited, sourceName, rating, readyInMinutes}) {
+export default function RecipeCard({recipeId, src, title, isFavorited, sourceName, rating, readyInMinutes, onRemove}) {
 
   const [favorited, setFavorited] = useState(isFavorited  || false)
   const {data: session, status} = useSession()
@@ -15,40 +16,43 @@ export default function RecipeCard({recipeId, src, title, isFavorited, sourceNam
     return <div>Loading...</div>; // Or return a loading spinner
   }
 
-  const handleFavorite = async () =>{
-
-    if(!session || !session.user){
-      setError("Please log in to favorite recipe")
-      return
-    }
-    console.log("Session on client: ", session)
-    console.log("Recipe ID: ", {recipeId})
-
+  const handleFavorite = async () => {
     try {
-      const response = await fetch("/api/favorite/add", {
-        method: "POST",
+      const session = await getSession();
+  
+      if (!session || !session.user.role) {
+        setError("Please log in to favorite recipes");
+        return;
+      }
+  
+      const endpoint = favorited ? "/api/favorite/remove" : "/api/favorite/add";
+      const method = favorited ? "DELETE" : "POST";
+  
+      const response = await fetch(endpoint, {
+        method: method,
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ recipeId }), // Send the recipe ID
+        body: JSON.stringify({ recipeId }),
       });
-
+  
       const data = await response.json();
-
-      console.log("Data: ", data)
+  
       if (response.ok) {
-        setFavorited(true); // Mark as favorited
-      } 
-      else {
-       
-        setError(data.message); // Handle error (e.g., already favorited)
+        setFavorited(!favorited);
+        if (favorited && onRemove) {
+          // Call onRemove only if the recipe is being unfavorited
+          onRemove(recipeId);
+        }
+      } else {
+        setError(data.message || "Failed to update favorite status");
       }
-    } 
-    catch (err) {
-      setError("Failed to favorite the recipe.");
+    } catch (err) {
+      console.error("Error:", err);
+      setError("An error occurred while updating favorites.");
     }
-
-  }
+  };
+  
 
   const renderStars = () => {
     const stars = Array.from({ length: 5 }, (_, i) => (i < Math.round(rating/20) ? "★" : "☆"));
@@ -67,8 +71,8 @@ export default function RecipeCard({recipeId, src, title, isFavorited, sourceNam
     
       <Card className="w-[300px] h-[450px] rounded-[5px]  bg-customYellow transform hover:scale-105 transition-transform duration-300 ease-in-out">
         <CardHeader className="p-0 relative" >
-          <Image  
-                className="rounded-[5px]"
+          <img  
+                className="rounded-[5px] h-[200px]"
                 src={src}
                 alt={title}
           />
@@ -98,7 +102,7 @@ export default function RecipeCard({recipeId, src, title, isFavorited, sourceNam
             </div>
             <a href={`/recipes/${recipeId}`} className="font-sans font-medium text-[14px] text-blue-800 underline absolute bottom-0 right-3">See detail</a>
            <div className='flex items-center absolute bottom-0 left-3'>
-              <Image src="/timer.png" className="w-[15px] h-[15px] mr-1" />    
+              <img src="/timer.png" className="w-[15px] h-[15px] mr-1" />    
               <h1 className='font-sans text-customDarkGreen text-[14px] font-normal'>{readyInMinutes} mins</h1>
            </div>
             

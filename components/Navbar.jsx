@@ -30,7 +30,7 @@ export default function Navbar() {
 
   return (
     <nav>
-      <div className="flex items-center border-b-[4px] border-customGreen px-8 h-20 mb-20"> {/* Ensures consistent height */}
+      <div className="flex items-center border-b-[4px] border-customGreen px-8 h-20"> {/* Ensures consistent height */}
         {/* Logo Section */}
         <div className="text-black font-jura text-[60px]">
           <Link href="/">Bites</Link>

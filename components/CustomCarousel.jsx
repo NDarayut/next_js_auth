@@ -4,8 +4,9 @@ import React, { useCallback } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
 import {Image} from "@nextui-org/react";
 
-export default function CustomCarousel() {
 
+export default function CustomCarousel() {
+  
   const [emblaRef, emblaApi] = useEmblaCarousel()
 
   const scrollPrev = useCallback(() => {
@@ -17,6 +18,7 @@ export default function CustomCarousel() {
   }, [emblaApi])
 
   return (
+    
     <div className='embla flex flex-row'>
 
       <div className='flex'>
@@ -28,10 +30,10 @@ export default function CustomCarousel() {
       <div className="embla__viewport h-[400px]" ref={emblaRef}>
 
           <div className="embla__container h-full">
-
+            
             <div className="embla__slide flex">
               {/*Cuisine image*/}
-              <div className=''><Image src="/japanese.jpg" className='w-[1000px]  h-[400px] object-cover rounded-none'/></div>
+              <div className=''><img src="/japanese.jpg" className='w-[1000px] h-[400px] object-cover rounded-none'/></div>
 
               <div className='flex flex-col px-9 w-[1500px]'>
                 <h1 className='text-[50px] font-bold text-customDarkGreen font-serif'>Japanese cuisine</h1>
@@ -40,12 +42,12 @@ export default function CustomCarousel() {
                  {/*Timer and task image*/}
                 <div className='flex flex-row items-center mt-3'>
                   <div className='flex mr-16 items-center'>
-                    <Image src="/timer.png" className="w-[20px] h-[20px] mr-3" />    
+                    <img src="/timer.png" className="w-[20px] h-[20px] mr-3" />    
                     <h1 className='font-sans text-customDarkGreen text-[16px] font-semibold'>10 min</h1>
                   </div>
 
                   <div className='flex items-center'>
-                    <Image src="/task.png" className="w-[20px] h-auto mr-3 rounded-none" />    
+                    <img src="/task.png" className="w-[20px] h-auto mr-3 rounded-none"/>    
                     <h1 className='font-sans text-customDarkGreen text-[16px] font-semibold'>Easy</h1>
                   </div>
                 </div>
@@ -66,7 +68,7 @@ export default function CustomCarousel() {
 
             <div className="embla__slide flex">
               {/*Cuisine image*/}
-              <div className=''><Image src="/italian.jpg" className='w-[1000px]  h-[400px] object-cover rounded-none'/></div>
+              <div className=''><img src="/italian.jpg" className='w-[1000px] h-[400px] object-cover rounded-none'/></div>
 
               <div className='flex flex-col px-9 w-[1500px]'>
                 <h1 className='text-[50px] font-bold text-customDarkGreen font-serif'>Italian cuisine</h1>
@@ -75,12 +77,12 @@ export default function CustomCarousel() {
                  {/*Timer and task image*/}
                 <div className='flex flex-row items-center mt-3'>
                   <div className='flex mr-16 items-center'>
-                    <Image src="/timer.png" className="w-[20px] h-[20px] mr-3" />    
+                    <img src="/timer.png" className="w-[20px] h-[20px] mr-3" />    
                     <h1 className='font-sans text-customDarkGreen text-[16px] font-semibold'>20 min</h1>
                   </div>
 
                   <div className='flex items-center'>
-                    <Image src="/task.png" className="w-[20px] h-auto mr-3 rounded-none" />    
+                    <img src="/task.png" className="w-[20px] h-auto mr-3 rounded-none" />    
                     <h1 className='font-sans text-customDarkGreen text-[16px] font-semibold'>Easy</h1>
                   </div>
                 </div>
@@ -102,7 +104,7 @@ export default function CustomCarousel() {
 
             <div className="embla__slide flex">
               {/*Cuisine image*/}
-              <div className=''><Image src="/chinese.jpg" className='w-[1000px]  h-[400px] object-cover rounded-none'/></div>
+              <div className=''><img src="/chinese.jpg" className='w-[1000px]  h-[400px] object-cover rounded-none'/></div>
 
               <div className='flex flex-col px-9 w-[1500px]'>
                 <h1 className='text-[50px] font-bold text-customDarkGreen font-serif'>Chinese cuisine</h1>
@@ -111,12 +113,12 @@ export default function CustomCarousel() {
                  {/*Timer and task image*/}
                 <div className='flex flex-row items-center mt-3'>
                   <div className='flex mr-16 items-center'>
-                    <Image src="/timer.png" className="w-[20px] h-[20px] mr-3" />    
+                    <img src="/timer.png" className="w-[20px] h-[20px] mr-3" />    
                     <h1 className='font-sans text-customDarkGreen text-[16px] font-semibold'>15 min</h1>
                   </div>
 
                   <div className='flex items-center'>
-                    <Image src="/task.png" className="w-[20px] h-auto mr-3 rounded-none" />    
+                    <img src="/task.png" className="w-[20px] h-auto mr-3 rounded-none" />    
                     <h1 className='font-sans text-customDarkGreen text-[16px] font-semibold'>Easy</h1>
                   </div>
                 </div>

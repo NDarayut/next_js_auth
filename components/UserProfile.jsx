@@ -2,6 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useEffect, useState, useRef } from "react";
+import LogoutBtn from "./LogoutBtn";
 
 export default function UserProfile({ userId }) {
     const { data: session, status } = useSession();
@@ -16,8 +17,11 @@ export default function UserProfile({ userId }) {
         profilePicture: "",
     });
     
-
     const fileInputRef = useRef(null);
+
+    if(status === "loading"){
+        return <p>Loading...</p>
+    }
 
     // Fetch user data
     useEffect(() => {
@@ -119,10 +123,11 @@ export default function UserProfile({ userId }) {
     return (
         <div className="mx-[100px]">
             <div className="flex flex-row gap-80 justify-center">
+
                 {/*Profile picture container */}
                 <div>
                     {isOwner ? (
-                        <>
+                    <>
                         <div
                             className="relative group w-72 h-72 mt-4 cursor-pointer"
                             onClick={() => fileInputRef.current?.click()} // Trigger file input on click
@@ -152,7 +157,7 @@ export default function UserProfile({ userId }) {
                             onChange={handleFileChange}
                             className="hidden"
                         />
-                        </>
+                    </>
                         ) : user.profilePicture ? (
                             <img
                             src={user.profilePicture}
@@ -162,6 +167,8 @@ export default function UserProfile({ userId }) {
                         ) : (
                             <p>No profile picture available</p>
                     )}
+
+                     {isOwner && <LogoutBtn />}
                 </div>
 
                 {/*Name and email container*/}
@@ -216,22 +223,20 @@ export default function UserProfile({ userId }) {
                             <div className="mt-4">
                                 <button
                                     onClick={handleSaveChanges}
-                                    className="p-2 bg-customGreen text-white rounded-[10px] w-48"
+                                    className="p-2 bg-customGreen text-white rounded-[10px] w-48 hover:bg-[#4E8A5A] active:bg-[#335C3D]"
                                 >
                                     Save
                                 </button>
                                 <button
                                     onClick={handleCancelChanges}
-                                    className="ml-2 p-2  text-customDarkGreen rounded-[10px] border-customDarkGreen border-1 w-48"
+                                    className="ml-2 p-2  text-customDarkGreen rounded-[10px] border-customDarkGreen border-1 w-48 hover:text-white hover:bg-customGreen"
                                 >
                                     Cancel
                                 </button>
                             </div>
                         )}
                     </div>
-                </div>
-                
-                
+                </div> 
             </div>
 
             
