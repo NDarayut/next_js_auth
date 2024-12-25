@@ -168,7 +168,16 @@ export default function UserProfile({ userId }) {
                             <p>No profile picture available</p>
                     )}
 
-                     {isOwner && <LogoutBtn />}
+                    <div className="flex flex-row mt-10 gap-2">
+                        <div>
+                            {isOwner && <LogoutBtn />}
+                        </div>
+                        <div>
+                            <button className="bg-customGreen text-white font-semibold px-6 py-2 mt-3 rounded-[10px] hover:bg-[#4E8A5A]">Delete account</button>
+                        </div>
+                    </div>
+                    
+                     
                 </div>
 
                 {/*Name and email container*/}

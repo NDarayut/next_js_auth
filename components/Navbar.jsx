@@ -3,12 +3,17 @@ import Link from 'next/link';
 import SearchBar from './SearchBar';
 import LoginBtn from './LoginBtn';
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 export default function Navbar() {
   const { data: session, status } = useSession();
   const [profilePicture, setProfilePicture] = useState("");
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollPos, setLastScrollPos] = useState(0);
+  const pathname = usePathname();
 
   useEffect(() => {
+    // Fetch user profile picture
     if (session?.user?.id) {
       const fetchUser = async () => {
         try {
@@ -28,33 +33,60 @@ export default function Navbar() {
     }
   }, [session]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollPos = window.scrollY;
+
+      // Hide Navbar when scrolling down, show when scrolling up
+      if (currentScrollPos > lastScrollPos && currentScrollPos > 50) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+
+      setLastScrollPos(currentScrollPos);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [lastScrollPos]);
+
   return (
-    <nav>
-      <div className="flex items-center border-b-[4px] border-customGreen px-8 h-20"> {/* Ensures consistent height */}
+    <nav
+      className={`fixed top-0 w-full z-50 transition-transform duration-500 ${
+        isVisible ? "translate-y-0" : "-translate-y-full"
+      }`}
+    >
+      <div className="flex items-center px-28 h-20 bg-customYellow font-sans drop-shadow-lg">
         {/* Logo Section */}
-        <div className="text-black font-jura text-[60px]">
-          <Link href="/">Bites</Link>
+        <div className="text-5xl mr-20 font-itim text-customGreen">
+          <Link href="#">Bites</Link>
         </div>
 
         {/* Links Section */}
-        <div className="space-x-[45px] text-[25px] mx-14">
-          <Link href="/" className="text-black font-itim hover:text-green-400 font-medium">
-            Home
+        <div className="space-x-[45px] text-[14px] mx-14 text-customDarkGreen font-medium">
+          <Link href="/" className="hover:text-[#4E8A5A]">
+            HOME
           </Link>
-          <Link href="/about" className="text-black font-itim hover:text-green-400 font-medium">
-            About us
+          <Link href="/about" className="hover:text-[#4E8A5A]">
+            ABOUT US
           </Link>
-          <Link href="/categories" className="text-black font-itim hover:text-green-400 font-medium">
-            Categories
+          <Link href="/categories" className="hover:text-[#4E8A5A]">
+            CATEGORIES
           </Link>
-          <Link href="/contact" className="text-black font-itim hover:text-green-400 font-medium">
-            Contact us
+          <Link href="/contact" className="hover:text-[#4E8A5A]">
+            CONTACT US
           </Link>
         </div>
 
-        <div className="ml-auto mr-4">
-          <SearchBar />
-        </div>
+        {/* Conditionally Render SearchBar */}
+        {pathname !== "/" && (
+          <div className="ml-auto mr-4">
+            <SearchBar />
+          </div>
+        )}
 
         {status === "unauthenticated" ? (
           <div className="flex justify-end">
@@ -64,10 +96,10 @@ export default function Navbar() {
 
         {/* Avatar Section */}
         {status === "authenticated" && session?.user && (
-          <div className="flex items-center ml-auto mr-4"> {/* Flex alignment for vertical centering */}
+          <div className="flex items-center ml-auto mr-4">
             <Link href={`/profile/${session.user.id}`}>
               <img
-                src={profilePicture || "/default-avatar.png"} // Fallback to a default avatar if profilePicture is unavailable
+                src={profilePicture || "/default-avatar.png"}
                 alt="User Avatar"
                 className="w-12 h-12 rounded-full cursor-pointer border border-customDarkGreen"
               />
