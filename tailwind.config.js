@@ -18,6 +18,7 @@ module.exports = {
         customOrange: '#FF642F',
         customDarkBrown: '#63483F',
         customLightGreen: "#9FB59D",
+        customWhite: "#FFFCF3",
       },
 
       fontFamily: {
@@ -26,9 +27,6 @@ module.exports = {
         itim: ['Itim'],
       },
 
-      boxShadow: {
-        customRight: '5px 0px 10px rgba(0, 0, 0, 0.25)', 
-      },
     },
   },
   plugins: [nextui()],

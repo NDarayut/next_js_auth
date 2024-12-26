@@ -18,9 +18,12 @@
 
 
 
-body{
+/* globals.css */
+
+html, body, #__next {
   height: 100%;
-  background-color: #F8F5EC;
+  width: 100%;
+  background-color: #F8F5EC !important; /* Match the body background color */
 }
 
 .loginButton {

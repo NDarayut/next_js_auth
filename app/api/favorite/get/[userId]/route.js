@@ -19,15 +19,8 @@ export async function GET(req, { params }) {
         // Fetch the user's favorite recipe IDs from the database
         const favorites = await Favorite.find({ user: userId });
 
-        if (!favorites || favorites.length === 0) {
-            return new Response(
-                JSON.stringify({ message: "No favorite recipes found" }),
-                { status: 404 }
-            );
-        }
-
-        // Extract recipeIds
-        const recipeIds = favorites.map((favorite) => favorite.recipeId);
+        // Return an empty array if no favorites found, else return the recipe IDs
+        const recipeIds = favorites.length > 0 ? favorites.map((favorite) => favorite.recipeId) : [];
 
         // Return recipe IDs to the frontend
         return new Response(JSON.stringify(recipeIds), {

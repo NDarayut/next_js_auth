@@ -6,7 +6,7 @@ import Recipe from "../models/recipe.js";
 
 
 const SPOONACULAR_API_KEY = process.env.SPOONACULAR_API_KEY; // Ensure your .env is set up
-const BATCH_SIZE = 49; // Adjust batch size as needed
+const BATCH_SIZE = 100; // Adjust batch size as needed
 // Fetch recipes from Spoonacular API
 const fetchRecipes = async () => {
     try {
@@ -48,13 +48,13 @@ const saveRecipesToDatabase = async (recipes) => {
                         ? recipe.nutrition.nutrients.map((n) => ({
                               name: n.name,
                               amount: n.amount.toString(), // Convert to string
-                              unit: n.unit || "N/A", // Provide fallback value for unit
+                              unit: n.unit || " ", // Provide fallback value for unit
                           }))
                         : [], // Provide an empty array if no nutrients
                 },
                 extendedIngredients: recipe.extendedIngredients?.map((ingredient) => ({
                     amount: ingredient.amount,
-                    unit: ingredient.unit || "N/A",
+                    unit: ingredient.unit || " ",
                     name: ingredient.name,
                 })) || [],
                 analyzedInstructions: recipe.analyzedInstructions?.map((instruction) => ({

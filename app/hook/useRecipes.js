@@ -43,7 +43,15 @@ export const useRecipes = () => {
             // Using the API we've just created in recipes folder
             const response = await fetch(`/api/recipes/${id}`);
             const data = await response.json();
-            setRecipeDetail(data);
+
+            // Extracting important nutrients
+            const importantNutrients = data.nutrition?.nutrients?.filter(nutrient =>
+                ["Calories", "Fat", "Saturated Fat", "Cholesterol", "Sodium",  "Potassium", "Carbohydrates", "Sugar", "Protein",  ].includes(nutrient.name)
+            );
+            setRecipeDetail({
+                ...data,
+                nutrition: importantNutrients,
+              });
         } 
 
         catch (err) {

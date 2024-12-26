@@ -30,6 +30,8 @@ export const authOptions = {
                         id: user._id.toString(),  // Store MongoDB _id as the id
                         email: user.email,
                         role: user.role,
+                        firstName: user.firstName,  // Add firstName and lastName
+                        lastName: user.lastName,
                     };
                 } catch (error) {
                     console.log("Authorization error:", error);
@@ -88,7 +90,8 @@ export const authOptions = {
                     await newUser.save();
                     // Set the user's _id in the JWT
                     user.id = newUser._id.toString();
-                } else {
+                } 
+                else {
                     // If user exists, ensure profile picture is updated
                     if (user.image && !existingUser.profilePicture) {
                         existingUser.profilePicture = user.image;
@@ -97,7 +100,12 @@ export const authOptions = {
 
                     // Set the user's _id in the JWT
                     user.id = existingUser._id.toString();
+                    user.firstName = existingUser.firstName;
+                    user.lastName = existingUser.lastName;
                 }
+
+                // Combine firstName and lastName to create username
+                user.username = `${user.firstName} ${user.lastName}`;
 
                 return true; // Allow sign-in
             } catch (error) {
@@ -111,6 +119,7 @@ export const authOptions = {
                 token.id = user.id;  // Set the MongoDB _id from the user object
                 token.email = user.email;
                 token.role = user.role || "user";
+                token.username = user.username;  // Store the username in the JWT token
             }
             console.log("JWT Callback User:", user);
 
@@ -123,6 +132,7 @@ export const authOptions = {
                 session.user.id = token.id;  // Use the MongoDB _id stored in the token
                 session.user.email = token.email;
                 session.user.role = token.role;
+                session.user.username = token.username;  // Set the username in the session
             }
             console.log("Session in next auth: ", session);
             return session;
