@@ -1,11 +1,9 @@
-import axios from "axios";
 import Recipe from "@/models/recipe";
 import { connectMongoDB } from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 
 export async function GET(req, { params }) {
   const { id } = params; // MongoDB or Spoonacular ID
-  const apiKey = process.env.SPOONACULAR_API_KEY;
 
   try {
     // Step 1: Connect to MongoDB
@@ -18,13 +16,6 @@ export async function GET(req, { params }) {
       // If it's a MongoDB ID, fetch the recipe from the database
       recipeDetail = await Recipe.findById(id).exec();
     } 
-    else {
-      // If it's a Spoonacular ID, fetch the recipe details from the Spoonacular API
-      const detailResponse = await axios.get(
-        `https://api.spoonacular.com/recipes/${id}/similar?apiKey=${apiKey}`
-      )
-      return new Response(JSON.stringify(detailResponse.data), { status: 200 });
-    }
 
     // Extract relevant fields for matching
     const { dishTypes = [], diets = [], occasions = [] } = recipeDetail;
@@ -66,7 +57,8 @@ export async function GET(req, { params }) {
 
     // Step 3: Return the results
     return new Response(JSON.stringify(dbRecipes), { status: 200 });
-  } catch (error) {
+  } 
+  catch (error) {
     console.error("Fetch similar recipe error:", error);
     return new Response(JSON.stringify({ error: "Failed to fetch recipes" }), { status: 500 });
   }

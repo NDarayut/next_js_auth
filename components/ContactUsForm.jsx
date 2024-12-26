@@ -4,7 +4,7 @@ export default function ContactUs() {
         
 
         {/* Hero Section with Parallax */}
-        <div className="relative h-screen w-2/3 bg-fixed bg-center bg-cover" style={{ backgroundImage: "url('/contact_img.jpg')" }}>
+        <div className="relative h-screen w-2/3 bg-center bg-cover" style={{ backgroundImage: "url('/contact_img.jpg')" }}>
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-center">
                     <h1 className="text-white text-5xl md:text-7xl font-bold px-4">

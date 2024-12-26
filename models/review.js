@@ -11,6 +11,10 @@ const reviewSchema = new Schema({
     type: String, // Reference to the user
     required: true,
   },
+  username: {
+    type: String, // Reference to the user
+    required: true,
+  },
   rating: {
     type: Number, // Rating (e.g., 1-5 stars)
     min: 1,

@@ -32,10 +32,10 @@ const CustomRoundCarousel = () => {
     <div className="bg-customYellow py-8 relative">
       {/* Left button */}
       <button
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 px-0 py-2"
+        className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 px-0 py-2"
         onClick={scrollLeft}
       >
-        <img src="/left.png" className='w-6 h-auto'/>
+        <img src="/left.png" className='w-4 h-auto'/>
       </button>
 
       {/* Carousel container */}
@@ -63,10 +63,10 @@ const CustomRoundCarousel = () => {
 
       {/* Right button */}
       <button
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 px-0 py-2"
+        className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 px-0 py-2"
         onClick={scrollRight}
       >
-        <img src="/right.png" className='w-6 h-auto'/>
+        <img src="/right.png" className='w-4 h-auto'/>
       </button>
     </div>
   );
