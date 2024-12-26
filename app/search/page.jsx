@@ -69,8 +69,11 @@ export default function SearchResults() {
   };
 
   return (
-    <div className="p-4">
-      <Navbar />
+    <div className="bg-customYellow min-h-screen">
+      <div className="mb-20">
+        <Navbar />
+      </div>
+      
       <h1 className="text-xl font-bold mb-4">Search Results for &quot;{query}&quot;</h1>
 
       {/* Filter Controls */}

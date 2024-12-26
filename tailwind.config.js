@@ -17,6 +17,7 @@ module.exports = {
         customBrown: '#EBDBD1',
         customOrange: '#FF642F',
         customDarkBrown: '#63483F',
+        customLightGreen: "#9FB59D",
       },
 
       fontFamily: {
