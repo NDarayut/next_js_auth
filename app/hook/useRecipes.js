@@ -46,7 +46,7 @@ export const useRecipes = () => {
 
             // Extracting important nutrients
             const importantNutrients = data.nutrition?.nutrients?.filter(nutrient =>
-                ["Calories", "Fat", "Saturated Fat", "Cholesterol", "Sodium",  "Potassium", "Carbohydrates", "Sugar", "Protein",  ].includes(nutrient.name)
+                ["Calories", "Fat", "Saturated Fat", "Cholesterol", "Sodium",  "Potassium", "Carbohydrates", "Sugar", "Protein",].includes(nutrient.name)
             );
             setRecipeDetail({
                 ...data,

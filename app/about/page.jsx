@@ -63,20 +63,25 @@ export default function About() {
       </div>
 
       {/* Hero Section with Parallax */}
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -50 }}
-        transition={{ duration: 0.6 }}
-        className="relative h-screen bg-center bg-cover"
-        style={{ backgroundImage: "url('/about_img.jpg')" }}
-      >
-        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <h1 className="text-white text-5xl md:text-7xl font-bold text-center px-4">
-            Discover the Joy of Cooking! <br /> Recipes Tailored Just for You.
-          </h1>
+        <div  
+          className="relative h-screen bg-fixed bg-center bg-cover"
+          style={{ backgroundImage: "url('/about_img.jpg')" }}
+        >
+
+        
+          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <motion.h1
+              initial={{ opacity: 0, y: 50 }}  // Start hidden and offset from the bottom
+              animate={{ opacity: 1, y: 0 }}    // Animate to visible and no offset
+              transition={{ duration: 0.8 }}    // Duration of animation
+            >
+              <h1 className="text-white text-5xl md:text-7xl font-bold text-center px-4">
+                Discover the Joy of Cooking! <br /> Recipes Tailored Just for You.
+              </h1>
+            </motion.h1>
+          </div>
         </div>
-      </motion.div>
+
 
       {/* Mission Section */}
       <motion.div
@@ -150,25 +155,30 @@ export default function About() {
       </motion.div>
 
       {/* Our Story Section with Parallax */}
-      <motion.div
-        ref={storyRef} // Unique ref for Our Story Section
-        initial={{ opacity: 0, y: 50 }}
-        animate={getAnimation(storyInView)}
-        exit={{ opacity: 0, y: -50 }}
-        transition={{ duration: 0.6 }}
-        className="relative h-screen bg-center bg-cover flex items-center justify-center"
+      <div
+        className="relative h-screen bg-fixed bg-center bg-cover flex items-center justify-center"
         style={{ backgroundImage: "url('/our_story.png')" }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-50"></div>
-        <div className="relative max-w-4xl text-center text-white px-8">
-          <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6">Our Story</h2>
-          <p className="text-lg md:text-xl leading-relaxed">
-            It all started with a simple idea: to make cooking accessible, fun, and personalized for everyone. 
-            From humble beginnings as a home-based project, we’ve grown into a community-driven platform that 
-            celebrates the joy of food and the art of cooking.
-          </p>
-        </div>
-      </motion.div>
+        <motion.div
+          ref={storyRef} // Unique ref for Our Story Section
+          initial={{ opacity: 0, y: 50 }}
+          animate={getAnimation(storyInView)}
+          exit={{ opacity: 0, y: -50 }}
+          transition={{ duration: 0.6 }}
+          
+        >
+          
+          <div className="relative max-w-4xl text-center text-white px-8">
+            <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6">Our Story</h2>
+            <p className="text-lg md:text-xl leading-relaxed">
+              It all started with a simple idea: to make cooking accessible, fun, and personalized for everyone. 
+              From humble beginnings as a home-based project, we’ve grown into a community-driven platform that 
+              celebrates the joy of food and the art of cooking.
+            </p>
+          </div>
+        </motion.div>
+      </div>
 
       {/* Call to Action Section */}
       <div className="relative bg-customDarkGreen text-white px-8 py-20 text-center">

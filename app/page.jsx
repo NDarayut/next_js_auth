@@ -72,25 +72,28 @@ export default function Home() {
       <div className="sticky top-0 bg-customYellow z-50">
         <Navbar />
       </div>
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: heroInView ? 1 : 0, y: heroInView ? 0 : 50 }}
-        transition={{ duration: 0.6 }}
+      
+      <div
+        className="relative h-[500px] bg-fixed bg-center bg-cover mb-20"
+        style={{ backgroundImage: "url('/about_img.jpg')" }}
       >
-        {/* Hero Section with Parallax */}
-        <div
-          ref={heroRef}
-          className="relative h-[500px] bg-center bg-cover mb-20"
-          style={{ backgroundImage: "url('/about_img.jpg')" }}
-        >
-          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center flex-col gap-8">
-            <h1 className="text-white text-6xl font-bold text-center px-4 font-serif">
+        {/* Non-animated layout wrapper */}
+        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center flex-col gap-8">
+          {/* Motion content */}
+          <motion.div
+            ref={heroRef}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: heroInView ? 1 : 0, y: heroInView ? 0 : 50 }}
+            transition={{ duration: 0.6 }}
+            className="text-center"
+          >
+            <h1 className="text-white text-6xl font-bold px-4 font-serif">
               Delicious Recipes
             </h1>
             <SearchBarMain />
-          </div>
+          </motion.div>
         </div>
-      </motion.div>
+      </div>
 
       <div className="mx-[100px]">
         <main className="px-[60px]">

@@ -7,11 +7,13 @@ export async function POST(req){
         await connectMongoDB()
 
         const {title, sourceName, summary, image, readyInMinutes, dishTypes = [], cuisines = [],
-            occasions = [], diets = [], nutrition = {nutrients: []}, extendedIngredients = [], analyzedInstructions = [],
+            occasions = [], diets = [], nutrition = {nutrients: []}, extendedIngredients = [], analyzedInstructions = [], userId
         } = await req.json()
 
       const newRecipe = await Recipe.create({
         title,
+        userId,
+        score: 0,
         sourceName,
         summary,
         image,

@@ -2,14 +2,22 @@ import mongoose from "mongoose";
 const  {Schema, models} = mongoose;
 
 const recipeSchema = new Schema({
+    userId: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User', 
+        required: true 
+    },
+    
     title: {
         type: String,
         required: true
     },
+    
     score: {
         type: Number,
         required: false,
     },
+
     sourceName: {
         type: String,
         required: true

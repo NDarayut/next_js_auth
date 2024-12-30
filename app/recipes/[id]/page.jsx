@@ -3,12 +3,13 @@ import { useRecipes } from "@/app/hook/useRecipes"
 import Navbar from "@/components/Navbar"
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
-import RelatedCard from "../components/RelatedCard"
-import NutritionalFacts from "../components/NutritionalFacts"
+import NutritionalFacts from "./components/NutritionalFacts"
+import RelatedCard from "./components/RelatedCard"
 import { motion } from "framer-motion";
 
+
 export default function RecipeDetail({params}){
-    
+
     const {id}  = params
     const {data: session} = useSession()
     console.log(id) // debug to see if ID is defined
@@ -235,13 +236,7 @@ export default function RecipeDetail({params}){
                       src={recipe.image} // Image URL
                       title={recipe.title} // Recipe title
                       rating={recipe.score}
-                      nutrition={{
-                        calories: 250,
-                        fat: 10,
-                        sodium: 200,
-                        protein: 15,
-                        carbohydrates: 30,
-                      }}
+
                     />
                   ))
                 ) : (

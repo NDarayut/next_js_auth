@@ -6,7 +6,10 @@ export default function CreateRecipe() {
   
   return (
     <>
-  <Navbar />
+    <div className="mb-36">
+      <Navbar />
+    </div>
+  
   <div className="flex justify-center items-center px-4">
     <div className="p-8 rounded-lg max-w-full md:max-w-[1300px] w-full">
       {/* Form */}
@@ -27,6 +30,7 @@ export default function CreateRecipe() {
                  
           </div>
         </div>
+        
         {/* Upload Image */}
         <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-4">
           <label className="text-lg font-medium text-gray-700">
