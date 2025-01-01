@@ -4,13 +4,17 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import FormInputs from "./components/FormInput";
 import CheckboxGroup from "./components/CheckboxGroup";
-import IngredientRow from "./components/IngredientForm";
 import Instructions from "./components/InstructionForm";
 import NutritionForm from './components/NutritionForm';
 import Navbar from "@/components/Navbar";
+import IngredientForm from "./components/IngredientForm";
+import Footer from "@/components/Footer";
+import { useRouter } from 'next/navigation'; // For client-side redirects
 
 export default function TestRecipe() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [isSuccess, setIsSuccess] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     sourceName: "",
@@ -102,6 +106,7 @@ export default function TestRecipe() {
         base64Image = reader.result;
         const payload = {
           ...formData,
+          status: "approved",
           sourceName: session.user.username,
           image: base64Image,
           extendedIngredients: ingredients,
@@ -118,46 +123,61 @@ export default function TestRecipe() {
         };
 
         try {
-          const res = await fetch("/api/recipes/create", {
+          const response = await fetch("/api/recipes/create", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
           });
 
-          const data = await res.json();
-          setResponse(data);
-        } catch (error) {
+          if(!response.ok){
+            const { error } = await response.json();
+            setResponse(error || "Failed to create recipe");
+            return;
+          }
+
+          setIsSuccess(true);
+        } 
+        catch (error) {
           console.error(error);
           setResponse({ error: "Failed to create recipe" });
         }
       };
 
       reader.readAsDataURL(imageFile);
-    } else {
+    } 
+    
+    else {
       alert("Please upload an image.");
     }
   };
 
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
+
+  // Check if the user is not authenticated
+  if (status === "unauthenticated") {
+    router.push("/login"); // Redirect to home or login page if not authenticated or not admin
+    return null;
+  }
+    
   return (
     <div className="bg-customYellow min-h-screen">
 
-      {/*Nav bar */}
-      <div className="sticky top-0 bg-customYellow z-50 mb-28">
+      {/*Nav bar*/}
+      <div className="sticky top-0 bg-customYellow z-50 mb-36">
         <Navbar />
       </div>
 
-      {/*The rest of the components */}
-      <div className="font-sans mx-[100px]">
+      {/*The rest of the components*/}
+      <div className="font-sans mx-[100px] mb-28">
 
         <form onSubmit={handleSubmit} className="space-y-4">
 
-          {/*Title, Author, Image, Description, and Prep time */}
-          
-            
+          {/*Title, Author, Image, Description, and Prep time */} 
           <FormInputs formData={formData} handleChange={handleChange} handleImageUpload={handleImageUpload}/>
 
-          
-
+          {/*Dishtypes*/}
           <CheckboxGroup
             label="Dish Types"
             options={["Appetizer", "Main Course", "Dessert"]}
@@ -173,6 +193,7 @@ export default function TestRecipe() {
             }}
           />
 
+          {/*Cuisines*/}
           <CheckboxGroup
             label="Cuisines"
             options={["Italian", "Asian", "American"]}
@@ -188,6 +209,7 @@ export default function TestRecipe() {
             }}
           />
 
+          {/*Occasions*/}
           <CheckboxGroup
             label="Occasions"
             options={["Party", "Wedding", "Funeral"]}
@@ -203,6 +225,7 @@ export default function TestRecipe() {
             }}
           />
 
+          {/*Diets*/}
           <CheckboxGroup
             label="Diets"
             options={["Vegan", "Gluten-free", "Keto"]}
@@ -218,11 +241,11 @@ export default function TestRecipe() {
             }}
           />
 
-          {/* Repeat CheckboxGroup for Cuisines, Occasions, and Diets */}
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">Ingredients</h2>
-          <table className="w-full border border-black text-gray-700">
+          {/* Ingredient table*/}
+          <h2 className="text-2xl font-semibold mb-4 text-customDarkGreen">Ingredients</h2>
+          <table className="w-full border border-customDarkGreen text-customDarkGreen">
             <thead>
-              <tr className="border-b border-black">
+              <tr className="border-b border-customDarkGreen">
                 <th className="py-3 px-4 text-left font-medium">Ingredient Name</th>
                 <th className="py-3 px-4 text-left font-medium">Amount</th>
                 <th className="py-3 px-4 text-left font-medium">Unit</th>
@@ -230,7 +253,7 @@ export default function TestRecipe() {
             </thead>
             <tbody>
               {ingredients.map((ingredient, index) => (
-                <IngredientRow
+                <IngredientForm
                   key={index}
                   index={index}
                   ingredient={ingredient}
@@ -238,16 +261,19 @@ export default function TestRecipe() {
                   removeIngredient={removeIngredientRow}
                 />
               ))}
+
+              <tr className="border-t border-black">
+                <button
+                  type="button"
+                  onClick={addIngredientRow}
+                  className="flex justify-center"
+                >
+                  <img src="/add.png" className="w-6 h-6 m-3"/>
+                </button>
+              </tr>
             </tbody>
           </table>
-
-          <button
-            type="button"
-            onClick={addIngredientRow}
-            className="bg-blue-500 text-white p-2"
-          >
-            Add Ingredient
-          </button>
+          
 
           {/* Nutrition Table */}
           <NutritionForm
@@ -261,16 +287,21 @@ export default function TestRecipe() {
             addStep={addInstructionStep}
             removeStep={removeInstructionStep}
           />
-          <button type="submit" className="bg-green-500 text-white p-4 w-full mt-4">
-            Submit Recipe
-          </button>
-        </form>
-        {response && (
-          <div className="mt-4">
-            <pre>{JSON.stringify(response, null, 2)}</pre>
+          <div className="w-full flex justify-center">
+            <button type="submit" className=" text-white text-lg rounded-md px-4 py-2 bg-customGreen font-jura hover:bg-[#4E8A5A] active:bg-[#335C3D]">
+              Create Recipe
+            </button>
           </div>
-        )}
+          
+        </form>
+        {isSuccess && (
+                <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-customGreen text-white px-4 py-2 rounded-md shadow-lg z-50">
+                    Recipe created successfully
+                </div>
+            )}
       </div>
+
+      <Footer/>
       
     </div>
   );

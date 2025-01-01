@@ -11,8 +11,6 @@ export async function GET(req, { params }) {
             });
         }
 
-        console.log("Extracted User ID from URL:", userId);
-
         // Connect to the database
         await connectMongoDB();
 

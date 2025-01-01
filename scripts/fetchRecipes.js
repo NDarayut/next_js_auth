@@ -34,6 +34,7 @@ const saveRecipesToDatabase = async (recipes) => {
 
             const formattedRecipe = {
                 title: recipe.title,
+                status: "approved",
                 score: recipe.spoonacularScore || 0, // Default to 0 if undefined
                 sourceName: recipe.sourceName || "Unknown",
                 summary: recipe.summary,

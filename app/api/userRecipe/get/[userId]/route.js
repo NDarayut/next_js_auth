@@ -20,8 +20,6 @@ export async function GET(req, { params }) {
         // Fetch only recipe Id, because image is too large to fetch
         const userRecipes = await Recipe.find({ userId: userId }, {_id:1});
 
-        console.log(userRecipes)
-
         // Return an empty array if no created recipe found, else return the recipe IDs
         const recipeIds = userRecipes.length > 0 ? userRecipes.map((userRecipe) => userRecipe._id) : [];
 

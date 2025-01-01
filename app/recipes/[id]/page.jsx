@@ -4,15 +4,20 @@ import Navbar from "@/components/Navbar"
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
 import NutritionalFacts from "./components/NutritionalFacts"
-import RelatedCard from "./components/RelatedCard"
 import { motion } from "framer-motion";
+import Introduction from "./components/introduction"
+import KeyInformation from "./components/KeyInformation"
+import Ingredients from "./components/Ingredients"
+import Instructions from "./components/Instructions"
+import SimilarRecipe from "./components/SimilarRecipe"
+import RecipeTags from "./components/RecipeTags"
+import { useRouter } from "next/navigation";
 
 
 export default function RecipeDetail({params}){
 
     const {id}  = params
     const {data: session} = useSession()
-    console.log(id) // debug to see if ID is defined
     const {recipeDetail, loading, error, fetchRecipeById} = useRecipes()
     const [similarRecipes, setSimilarRecipes] = useState([])
 
@@ -20,6 +25,8 @@ export default function RecipeDetail({params}){
     const [newComment, setNewComment] = useState("");
     const [newRating, setNewRating] = useState(5);
     const [errors, setError] = useState("");
+    const [isOwner, setIsOwner] = useState(false);
+    const router = useRouter();
     
     useEffect(() =>{
 
@@ -38,12 +45,20 @@ export default function RecipeDetail({params}){
           setReviews(data);
        
         }
-
+        fetchRecipeById(id) 
         fetchReviews();
-        fetchRecipeById(id)  
         fetchSimilarRecipes()
     }, [id])
 
+    useEffect(() => {
+      if (session?.user?.id === recipeDetail?.userId) {
+          setIsOwner(true);
+      }
+    }, [session, recipeDetail]);
+
+    const handleSettingsClick = () => {
+      router.push(`/recipes/update/${id}`); // Redirect to the update page
+    };
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -81,7 +96,8 @@ export default function RecipeDetail({params}){
           setNewComment("");
           setNewRating(5);
           setError("");
-        } catch (errors) {
+        } 
+        catch (errors) {
           console.error(errors);
           setError("Failed to submit review.");
         }
@@ -100,15 +116,23 @@ export default function RecipeDetail({params}){
         return <p>No recipe details available.</p>;
     }
 
-    const title = recipeDetail.title
-    const author = recipeDetail.sourceName
-    const description = recipeDetail.summary
-    const recipeImage = recipeDetail.image
-    const prepTime = recipeDetail.readyInMinutes
-    const calories = recipeDetail.nutrition?.find( (nutrient) => nutrient.name === "Calories")?.amount
-    const numberOfIngredients = recipeDetail.extendedIngredients?.length
+    const introduction = {
+      title: recipeDetail.title,
+      author: recipeDetail.sourceName,
+      description: recipeDetail.summary,
+      recipeImage:  recipeDetail.image
+    }
+
+    const keyInformation = {
+      prepTime: recipeDetail.readyInMinutes,
+      calories: recipeDetail.nutrition?.find( (nutrient) => nutrient.name === "Calories")?.amount,
+      numberOfIngredients: recipeDetail.extendedIngredients?.length
+    }
+
     const ingredients = recipeDetail.extendedIngredients
+
     const instruction = recipeDetail.analyzedInstructions
+
     const tags = {
         dishTypes: recipeDetail.dishTypes || [],
         cuisines: recipeDetail.cuisines || [],
@@ -116,177 +140,71 @@ export default function RecipeDetail({params}){
         diets: recipeDetail.diets || [],
     }
 
+    const similar = {
+      loading: loading,
+      error: error,
+      similarRecipes: similarRecipes
+    }
+
     return(
       <div className="bg-customYellow min-h-screen">
+
         <div className="sticky top-0 bg-customYellow z-50 mb-28">
           <Navbar />
         </div>
         
-        
         <div className="font-sans mx-[100px]">
+
+          {/*Title, author, description, image */}
           <motion.div
             initial={{ opacity: 0, y: 50 }}  // Start hidden and offset from the bottom
             animate={{ opacity: 1, y: 0 }}    // Animate to visible and no offset
             transition={{ duration: 0.8 }}    // Duration of animation
           >
-            <h1 className="font-serif text-[60px] mb-4">{title}</h1>
-            <h1 className="font-normal font-sans text-[18px] mb-4">Created by: {author}</h1>
-            <div className="border-b-1 border-customDarkGreen" />
-            <section className="flex flex-col items-center justify-center gap-6 mt-[50px]">
-                <p 
-                      className="text-[18px] align-left mb-[50px]" 
-                      dangerouslySetInnerHTML={{ __html: description }} 
-                />
-                <img
-                  src={recipeImage}
-                  className="rounded-small w-[900px] h-auto mb-4" 
-                  alt="Recipe"
-                />
-                
-            </section>
+            
+            <Introduction {...introduction} />
+            {isOwner &&(
+              <div className="absolute top-32 right-0 mr-[100px] w-8 h-8">
+              <button onClick={handleSettingsClick}>
+                <img src="/setting.png" />
+              </button>
+            </div>
+            )}
+             
           </motion.div>
+          
 
-          <div className="flex flex-row gap-8 text-18 mt-[50px]">
-            <div className="flex flex-col font-light">
-              PREP TIME 
-              <div className="text-customDarkGreen font-bold">
-                {prepTime} MIN
-              </div>
-            </div>
-
-            <div className="border-r-1 border-customGreen"/>
-
-            <div className="flex flex-col font-light">
-              INGREDIENTS: 
-              <div className="text-customDarkGreen font-bold">
-                {numberOfIngredients}
-              </div>
-            </div>
-
-            <div className="border-r-1 border-customGreen"/>
-
-            <div className="flex flex-col font-light">
-              CALORIES: 
-              <div className="text-customDarkGreen font-bold">
-                {calories} kcal
-              </div>
-
-            </div>
-          </div>
+          {/*Prep time, ingredients, calories */}
+          <KeyInformation {...keyInformation}/>
 
           <div className="grid grid-cols-[2fr_1fr] lg:grid-cols-[2fr_1fr] gap-8 mt-[50px]">
+
             {/* Left Column: Ingredients and Instructions */}
             <div className="border-r-1 border-customDarkGreen border-opacity-45 pr-11">
+
               {/* Ingredients Section */}
-              <h1 className="font-[700] font-serif text-[25px] my-2">Ingredients</h1>
-              <ul className="pl-5 space-y-3">
-                {ingredients.map((ingredient, index) => (
-                  <li key={index} className="flex items-center text-[18px]">
-                    <span 
-                      className="mr-3 w-5 h-5 flex items-center justify-center border-2 border-gray-500 rounded-full"
-                    />
-                    <span className={`${ingredient.completed ? 'line-through text-gray-400' : ''}`}>
-                      {ingredient.amount} {ingredient.unit} of {ingredient.name}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+              <Ingredients ingredients={ingredients} />
 
               {/* Instructions Section */}
-              <div className="mt-8">
-                <h1 className="font-[700] font-serif text-[25px]">Instructions</h1>
-                {instruction.map((instruction, index) => (
-                  <div key={index} className="mt-4">
-                    <ol>
-                      {instruction.steps.map((step) => (
-                        <li key={step.number} className="flex items-start gap-4 mb-4">
-                          {/* Step Number */}
-                          <div className="flex-shrink-0">
-                            <div className="w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full font-bold">
-                              {step.number}
-                            </div>
-                          </div>
-                          {/* Step Text */}
-                          <div className="flex-grow">
-                            <p className=" text-gray-800 leading-relaxed text-[18px]">{step.step}</p>
-                          </div>
-                        </li>
-                      ))}
-                    </ol>
-                  </div>
-                ))}
-              </div>
+              <Instructions instruction={instruction} />
 
-          </div>
+            </div>
 
             {/* Right Column: Similar Recipes */}
             <div>
               
+              {/* Nutrition table */}
               <NutritionalFacts nutrition={recipeDetail?.nutrition} />
 
-              <h2 className="font-[700] font-serif text-[25px] mb-4 mt-12">Similar Recipes</h2>
-              {loading && <p>Loading...</p>}
-              {error && <p className="text-red-500">{error}</p>}
-              <div className="overflow-y-auto max-h-[700px] grid grid-cols-1 gap-x-6 gap-y-8" style={{ scrollBehavior: "smooth" }}>
-                {similarRecipes.length > 0 ? (
-                  similarRecipes.map((recipe) => (
-                    <RelatedCard
-                      key={recipe._id}
-                      recipeId={recipe._id}
-                      src={recipe.image} // Image URL
-                      title={recipe.title} // Recipe title
-                      rating={recipe.score}
+              {/*Similar Recipe */}
+              <SimilarRecipe {...similar} />;
 
-                    />
-                  ))
-                ) : (
-                  !loading && <p>No similar recipes found.</p>
-                )}
-              </div>
             </div>
+
           </div>
 
-            <div>
-                <h2 className="font-[700] font-serif text-[25px] mt-6 mb-2">Recipe Tags</h2>
-                <div className="flex flex-wrap gap-2">
-                    {tags.dishTypes.map((tag, index) => (
-                    <span
-                        key={index}
-                        className="px-4 py-2 bg-customGreen text-white text-sm font-semibold rounded-full"
-                    >
-                        {tag}
-                    </span>
-                    ))}
-
-                    {tags.cuisines.map((tag, index) => (
-                    <span
-                        key={index}
-                        className="px-4 py-2 bg-customGreen text-white text-sm font-semibold rounded-full"
-                    >
-                        {tag}
-                    </span>
-                    ))}
-
-                    {tags.occasions.map((tag, index) => (
-                    <span
-                        key={index}
-                        className="px-4 py-2 bg-customGreen text-white text-sm font-semibold rounded-full"
-                    >
-                        {tag}
-                    </span>
-                    ))}
-
-                    {tags.diets.map((tag, index) => (
-                    <span
-                        key={index}
-                        className="px-4 py-2 bg-customGreen text-white text-sm font-semibold rounded-full"
-                    >
-                        {tag}
-                    </span>
-                    ))}
-                    
-                </div>
-            </div>
+          {/*Recipe's tags*/}
+          <RecipeTags tags={tags} />
 
           {/* Reviews List */}
           <div className="mt-[50px]">
@@ -343,3 +261,5 @@ export default function RecipeDetail({params}){
       </div>
     )
 }
+
+

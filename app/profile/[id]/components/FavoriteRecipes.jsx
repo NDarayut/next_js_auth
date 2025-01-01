@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import RecipeCard from "../../../components/RecipeCard";
+import RecipeCard from "../../../../components/RecipeCard";
 
 
-export default function UserCreatedRecipes ({ userId }) {
+export default function FavoriteRecipes ({ userId }) {
   const [recipeIds, setRecipeIds] = useState([]);
   const [recipes, setRecipes] = useState([]);
   const [error, setError] = useState(null);
@@ -11,9 +11,9 @@ export default function UserCreatedRecipes ({ userId }) {
   useEffect(() => {
     if (!userId) return;
 
-    const fetchUserRecipeIds = async () => {
+    const fetchFavoriteRecipeIds = async () => {
       try {
-        const response = await fetch(`/api/userRecipe/get/${userId}`);
+        const response = await fetch(`/api/favorite/get/${userId}`);
         const data = await response.json();
         if (response.ok) {
           setRecipeIds(data);
@@ -25,7 +25,7 @@ export default function UserCreatedRecipes ({ userId }) {
       }
     };
 
-    fetchUserRecipeIds();
+    fetchFavoriteRecipeIds();
   }, [userId]);
 
   useEffect(() => {
@@ -59,7 +59,7 @@ export default function UserCreatedRecipes ({ userId }) {
   }
 
   if (!recipes.length) {
-    return <div>No user created recipes found.</div>;
+    return <div>No favorite recipes found.</div>;
   }
 
   return (

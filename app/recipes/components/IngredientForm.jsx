@@ -1,5 +1,5 @@
 // components/IngredientRow.jsx
-const IngredientRow = ({ index, ingredient, handleChange, removeIngredient }) => (
+const IngredientForm = ({ index, ingredient, handleChange, removeIngredient }) => (
   <tr key={index}>
     <td>
       <input
@@ -12,6 +12,7 @@ const IngredientRow = ({ index, ingredient, handleChange, removeIngredient }) =>
     <td>
       <input
         type="number"
+        min="1"
         value={ingredient.amount}
         onChange={(e) => handleChange(index, "amount", e.target.value)}
         placeholder="Amount"
@@ -30,12 +31,12 @@ const IngredientRow = ({ index, ingredient, handleChange, removeIngredient }) =>
       <button
         type="button"
         onClick={() => removeIngredient(index)}
-        className="bg-red-500 text-white p-2"
+        className="flex justify-center"
       >
-        Remove
+        <img src="/bin.png" className="w-8 h-8" />
       </button>
     </td>
   </tr>
 );
 
-export default IngredientRow;
+export default IngredientForm;

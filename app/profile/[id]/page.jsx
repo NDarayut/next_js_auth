@@ -1,12 +1,12 @@
 "use client"
 
 import { useParams } from "next/navigation"
-import UserProfile from "@/components/UserProfile"
+import UserProfile from "@/app/profile/[id]/components/UserProfile"
 import { useSession } from "next-auth/react"
 import Navbar from "@/components/Navbar"
-import FavoriteRecipes from "@/app/profile/components/FavoriteRecipes"
+import FavoriteRecipes from "@/app/profile/[id]/components/FavoriteRecipes"
 import Footer from "@/components/Footer"
-import UserCreatedRecipes from "../components/UserCreatedRecipes"
+import UserCreatedRecipes from "./components/UserCreatedRecipes"
 
 export default function ProfilePage() {
     const { id } = useParams()
@@ -16,6 +16,8 @@ export default function ProfilePage() {
     if(status === "loading"){
         return <p>Loading...</p>
     }
+
+    
 
     return (
         <div className="bg-customYellow min-h-screen">

@@ -1,417 +1,309 @@
+// app/test-recipe/page.jsx
 "use client";
-
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import FormInputs from "../components/FormInput";
+import CheckboxGroup from "../components/CheckboxGroup";
+import Instructions from "../components/InstructionForm";
+import NutritionForm from '../components/NutritionForm';
 import Navbar from "@/components/Navbar";
+import IngredientForm from "../components/IngredientForm";
+import Footer from "@/components/Footer";
+import { useRouter } from 'next/navigation'; // For client-side redirects
 
-export default function CreateRecipe() {
-  
+
+export default function TestRecipe() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [formData, setFormData] = useState({
+    title: "",
+    sourceName: "",
+    summary: "",
+    readyInMinutes: "",
+    dishTypes: [],
+    cuisines: [],
+    occasions: [],
+    diets: [],
+  });
+  const [ingredients, setIngredients] = useState([{ name: "", amount: "", unit: "" }]);
+  const [nutritions, setNutritions] = useState([
+    { name: "Calories", amount: "", unit: "kcal" },
+    { name: "Fat", amount: "", unit: "g" },
+    { name: "Saturated Fat", amount: "", unit: "g" },
+    { name: "Carbohydrates", amount: "", unit: "g" },
+    { name: "Sugar", amount: "", unit: "g" },
+    { name: "Cholesterol", amount: "", unit: "mg" },
+    { name: "Sodium", amount: "", unit: "mg" },
+    { name: "Protein", amount: "", unit: "g" },
+    { name: "Potassium", amount: "", unit: "mg" },
+  ]);
+  const [instructions, setInstructions] = useState([""]);
+  const [imageFile, setImageFile] = useState(null);
+  const [response, setResponse] = useState(null);
+
+  useEffect(() => {
+    if (session && session.user) {
+      setFormData((prev) => ({
+        ...prev,
+        sourceName: session.user.username,
+      }));
+    }
+  }, [session]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleIngredientChange = (index, field, value) => {
+    const updatedIngredients = [...ingredients];
+    updatedIngredients[index][field] = value;
+    setIngredients(updatedIngredients);
+  };
+
+  const handleNutritionChange = (index, field, value) => {
+    const updatedNutritions = [...nutritions];
+    updatedNutritions[index][field] = value;
+    setNutritions(updatedNutritions);
+  };
+
+  const addIngredientRow = () => {
+    setIngredients([...ingredients, { name: "", amount: "", unit: "" }]);
+  };
+
+  const removeIngredientRow = (index) => {
+    const updatedIngredients = ingredients.filter((_, i) => i !== index);
+    setIngredients(updatedIngredients);
+  };
+
+  const handleInstructionChange = (index, value) => {
+    const updatedInstructions = [...instructions];
+    updatedInstructions[index] = value;
+    setInstructions(updatedInstructions);
+  };
+
+  const addInstructionStep = () => {
+    setInstructions([...instructions, ""]);
+  };
+
+  const removeInstructionStep = (index) => {
+    const updatedInstructions = instructions.filter((_, i) => i !== index);
+    setInstructions(updatedInstructions);
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    setImageFile(file);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    let base64Image = "";
+    if (imageFile) {
+      const reader = new FileReader();
+      reader.onload = async () => {
+        base64Image = reader.result;
+        const payload = {
+          ...formData,
+          status: "pending-create",
+          sourceName: session.user.username,
+          image: base64Image,
+          extendedIngredients: ingredients,
+          nutrition: { nutrients: nutritions },
+          analyzedInstructions: [
+            {
+              steps: instructions.map((instruction, index) => ({
+                number: index + 1,
+                step: instruction,
+              })),
+            },
+          ],
+          userId: session.user.id,
+        };
+
+        try {
+          const response = await fetch("/api/recipes/create", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+
+          if(!response.ok){
+            const { error } = await response.json();
+            setResponse(error || "Failed to create recipe");
+            return;
+          }
+
+          setIsSuccess(true);
+        } 
+        catch (error) {
+          console.error(error);
+          setResponse({ error: "Failed to create recipe" });
+        }
+      };
+
+      reader.readAsDataURL(imageFile);
+    } 
+    
+    else {
+      alert("Please upload an image.");
+    }
+  };
+
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
+
+  // Check if the user is not authenticated
+  if (status === "unauthenticated") {
+    router.push("/login"); // Redirect to home or login page if not authenticated or not admin
+    return null;
+  }
+    
   return (
-    <>
-    <div className="mb-36">
-      <Navbar />
-    </div>
-  
-  <div className="flex justify-center items-center px-4">
-    <div className="p-8 rounded-lg max-w-full md:max-w-[1300px] w-full">
-      {/* Form */}
-      <form className="space-y-6">
-        {/* Recipe Name */}
-        <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-4">
-          <label className="text-lg font-medium text-gray-700">
-            Recipe title
-          </label>
-          <div className="md:col-span-2">
-            <input
-              type="text"
-              id="title"
-              className="w-full px-4 py-2 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-customGreen"
-              placeholder="Recipe title"
-              required
-            />
-                 
-          </div>
-        </div>
-        
-        {/* Upload Image */}
-        <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-4">
-          <label className="text-lg font-medium text-gray-700">
-            Upload image
-          </label>
-          <div className="md:col-span-2">
-            <input
-              type="file"
-              className="w-full px-4 py-2 border border-gray-400 rounded-lg text-gray-600 cursor-pointer focus:outline-none focus:ring-2 focus:ring-customGreen"
-            />
-          </div>
-        </div>
-        {/* Description */}
-        <div className="grid grid-cols-1 md:grid-cols-3 items-start gap-4">
-          <label className="text-lg font-medium text-gray-700">
-            Description
-          </label>
-          <div className="md:col-span-2">
-            <textarea
-              rows={6}
-              placeholder="Write your recipe description here..."
-              className="w-full px-4 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-customGreen text-gray-600"
-              defaultValue={""}
-            />
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-  
-  <div className="flex justify-center items-center">
-    <div className="p-6 rounded-lg max-w-[1300px] w-full">
-      {/* Ingredients Title */}
-      <h2 className="text-2xl font-semibold mb-4 text-gray-800">Ingredients</h2>
-      {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full border border-black text-gray-700">
-          {/* Table Head */}
-          <thead>
-            <tr className="border-b border-black">
-              <th className="py-3 px-4 text-left font-medium">Serving name</th>
-              <th className="py-3 px-4 text-left font-medium">Amount</th>
-              <th className="py-3 px-4 text-left font-medium">Unit</th>
-              <th className="py-3 px-4 text-left font-medium">Weight</th>
-            </tr>
-          </thead>
-          {/* Table Body */}
-          <tbody>
-            <tr className="border-b border-black">
-              <td className="py-3 px-4">Mozzarella cheese</td>
-              <td className="py-3 px-4">2</td>
-              <td className="py-3 px-4">cup</td>
-              <td className="py-3 px-4">61.3g</td>
-            </tr>
-            <tr className="border-b border-black">
-              <td className="py-3 px-4">Pizza sauce</td>
-              <td className="py-3 px-4">1/4</td>
-              <td className="py-3 px-4">cup</td>
-              <td className="py-3 px-4">14.3g</td>
-            </tr>
-            {/* Add More Row */}
-            <tr>
-              <td colSpan={4} className="py-4 px-10 text-center">
-                <button className="w-8 h-8 rounded-full border-2 border-black text-gray-600 hover:bg-gray-200 flex items-center justify-center">
-                  <span className="text-xl">+</span>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-  <div className="mx-auto p-4" style={{ maxWidth: 1300 }}>
-    <h2 className="text-xl font-semibold mb-4">Nutritions</h2>
-    <table className="min-w-full border border-black">
-      <thead>
-        <tr className=" text-left">
-          <th className="py-2 px-4 border-b border-black">Nutrition</th>
-          <th className="py-2 px-4 border-b border-black">Amount</th>
-          <th className="py-2 px-4 border-b border-black" />
-        </tr>
-      </thead>
-      <tbody>
-        <tr className="border-b border-black">
-          <td className="py-2 px-4">Calories</td>
-          <td className="py-2 px-4">61.3g</td>
-          <td className="py-2 px-4 text-right">
-            <button className="text-red-500 hover:text-red-700">
-              <i className="fa-solid fa-trash-can" />
-            </button>
-          </td>
-        </tr>
-        <tr className="border-b border-black">
-          <td className="py-2 px-4">Total fat</td>
-          <td className="py-2 px-4">6.3g</td>
-          <td className="py-2 px-4 text-right">
-            <button className="text-red-500 hover:text-red-700">
-              <i className="fa-solid fa-trash-can" />
-            </button>
-          </td>
-        </tr>
-        <tr className="border-b border-black">
-          <td className="py-2 px-4">Saturated fat</td>
-          <td className="py-2 px-4" />
-          <td className="py-2 px-4 text-right">
-            <button className="text-red-500 hover:text-red-700">
-              <i className="fa-solid fa-trash-can" />
-            </button>
-          </td>
-        </tr>
-        <tr className="border-b border-black">
-          <td className="py-2 px-4">Cholesterol</td>
-          <td className="py-2 px-4" />
-          <td className="py-2 px-4 text-right">
-            <button className="text-red-500 hover:text-red-700">
-              <i className="fa-solid fa-trash-can" />
-            </button>
-          </td>
-        </tr>
-        <tr className="border-b border-black">
-          <td className="py-2 px-4">Sodium</td>
-          <td className="py-2 px-4" />
-          <td className="py-2 px-4 text-right">
-            <button className="text-red-500 hover:text-red-700">
-              <i className="fa-solid fa-trash-can" />
-            </button>
-          </td>
-        </tr>
-        <tr className="border-b border-black">
-          <td className="py-2 px-4">Potassium</td>
-          <td className="py-2 px-4" />
-          <td className="py-2 px-4 text-right">
-            <button className="text-red-500 hover:text-red-700">
-              <i className="fa-solid fa-trash-can" />
-            </button>
-          </td>
-        </tr>
-        <tr className="border-b border-black">
-          <td className="py-2 px-4">Total carbohydrate</td>
-          <td className="py-2 px-4" />
-          <td className="py-2 px-4 text-right">
-            <button className="text-red-500 hover:text-red-700">
-              <i className="fa-solid fa-trash-can" />
-            </button>
-          </td>
-        </tr>
-        <tr className="border-b border-black">
-          <td className="py-2 px-4">Sugars</td>
-          <td className="py-2 px-4" />
-          <td className="py-2 px-4 text-right">
-            <button className="text-red-500 hover:text-red-700">
-              <i className="fa-solid fa-trash-can" />
-            </button>
-          </td>
-        </tr>
-        <tr className="border-b border-black">
-          <td className="py-2 px-4">Protein</td>
-          <td className="py-2 px-4" />
-          <td className="py-2 px-4 text-right">
-            <button className="text-red-500 hover:text-red-700">
-              <i className="fa-solid fa-trash-can" />
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div className="max-w-[1300px] mx-auto p-6 rounded-lg bg-beige">
-    <h2 className="text-xl font-semibold mb-4">Recipe tags</h2>
-    {/* Table wrapper with scroll on small screens */}
-    <div className="overflow-x-auto">
-      <table className="min-w-full border border-black">
-        <tbody>
-          <tr className="border-b border-black">
-            <td className="py-2 px-4">Main dishes</td>
-            <td className="py-2 px-4 text-center">
-              <input
-                type="checkbox"
-                className="form-checkbox h-5 w-5 text-green-600"
-              />
-            </td>
-          </tr>
-          <tr className="border-b border-black">
-            <td className="py-2 px-4">Vegetable</td>
-            <td className="py-2 px-4 text-center">
-              <input
-                type="checkbox"
-                className="form-checkbox h-5 w-5 text-green-600"
-              />
-            </td>
-          </tr>
-          <tr className="border-b border-black">
-            <td className="py-2 px-4">Soup</td>
-            <td className="py-2 px-4 text-center">
-              <input
-                type="checkbox"
-                className="form-checkbox h-5 w-5 text-green-600"
-              />
-            </td>
-          </tr>
-          <tr className="border-b border-black">
-            <td className="py-2 px-4">Dessert</td>
-            <td className="py-2 px-4 text-center">
-              <input
-                type="checkbox"
-                className="form-checkbox h-5 w-5 text-green-600"
-              />
-            </td>
-          </tr>
-          <tr className="border-b border-black">
-            <td className="py-2 px-4">Bread</td>
-            <td className="py-2 px-4 text-center">
-              <input
-                type="checkbox"
-                className="form-checkbox h-5 w-5 text-green-600"
-              />
-            </td>
-          </tr>
-          <tr className="border-b border-black">
-            <td className="py-2 px-4">Salad</td>
-            <td className="py-2 px-4 text-center">
-              <input
-                type="checkbox"
-                className="form-checkbox h-5 w-5 text-green-600"
-              />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    {/* Tags Section */}
-    <div className="flex flex-col md:flex-row gap-4 p-6">
-      <button className="bg-green-600 text-white px-4 py-2 rounded flex items-center justify-center w-full md:w-auto">
-        Main dish
-        <span
-          className="ml-2 cursor-pointer"
-          onclick="handleCancel('Main dish')"
-        >
-          <svg
-            className="w-4 h-4"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <circle cx={12} cy={12} r={10} stroke="white" strokeWidth={2} />
-            <path stroke="white" strokeWidth={2} d="M15 9l-6 6m0-6l6 6" />
-          </svg>
-        </span>
-      </button>
-      <button className="bg-green-600 text-white px-4 py-2 rounded flex items-center justify-center w-full md:w-auto">
-        Asian
-        <span className="ml-2 cursor-pointer" onclick="handleCancel('Asian')">
-          <svg
-            className="w-4 h-4"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <circle cx={12} cy={12} r={10} stroke="white" strokeWidth={2} />
-            <path stroke="white" strokeWidth={2} d="M15 9l-6 6m0-6l6 6" />
-          </svg>
-        </span>
-      </button>
-      <button className="bg-green-600 text-white px-4 py-2 rounded flex items-center justify-center w-full md:w-auto">
-        Dairy
-        <span className="ml-2 cursor-pointer" onclick="handleCancel('Dairy')">
-          <svg
-            className="w-4 h-4"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <circle cx={12} cy={12} r={10} stroke="white" strokeWidth={2} />
-            <path stroke="white" strokeWidth={2} d="M15 9l-6 6m0-6l6 6" />
-          </svg>
-        </span>
-      </button>
-    </div>
-  </div>
-  <div className="p-6 max-w-screen-lg mx-auto" style={{ maxWidth: 1300 }}>
-    <label
-      className="block text-black text-2xl font-semibold mb-2"
-      htmlFor="estimated-time"
-    >
-      Estimated time
-    </label>
-    <div className="border border-black rounded-md w-full h-16 flex items-center p-2"></div>
-  </div>
-  <div className="p-6 max-w-screen-lg mx-auto" style={{ maxWidth: 1300 }}>
-    <h2 className="text-2xl font-semibold mb-4">Instructions</h2>
-    {/* Instructions Section */}
-    <div className="space-y-4">
-      {/* First Instruction */}
-      <div className="flex flex-col md:flex-row items-center gap-4">
-        <button className="flex items-center justify-center w-10 h-10 bg-gray-300 rounded-full text-lg font-bold text-black">
-          1
-        </button>
-        <div className="border border-black rounded-md p-4 flex-grow">
-          <p className="text-gray-700">
-            Heat the oven to 550°F or higher. Arrange a rack in the lower-middle
-            part of the oven (if you have a baking stone, place it on the rack)
-            and heat the oven to 550°F or higher.
-          </p>
-        </div>
-      </div>
-      {/* Add more instructions */}
-      <div className="flex flex-col md:flex-row items-center gap-4">
-        <button className="bg-gray-300 text-black w-10 h-10 rounded-full flex items-center justify-center">
-          +
-        </button>
-        <input
-          type="text"
-          placeholder="Add more instructions..."
-          className="border border-black rounded-md w-full h-12 p-2 focus:outline-none focus:border-green-600 transition"
-        />
-      </div>
-    </div>
-    {/* Save and Upload Buttons */}
-    <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 p-6 items-center justify-center">
-      <button className="bg-green-600 text-white px-6 py-2 rounded w-full md:w-auto">
-        Save draft
-      </button>
-      <button className="bg-green-600 text-white px-6 py-2 rounded w-full md:w-auto">
-        Upload
-      </button>
-    </div>
-  </div>
-  <div className="footer bg-[#f5e0d3] p-8 text-center">
-    {/* Flex Container */}
-    <div className="flex flex-col md:flex-row justify-around p-10 space-y-8 md:space-y-0">
-      {/* Left Side - Title */}
-      <div className="text-center md:text-left">
-        <h1
-          className="text-5xl font-bold mb-2"
-          style={{ fontFamily: '"Comic Sans MS", cursive' }}
-        >
-          My KITCHEN
-        </h1>
-        <h2
-          className="text-5xl font-semibold mb-4"
-          style={{ fontFamily: '"Comic Sans MS", cursive' }}
-        >
-          My - RULES
-        </h2>
-      </div>
-      {/* Right Side - Contact Form */}
-      <div className="text-center md:text-left">
-        <p className="text-lg mb-4 text-center">
-          Email us for more information
-        </p>
-        <div className="flex items-center bg-[#f5f5f5] border border-gray-300 rounded-md p-2 w-full md:w-[500px] mx-auto">
-          <span className="text mr-2">
-            <i className="fa-brands fa-google" />
-          </span>
-          <input
-            type="email"
-            placeholder="Email us..."
-            className="flex-1 bg-transparent border-none focus:outline-none placeholder-gray-400 py-2 px-4"
-          />
-          <button className="bg-[#f5e0d3] text-gray-700 rounded-md px-4 py-2 ml-2">
-            Send
-          </button>
-        </div>
-      </div>
-    </div>
-    {/* Footer Quotes */}
-    <div className="p-10 text-center">
-      <p className="text-lg mb-6">
-        Try new recipes, learn from your mistakes, be fearless, and above all,{" "}
-        <span className="font-bold">HAVE FUN!</span>
-      </p>
-      <p className="text-lg mb-4">
-        I don&apos;t think there are bad cooks, just bad recipes.
-      </p>
-    </div>
-  </div>
-</>
+    <div className="bg-customYellow min-h-screen">
 
+      {/*Nav bar*/}
+      <div className="sticky top-0 bg-customYellow z-50 mb-36">
+        <Navbar />
+      </div>
+
+      {/*The rest of the components*/}
+      <div className="font-sans mx-[100px] mb-28">
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+
+          {/*Title, Author, Image, Description, and Prep time */} 
+          <FormInputs formData={formData} handleChange={handleChange} handleImageUpload={handleImageUpload}/>
+
+          {/*Dishtypes*/}
+          <CheckboxGroup
+            label="Dish Types"
+            options={["Appetizer", "Main Course", "Dessert"]}
+            selectedOptions={formData.dishTypes}
+            handleChange={(option) => {
+              const checked = formData.dishTypes.includes(option);
+              setFormData({
+                ...formData,
+                dishTypes: checked
+                  ? formData.dishTypes.filter((item) => item !== option)
+                  : [...formData.dishTypes, option],
+              });
+            }}
+          />
+
+          {/*Cuisines*/}
+          <CheckboxGroup
+            label="Cuisines"
+            options={["Italian", "Asian", "American"]}
+            selectedOptions={formData.cuisines}
+            handleChange={(option) => {
+              const checked = formData.cuisines.includes(option);
+              setFormData({
+                ...formData,
+                cuisines: checked
+                  ? formData.cuisines.filter((item) => item !== option)
+                  : [...formData.cuisines, option],
+              });
+            }}
+          />
+
+          {/*Occasions*/}
+          <CheckboxGroup
+            label="Occasions"
+            options={["Party", "Wedding", "Funeral"]}
+            selectedOptions={formData.occasions}
+            handleChange={(option) => {
+              const checked = formData.occasions.includes(option);
+              setFormData({
+                ...formData,
+                occasions: checked
+                  ? formData.occasions.filter((item) => item !== option)
+                  : [...formData.occasions, option],
+              });
+            }}
+          />
+
+          {/*Diets*/}
+          <CheckboxGroup
+            label="Diets"
+            options={["Vegan", "Gluten-free", "Keto"]}
+            selectedOptions={formData.diets}
+            handleChange={(option) => {
+              const checked = formData.diets.includes(option);
+              setFormData({
+                ...formData,
+                diets: checked
+                  ? formData.diets.filter((item) => item !== option)
+                  : [...formData.diets, option],
+              });
+            }}
+          />
+
+          {/* Ingredient table*/}
+          <h2 className="text-2xl font-semibold mb-4 text-customDarkGreen">Ingredients</h2>
+          <table className="w-full border border-customDarkGreen text-customDarkGreen">
+            <thead>
+              <tr className="border-b border-customDarkGreen">
+                <th className="py-3 px-4 text-left font-medium">Ingredient Name</th>
+                <th className="py-3 px-4 text-left font-medium">Amount</th>
+                <th className="py-3 px-4 text-left font-medium">Unit</th>
+              </tr>
+            </thead>
+            <tbody>
+              {ingredients.map((ingredient, index) => (
+                <IngredientForm
+                  key={index}
+                  index={index}
+                  ingredient={ingredient}
+                  handleChange={handleIngredientChange}
+                  removeIngredient={removeIngredientRow}
+                />
+              ))}
+
+              <tr className="border-t border-black">
+                <button
+                  type="button"
+                  onClick={addIngredientRow}
+                  className="flex justify-center"
+                >
+                  <img src="/add.png" className="w-6 h-6 m-3"/>
+                </button>
+              </tr>
+            </tbody>
+          </table>
+          
+
+          {/* Nutrition Table */}
+          <NutritionForm
+            nutritions={nutritions}
+            handleNutritionChange={handleNutritionChange}
+          />
+          
+          <Instructions
+            instructions={instructions}
+            handleChange={handleInstructionChange}
+            addStep={addInstructionStep}
+            removeStep={removeInstructionStep}
+          />
+          <div className="w-full flex justify-center">
+            <button type="submit" className=" text-white text-lg rounded-md px-4 py-2 bg-customGreen font-jura hover:bg-[#4E8A5A] active:bg-[#335C3D]">
+              Submit Recipe
+            </button>
+          </div>
+          
+        </form>
+        {isSuccess && (
+                <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-customGreen text-white px-4 py-2 rounded-md shadow-lg z-50">
+                    Recipe submitted successfully
+                </div>
+            )}
+      </div>
+
+      <Footer/>
+      
+    </div>
   );
 }

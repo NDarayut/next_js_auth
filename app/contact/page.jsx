@@ -1,5 +1,5 @@
 "use client"
-import ContactUs from "@/components/ContactUsForm";
+import ContactUs from "@/app/contact/components/ContactUsForm";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 

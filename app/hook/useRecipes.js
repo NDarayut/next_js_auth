@@ -6,6 +6,7 @@ export const useRecipes = () => {
     const [recipeDetail, setRecipeDetail] = useState(null); // store detail of one recipes
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [data, setData] = useState([])
 
     // Search for recipes based on our search query
     const searchRecipes = async (query, filters = {}) => {
@@ -43,6 +44,8 @@ export const useRecipes = () => {
             // Using the API we've just created in recipes folder
             const response = await fetch(`/api/recipes/${id}`);
             const data = await response.json();
+            
+            setData(data)
 
             // Extracting important nutrients
             const importantNutrients = data.nutrition?.nutrients?.filter(nutrient =>
@@ -51,7 +54,9 @@ export const useRecipes = () => {
             setRecipeDetail({
                 ...data,
                 nutrition: importantNutrients,
-              });
+            });
+
+            
         } 
 
         catch (err) {
@@ -64,6 +69,7 @@ export const useRecipes = () => {
     };
 
     return {
+        data,
         recipes,
         recipeDetail,
         loading,

@@ -3,6 +3,7 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState, useRef } from "react";
 import LogoutBtn from "./LogoutBtn";
+import DeleteBtn from "./DeleteButton";
 
 export default function UserProfile({ userId }) {
     const { data: session, status } = useSession();
@@ -160,9 +161,9 @@ export default function UserProfile({ userId }) {
                     </>
                         ) : user.profilePicture ? (
                             <img
-                            src={user.profilePicture}
-                            alt="Profile"
-                            className="w-32 h-32 rounded-full object-cover mt-4"
+                                src={user.profilePicture}
+                                alt="Profile"
+                                className="w-72 h-72 rounded-full object-cover"
                             />
                         ) : (
                             <p>No profile picture available</p>
@@ -173,7 +174,7 @@ export default function UserProfile({ userId }) {
                             {isOwner && <LogoutBtn />}
                         </div>
                         <div>
-                            <button className="bg-customGreen text-white font-semibold px-6 py-2 mt-3 rounded-[10px] hover:bg-[#4E8A5A]">Delete account</button>
+                            {isOwner && <DeleteBtn />}
                         </div>
                     </div>
                     
@@ -193,7 +194,7 @@ export default function UserProfile({ userId }) {
                                 className="border border-customDarkGreen rounded-[10px] p-2 mr-2 w-[429px] bg-customYellow"
                             />
                         ) : (
-                            <p className="text-gray-700">{user.firstName}</p>
+                            <p className="w-[429px]">{user.firstName}</p>
                         )}
                     </div>
 
@@ -208,7 +209,7 @@ export default function UserProfile({ userId }) {
                                 className="border border-customDarkGreen rounded-[10px] p-2 w-[429px] bg-customYellow"
                             />
                         ) : (
-                            <p className="text-gray-700">{user.lastName}</p>
+                            <p className="w-[429px]">{user.lastName}</p>
                         )}
                     </div>
 
@@ -223,7 +224,7 @@ export default function UserProfile({ userId }) {
                                 className="border border-customDarkGreen rounded-[10px] p-2 w-[429px] bg-customYellow"
                             />
                         ) : (
-                            <p className="text-gray-700">{user.email}</p>
+                            <p className="w-[429px]">{user.email}</p>
                         )}
                     </div>
                     
@@ -247,8 +248,6 @@ export default function UserProfile({ userId }) {
                     </div>
                 </div> 
             </div>
-
-            
 
             {isSuccess && (
                 <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-customGreen text-white px-4 py-2 rounded-md shadow-lg z-50">
