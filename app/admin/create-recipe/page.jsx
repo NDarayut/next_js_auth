@@ -2,15 +2,14 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import FormInputs from "../components/FormInput";
-import CheckboxGroup from "../components/CheckboxGroup";
-import Instructions from "../components/InstructionForm";
-import NutritionForm from '../components/NutritionForm';
+import FormInputs from "./components/FormInput";
+import CheckboxGroup from "./components/CheckboxGroup";
+import Instructions from "./components/InstructionForm";
+import NutritionForm from './components/NutritionForm';
 import Navbar from "@/components/Navbar";
-import IngredientForm from "../components/IngredientForm";
+import IngredientForm from "./components/IngredientForm";
 import Footer from "@/components/Footer";
 import { useRouter } from 'next/navigation'; // For client-side redirects
-
 
 export default function TestRecipe() {
   const { data: session, status } = useSession();
@@ -107,7 +106,7 @@ export default function TestRecipe() {
         base64Image = reader.result;
         const payload = {
           ...formData,
-          status: "pending-create",
+          status: "approved",
           sourceName: session.user.username,
           image: base64Image,
           extendedIngredients: ingredients,
@@ -290,14 +289,14 @@ export default function TestRecipe() {
           />
           <div className="w-full flex justify-center">
             <button type="submit" className=" text-white text-lg rounded-md px-4 py-2 bg-customGreen font-jura hover:bg-[#4E8A5A] active:bg-[#335C3D]">
-              Submit Recipe
+              Create Recipe
             </button>
           </div>
           
         </form>
         {isSuccess && (
                 <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-customGreen text-white px-4 py-2 rounded-md shadow-lg z-50">
-                    Recipe submitted successfully
+                    Recipe created successfully
                 </div>
             )}
       </div>

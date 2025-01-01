@@ -2,14 +2,27 @@ import mongoose from "mongoose";
 const  {Schema, models} = mongoose;
 
 const recipeSchema = new Schema({
+    status: {
+        type:String,
+        required: true
+    },
+    
+    userId: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User', 
+        required: false 
+    },
+    
     title: {
         type: String,
         required: true
     },
+    
     score: {
         type: Number,
         required: false,
     },
+
     sourceName: {
         type: String,
         required: true
@@ -34,18 +47,22 @@ const recipeSchema = new Schema({
         type: [String],
         default: [],
     },
+
     cuisines: {
         type: [String],
         default: [],
     },
+
     occasions: {
         type:[String],
         default: [],
     },
+
     diets: {
         type: [String],
         default: [],
     },
+
     nutrition: {
         nutrients: [
             {
@@ -55,6 +72,7 @@ const recipeSchema = new Schema({
             }
         ]
     },
+
     extendedIngredients: [
         {
           amount: { type: Number, required: true },
@@ -62,6 +80,7 @@ const recipeSchema = new Schema({
           name: { type: String, required: true },
         },
     ],
+    
     analyzedInstructions: [
         {
           steps: [

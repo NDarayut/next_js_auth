@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import RecipeCard from "./RecipeCard";
+import RecipeCard from "../../../../components/RecipeCard";
 
 
 export default function FavoriteRecipes ({ userId }) {

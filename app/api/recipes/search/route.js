@@ -14,7 +14,7 @@ export async function GET(req) {
     await connectMongoDB();
 
     // Start with a base query
-    let filterQuery = {};
+    let filterQuery = { status: "approved"};
 
     // If there's a query, search by title
     if (query) {

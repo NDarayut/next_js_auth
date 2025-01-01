@@ -8,6 +8,7 @@ export async function GET() {
 
         // Fetch 20 random recipes from MongoDB
         const randomRecipes = await Recipe.aggregate([
+            { $match: { status: "approved" } },
             { $sample: { size: 20 } } // Randomly select 20 documents
         ]);
 

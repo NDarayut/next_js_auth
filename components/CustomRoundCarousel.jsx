@@ -1,19 +1,20 @@
 import React, { useRef } from "react";
+import Link from "next/link"; // Import Link from next/link
 
 const CustomRoundCarousel = () => {
   const items = [
-    { id: 1, src: "/pasta.jpg", label: "Pasta" },
-    { id: 2, src: "/pizza.jpg", label: "Pizza" },
-    { id: 3, src: "/vegan.jpg", label: "Vegan" },
-    { id: 4, src: "/desserts.jpg", label: "Desserts" },
-    { id: 5, src: "/smoothies.jpg", label: "Smoothies" },
-    { id: 6, src: "/breakfast.jpg", label: "Breakfast" },
-    { id: 7, src: "/snacks.jpg", label: "Snacks" },
-    { id: 8, src: "/soup.jpg", label: "Soup" },
-    { id: 9, src: "/smoothies.jpg", label: "Smoothies" },
-    { id: 10, src: "/breakfast.jpg", label: "Breakfast" },
-    { id: 11, src: "/snacks.jpg", label: "Snacks" },
-    { id: 12, src: "/soup.jpg", label: "Soup" },
+    { id: 1, src: "/pasta.jpg", label: "Asian" },
+    { id: 2, src: "/pizza.jpg", label: "Chinese" },
+    { id: 3, src: "/vegan.jpg", label: "American" },
+    { id: 4, src: "/desserts.jpg", label: "Mexican" },
+    { id: 5, src: "/smoothies.jpg", label: "Italian" },
+    { id: 6, src: "/breakfast.jpg", label: "Latin American" },
+    { id: 7, src: "/snacks.jpg", label: "European" },
+    { id: 8, src: "/soup.jpg", label: "Mediterranean" },
+    { id: 9, src: "/smoothies.jpg", label: "French" },
+    { id: 10, src: "/breakfast.jpg", label: "Scottish" },
+    { id: 11, src: "/snacks.jpg", label: "British" },
+    { id: 12, src: "/soup.jpg", label: "Thai" },
   ];
 
   const carouselRef = useRef(null);
@@ -35,7 +36,7 @@ const CustomRoundCarousel = () => {
         className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 px-0 py-2"
         onClick={scrollLeft}
       >
-        <img src="/left.png" className='w-4 h-auto'/>
+        <img src="/left.png" className="w-4 h-auto" />
       </button>
 
       {/* Carousel container */}
@@ -47,8 +48,9 @@ const CustomRoundCarousel = () => {
         }}
       >
         {items.map((item) => (
-          <div
+          <Link
             key={item.id}
+            href={`/recipes/cuisines/${item.label.toLowerCase()}`} // Link to the cuisine page
             className="flex flex-col items-center flex-shrink-0 w-1/6 scroll-snap-align-center"
           >
             <img
@@ -57,7 +59,7 @@ const CustomRoundCarousel = () => {
               className="w-32 h-32 rounded-full object-cover border-4 border-gray-300 shadow-md"
             />
             <p className="mt-2 text-sm font-medium text-black">{item.label}</p>
-          </div>
+          </Link>
         ))}
       </div>
 
@@ -66,7 +68,7 @@ const CustomRoundCarousel = () => {
         className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 px-0 py-2"
         onClick={scrollRight}
       >
-        <img src="/right.png" className='w-4 h-auto'/>
+        <img src="/right.png" className="w-4 h-auto" />
       </button>
     </div>
   );

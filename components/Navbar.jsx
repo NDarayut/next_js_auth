@@ -89,14 +89,20 @@ export default function Navbar() {
         )}
 
         {status === "unauthenticated" ? (
-          <div className="flex justify-end">
+          <div className="flex flex-1 justify-end">
             <LoginBtn />
           </div>
+          
         ) : null}
 
         {/* Avatar Section */}
         {status === "authenticated" && session?.user && (
-          <div className="flex items-center ml-auto mr-4">
+          <div className="flex items-center ml-auto mr-4 gap-4">
+            <div>
+              <Link href="/recipes/create">
+                <img src="/create.png " className="w-8 h-8" />
+              </Link>
+            </div>
             <Link href={`/profile/${session.user.id}`}>
               <img
                 src={profilePicture || "/default-avatar.png"}

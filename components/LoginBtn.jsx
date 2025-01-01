@@ -5,6 +5,5 @@ export default function LoginBtn(){
         <Link href={"/login"}>
             <button className="generalButton text-white" type="button">Login/Sign up</button>
         </Link>
-        
     )
 }
