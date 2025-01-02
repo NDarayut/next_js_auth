@@ -108,6 +108,8 @@ export default function TestRecipe() {
         const payload = {
           ...formData,
           status: "pending-create",
+          score: 0,
+          userId: session.user.id,
           sourceName: session.user.username,
           image: base64Image,
           extendedIngredients: ingredients,
@@ -120,7 +122,6 @@ export default function TestRecipe() {
               })),
             },
           ],
-          userId: session.user.id,
         };
 
         try {

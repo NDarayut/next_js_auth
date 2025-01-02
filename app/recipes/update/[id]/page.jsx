@@ -55,7 +55,6 @@ export default function UpdateRecipe() {
 
   useEffect(() => {
     if (recipeDetail) {
-      console.log("Recipe detail:", recipeDetail); // Debug: Check the object structure);
       setFormData({
         title: recipeDetail.title,
         image: recipeDetail.image || "", 
@@ -124,33 +123,6 @@ export default function UpdateRecipe() {
 
   const handleDelete = async (e) => {
     e.preventDefault();
-    
-    const payload = {
-      status: "pending-delete", // Only send the status update
-    };
-  
-    try {
-      const response = await fetch(`/api/recipes/update/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-  
-      if (!response.ok) {
-        const { error } = await response.json();
-        setResponse(error || "Failed to update recipe status to pending-delete");
-        return;
-      }
-  
-      setIsSuccess(true);
-    } catch (error) {
-      console.error(error);
-      setResponse("Failed to update recipe status to pending-delete");
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
 
     let base64Image = "";
     if (imageFile) {
@@ -159,7 +131,10 @@ export default function UpdateRecipe() {
         base64Image = reader.result;
         const payload = {
           ...formData,
-          status: "pending-update",
+          originalRecipeId: id,
+          status: "pending-delete",
+          userId: session.user.id,
+          score: recipeDetail.score,
           image: base64Image,
           extendedIngredients: ingredients,
           nutrition: { nutrients: nutritions },
@@ -174,8 +149,8 @@ export default function UpdateRecipe() {
         };
 
         try {
-          const response = await fetch(`/api/recipes/update/${id}`, {
-            method: "PUT",
+          const response = await fetch(`/api/recipes/create-mock-recipe`, {
+            method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
           });
@@ -194,7 +169,60 @@ export default function UpdateRecipe() {
       };
 
       reader.readAsDataURL(imageFile);
-    } else {
+  }
+};
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    let base64Image = "";
+    if (imageFile) {
+      const reader = new FileReader();
+      reader.onload = async () => {
+        base64Image = reader.result;
+        const payload = {
+          ...formData,
+          originalRecipeId: id,
+          status: "pending-update",
+          userId: session.user.id,
+          score: recipeDetail.score,
+          image: base64Image,
+          extendedIngredients: ingredients,
+          nutrition: { nutrients: nutritions },
+          analyzedInstructions: [
+            {
+              steps: instructions.map((instruction, index) => ({
+                number: index + 1,
+                step: instruction,
+              })),
+            },
+          ],
+        };
+
+        try {
+          const response = await fetch(`/api/recipes/create-mock-recipe`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+
+          if (!response.ok) {
+            const { error } = await response.json();
+            setResponse(error || "Failed to update recipe");
+            return;
+          }
+
+          setIsSuccess(true);
+        } catch (error) {
+          console.error(error);
+          setResponse("Failed to update recipe");
+        }
+      };
+
+      reader.readAsDataURL(imageFile);
+    } 
+    
+    else {
       alert("Please upload an image.");
     }
   };
@@ -259,7 +287,7 @@ if (!recipeDetail) {
         </form>
         {isSuccess && (
           <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-customGreen text-white px-4 py-2 rounded-md shadow-lg z-50">
-            Recipe updated successfully
+            Request Submitted Successfully
           </div>
         )}
       </div>
