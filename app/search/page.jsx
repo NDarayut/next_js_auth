@@ -120,6 +120,7 @@ export default function SearchResults() {
         {recipes.length > 0 ? (
           recipes.map((recipe) => (
             <RecipeCard
+              key={recipe._id}
               recipeId={recipe._id}
               src={recipe.image}
               title={recipe.title}

@@ -11,7 +11,7 @@ import UserCreatedRecipes from "./components/UserCreatedRecipes"
 export default function ProfilePage() {
     const { id } = useParams()
 
-    const {data: session, status} = useSession()
+    const {data: status} = useSession()
 
     if(status === "loading"){
         return <p>Loading...</p>

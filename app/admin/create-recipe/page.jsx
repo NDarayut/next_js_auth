@@ -10,6 +10,7 @@ import Navbar from "@/components/Navbar";
 import IngredientForm from "./components/IngredientForm";
 import Footer from "@/components/Footer";
 import { useRouter } from 'next/navigation'; // For client-side redirects
+import Image from "next/image";
 
 export default function TestRecipe() {
   const { data: session, status } = useSession();
@@ -263,13 +264,21 @@ export default function TestRecipe() {
               ))}
 
               <tr className="border-t border-black">
-                <button
-                  type="button"
-                  onClick={addIngredientRow}
-                  className="flex justify-center"
-                >
-                  <img src="/add.png" className="w-6 h-6 m-3"/>
-                </button>
+                <td>
+                  <button
+                    type="button"
+                    onClick={addIngredientRow}
+                    className="flex justify-center"
+                  >
+                    <Image 
+                      src="/add.png"
+                      alt="Add ingredients"
+                      width={24}
+                      height={24}
+                      className="m-3"
+                    />
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -280,7 +289,8 @@ export default function TestRecipe() {
             nutritions={nutritions}
             handleNutritionChange={handleNutritionChange}
           />
-          
+
+          {/* Instructions table */}
           <Instructions
             instructions={instructions}
             handleChange={handleInstructionChange}
@@ -292,17 +302,14 @@ export default function TestRecipe() {
               Create Recipe
             </button>
           </div>
-          
         </form>
         {isSuccess && (
-                <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-customGreen text-white px-4 py-2 rounded-md shadow-lg z-50">
-                    Recipe created successfully
-                </div>
-            )}
+          <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-customGreen text-white px-4 py-2 rounded-md shadow-lg z-50">
+            Recipe created successfully
+          </div>
+        )}
       </div>
-
-      <Footer/>
-      
+      <Footer/>    
     </div>
   );
 }

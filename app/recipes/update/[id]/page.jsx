@@ -10,6 +10,7 @@ import IngredientForm from "../../components/IngredientForm";
 import Footer from "@/components/Footer";
 import { useRouter, useParams } from 'next/navigation'; // For client-side redirects
 import { useRecipes } from "@/app/hook/useRecipes";
+import Image from "next/image";
 
 export default function UpdateRecipe() {
   const { data: session, status } = useSession();
@@ -124,53 +125,34 @@ export default function UpdateRecipe() {
   const handleDelete = async (e) => {
     e.preventDefault();
 
-    let base64Image = "";
-    if (imageFile) {
-      const reader = new FileReader();
-      reader.onload = async () => {
-        base64Image = reader.result;
-        const payload = {
-          ...formData,
-          originalRecipeId: id,
-          status: "pending-delete",
-          userId: session.user.id,
-          score: recipeDetail.score,
-          image: base64Image,
-          extendedIngredients: ingredients,
-          nutrition: { nutrients: nutritions },
-          analyzedInstructions: [
-            {
-              steps: instructions.map((instruction, index) => ({
-                number: index + 1,
-                step: instruction,
-              })),
-            },
-          ],
-        };
+    const payload = {
+      originalRecipeId: id,
+      status: "pending-delete",
+    };
 
-        try {
-          const response = await fetch(`/api/recipes/create-mock-recipe`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-          });
+    try {
+      const response = await fetch(`/api/recipes/create-mock-recipe`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-          if (!response.ok) {
-            const { error } = await response.json();
-            setResponse(error || "Failed to update recipe");
-            return;
-          }
+      if (!response.ok) {
+        const { error } = await response.json();
+        setResponse(error || "Failed to update recipe");
+        return;
+      }
+      setIsSuccess(true);
+    } 
+    
+    catch (error) {
+      console.error(error);
+      setResponse("Failed to update recipe");
+    }
+    };
 
-          setIsSuccess(true);
-        } catch (error) {
-          console.error(error);
-          setResponse("Failed to update recipe");
-        }
-      };
 
-      reader.readAsDataURL(imageFile);
-  }
-};
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -270,9 +252,17 @@ if (!recipeDetail) {
                 <IngredientForm key={index} index={index} ingredient={ingredient} handleChange={handleIngredientChange} removeIngredient={removeIngredientRow} />
               ))}
               <tr className="border-t border-black">
-                <button type="button" onClick={addIngredientRow} className="flex justify-center">
-                  <img src="/add.png" className="w-6 h-6 m-3" />
-                </button>
+                <td>
+                  <button type="button" onClick={addIngredientRow} className="flex justify-center">
+                    <Image 
+                      src="/add.png"
+                      alt="Add Ingredient"
+                      width={24}
+                      height={24}
+                      className="m-3"
+                    />
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>

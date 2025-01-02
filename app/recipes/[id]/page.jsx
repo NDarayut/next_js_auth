@@ -12,6 +12,7 @@ import Instructions from "./components/Instructions"
 import SimilarRecipe from "./components/SimilarRecipe"
 import RecipeTags from "./components/RecipeTags"
 import { useRouter } from "next/navigation";
+import Image from "next/image"
 
 
 export default function RecipeDetail({params}){
@@ -165,9 +166,14 @@ export default function RecipeDetail({params}){
             
             <Introduction {...introduction} />
             {isOwner &&(
-              <div className="absolute top-32 right-0 mr-[100px] w-8 h-8">
+              <div className="absolute top-32 right-0 mr-[100px]">
               <button onClick={handleSettingsClick}>
-                <img src="/setting.png" />
+                <Image 
+                  src="/setting.png"
+                  alt="Settings"
+                  width={32}
+                  height={32}
+                />
               </button>
             </div>
             )}

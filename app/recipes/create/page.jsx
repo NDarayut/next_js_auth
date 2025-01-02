@@ -9,7 +9,8 @@ import NutritionForm from '../components/NutritionForm';
 import Navbar from "@/components/Navbar";
 import IngredientForm from "../components/IngredientForm";
 import Footer from "@/components/Footer";
-import { useRouter } from 'next/navigation'; // For client-side redirects
+import { useRouter } from 'next/navigation';
+import Image from "next/image";
 
 
 export default function TestRecipe() {
@@ -265,18 +266,25 @@ export default function TestRecipe() {
               ))}
 
               <tr className="border-t border-black">
-                <button
-                  type="button"
-                  onClick={addIngredientRow}
-                  className="flex justify-center"
-                >
-                  <img src="/add.png" className="w-6 h-6 m-3"/>
-                </button>
+                <td>
+                  <button
+                    type="button"
+                    onClick={addIngredientRow}
+                    className="flex justify-center"
+                  >
+                     <Image 
+                      src="/add.png"
+                      alt="Add ingredients"
+                      width={24}
+                      height={24}
+                      className="m-3"
+                    />
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
           
-
           {/* Nutrition Table */}
           <NutritionForm
             nutritions={nutritions}

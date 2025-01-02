@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 // components/Instructions.jsx
 const Instructions = ({ instructions, handleChange, addStep, removeStep }) => (
     <div>
@@ -16,7 +18,12 @@ const Instructions = ({ instructions, handleChange, addStep, removeStep }) => (
               onClick={() => removeStep(index)}
               className="flex justify-center "
             >
-              <img src="/bin.png" className="w-8 h-8 m-3" />
+              <Image 
+                src="/bin.png"
+                alt="Remove instruction"
+                width={32}
+                height={32}
+              />
             </button>
           )}
         </div>
@@ -26,7 +33,13 @@ const Instructions = ({ instructions, handleChange, addStep, removeStep }) => (
         onClick={addStep}
         className="flex justify-center items-center"
       >
-        <img src="/add.png" className="w-6 h-6 m-3"/><p>Add steps</p>
+        <Image
+          src="/add.png"
+          alt="Add instruction"
+          width={24}
+          height={24}
+          className="m-3"
+        />
       </button>
     </div>
   );

@@ -1,13 +1,17 @@
-import {Card, CardHeader, CardBody, Image} from "@nextui-org/react";
+import {Card, CardHeader, CardBody} from "@nextui-org/react";
+import Image from "next/image";
 
 export default function RandomCard() {
   return (
     <Card className="w-[600px] rounded-[10px]  bg-customYellow">
       <CardHeader className="p-0">
-        <img  
-                className="rounded-none"
-                src="/chinese.jpg"
-            />
+        <Image
+          src="/chinese.jpg"
+          alt="Chinese"
+          width={0}
+          height={0}
+          className="w-auto h-auto rounded-none"
+        />
       </CardHeader>
       <CardBody className="py-8 px-5">
         <div className="flex flex-row items-end">

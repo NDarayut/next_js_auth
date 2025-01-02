@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 // components/IngredientRow.jsx
 const IngredientForm = ({ index, ingredient, handleChange, removeIngredient }) => (
   <tr key={index}>
@@ -33,7 +35,12 @@ const IngredientForm = ({ index, ingredient, handleChange, removeIngredient }) =
         onClick={() => removeIngredient(index)}
         className="flex justify-center"
       >
-        <img src="/bin.png" className="w-8 h-8" />
+        <Image
+          src="/bin.png"
+          alt="Remove ingredient"
+          width={32}
+          height={32}
+        />
       </button>
     </td>
   </tr>

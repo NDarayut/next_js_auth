@@ -1,11 +1,10 @@
 "use client"
 
-import {Card, CardHeader, CardBody, Image, Button} from "@nextui-org/react";
+import {Card, CardHeader} from "@nextui-org/react";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import Link from "next/link";
 import {useState} from "react"
-import { getSession } from "next-auth/react";
-import NutritionalFacts from "./NutritionalFacts";
 
 export default function RelatedCard({recipeId, src, title, rating}) {
     
@@ -37,10 +36,13 @@ export default function RelatedCard({recipeId, src, title, rating}) {
                     <CardHeader className="flex flex-row items-center h-full p-0">
                         {/* Image Section */}
                         <div className="h-[120px] w-[150px] flex-shrink-0">
-                            <img
-                                className="h-full w-full object-cover rounded-none"
+                            <Image 
                                 src={src}
                                 alt={title}
+                                width={0}
+                                height={0}
+                                style={{ width: '100%', height: '100%' }}
+                                className="object-cover rounded-none"
                             />
                         </div>
 

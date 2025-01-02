@@ -3,6 +3,8 @@ const  {Schema, models} = mongoose;
 
 const mockRecipeSchema = new Schema({
     
+    // When create pending-delete, we only need recipe's ID and the status
+    // So everything else is not required
     originalRecipeId: { type: mongoose.Schema.Types.ObjectId, ref: 'Recipe', required: true },
 
     status: {
@@ -13,37 +15,37 @@ const mockRecipeSchema = new Schema({
     userId: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User', 
-        required: true 
+        required: false 
     },
     
     title: {
         type: String,
-        required: true
+        required: false
     },
     
     score: {
         type: Number,
-        required: true,
+        required: false,
     },
 
     sourceName: {
         type: String,
-        required: true
+        required: false
     },
 
     summary: {
         type: String,
-        required: true
+        required: false
     },
 
     image: {
         type: String,
-        required: true
+        required: false
     },
 
     readyInMinutes: {
         type: Number,
-        required: true,
+        required: false,
     },
 
     dishTypes: {
