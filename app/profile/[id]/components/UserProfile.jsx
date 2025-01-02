@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState, useRef } from "react";
 import LogoutBtn from "./LogoutBtn";
 import DeleteBtn from "./DeleteButton";
+import Image from "next/image";
 
 export default function UserProfile({ userId }) {
     const { data: session, status } = useSession();
@@ -19,10 +20,6 @@ export default function UserProfile({ userId }) {
     });
     
     const fileInputRef = useRef(null);
-
-    if(status === "loading"){
-        return <p>Loading...</p>
-    }
 
     // Fetch user data
     useEffect(() => {
@@ -46,7 +43,8 @@ export default function UserProfile({ userId }) {
                         profilePicture: data.profilePicture || "", // Add this to handle profile picture
                     });
                 }
-            } catch (error) {
+            } 
+            catch (error) {
                 console.error("Error fetching user:", error);
                 setError("An unexpected error occurred");
             }
@@ -104,7 +102,9 @@ export default function UserProfile({ userId }) {
             setUser((prevUser) => ({ ...prevUser, ...formData }));
             setIsSuccess(true);
             setTimeout(() => setIsSuccess(false), 3000);
-        } catch (error) {
+        } 
+        
+        catch (error) {
             console.error("Error saving changes:", error);
             setError("An unexpected error occurred");
         }
@@ -127,18 +127,24 @@ export default function UserProfile({ userId }) {
 
                 {/*Profile picture container */}
                 <div>
+                    {/*Determine if the current user is the owner of the profile page */}
                     {isOwner ? (
                     <>
                         <div
                             className="relative group w-72 h-72 mt-4 cursor-pointer"
                             onClick={() => fileInputRef.current?.click()} // Trigger file input on click
                         >
+                            {/*If the profile picture exist, display it, if not, show a text*/}
                             {formData.profilePicture ? (
-                            <img
-                                src={formData.profilePicture}
-                                alt="Profile Preview"
-                                className="w-full h-full rounded-full object-cover"
-                            />
+                                <Image 
+                                    src={formData.profilePicture}
+                                    alt="Profile Preview"
+                                    width={0}
+                                    height={0}
+                                    className="rounded-full"
+                                    style={{ width: '100%', height: '100%' }}
+
+                                />
                             ) : (
                             <div className="w-full h-full rounded-full bg-gray-200 flex items-center justify-center">
                                 <p>Upload Picture</p>
@@ -147,7 +153,12 @@ export default function UserProfile({ userId }) {
 
                             {/* Hover Camera Icon */}
                             <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                                <img src="/upload.png" className="w-12 h-12"/>
+                                <Image
+                                    src="/upload.png"
+                                    alt="Upload"
+                                    width={48}
+                                    height={48}
+                                />
                             </div>
                         </div>
 
@@ -159,15 +170,7 @@ export default function UserProfile({ userId }) {
                             className="hidden"
                         />
                     </>
-                        ) : user.profilePicture ? (
-                            <img
-                                src={user.profilePicture}
-                                alt="Profile"
-                                className="w-72 h-72 rounded-full object-cover"
-                            />
-                        ) : (
-                            <p>No profile picture available</p>
-                    )}
+                        ) : null}
 
                     <div className="flex flex-row mt-10 gap-2">
                         <div>

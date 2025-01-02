@@ -11,14 +11,12 @@ import UserCreatedRecipes from "./components/UserCreatedRecipes"
 export default function ProfilePage() {
     const { id } = useParams()
 
-    const {data: session, status} = useSession()
+    const {data: status} = useSession()
 
     if(status === "loading"){
         return <p>Loading...</p>
     }
-
     
-
     return (
         <div className="bg-customYellow min-h-screen">
             <div className="sticky top-0 bg-customYellow z-50 mb-36">

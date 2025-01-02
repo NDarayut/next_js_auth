@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer"; // Ensure you're using this hook
+import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 export default function About() {
   const [stats, setStats] = useState({
@@ -12,6 +14,8 @@ export default function About() {
     recipesCount: 0,
     reviewsCount: 0,
   });
+
+  const {data: status} = useSession()
 
   // Fetch stats
   useEffect(() => {
@@ -55,6 +59,10 @@ export default function About() {
     y: inView ? 0 : 50,
   });
 
+  if(status === "loading"){
+    return <div>Loading...</div>
+  }
+
   return (
     <div className="bg-customYellow min-h-screen">
       {/* Sticky Navbar */}
@@ -67,17 +75,14 @@ export default function About() {
           className="relative h-screen bg-fixed bg-center bg-cover"
           style={{ backgroundImage: "url('/about_img.jpg')" }}
         >
-
-        
           <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
             <motion.h1
               initial={{ opacity: 0, y: 50 }}  // Start hidden and offset from the bottom
               animate={{ opacity: 1, y: 0 }}    // Animate to visible and no offset
               transition={{ duration: 0.8 }}    // Duration of animation
+              className="text-white text-5xl md:text-7xl font-bold text-center px-4"
             >
-              <h1 className="text-white text-5xl md:text-7xl font-bold text-center px-4">
-                Discover the Joy of Cooking! <br /> Recipes Tailored Just for You.
-              </h1>
+              Discover the Joy of Cooking! <br /> Recipes Tailored Just for You.
             </motion.h1>
           </div>
         </div>
@@ -137,17 +142,35 @@ export default function About() {
         <h2 className="text-customDarkGreen font-serif text-6xl mb-36 text-center">How It Works</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="text-center">
-            <img src="/recipe.png" alt="Step 1" className="mx-auto w-24 h-auto mb-4" />
+            <Image 
+              src="/recipe.png" 
+              alt="Step 1"  
+              width={96} // Matches the `w-24` (24 x 4px = 96px)
+              height={0} // This will be ignored when using layout="intrinsic"
+              className="mx-auto mb-4" 
+            />
             <h3 className="text-2xl font-bold">Step 1</h3>
             <p className="text-gray-600">Tell us the recipe.</p>
           </div>
           <div className="text-center">
-            <img src="/task.png" alt="Step 2" className="mx-auto w-24 h-auto mb-4" />
+            <Image 
+              src="/task.png" 
+              alt="Step 2"  
+              width={96} // Matches the `w-24` (24 x 4px = 96px)
+              height={0} // This will be ignored when using layout="intrinsic"
+              className="mx-auto mb-4" 
+            />
             <h3 className="text-2xl font-bold">Step 2</h3>
             <p className="text-gray-600">Get detailed instruction.</p>
           </div>
           <div className="text-center">
-            <img src="/cook.png" alt="Step 3" className="mx-auto w-24 h-auto mb-4" />
+            <Image 
+              src="/cook.png" 
+              alt="Step 3"  
+              width={96} // Matches the `w-24` (24 x 4px = 96px)
+              height={0} // This will be ignored when using layout="intrinsic"
+              className="mx-auto mb-4" 
+            />
             <h3 className="text-2xl font-bold">Step 3</h3>
             <p className="text-gray-600">Cook, enjoy, and share your creations!</p>
           </div>
@@ -166,7 +189,6 @@ export default function About() {
           animate={getAnimation(storyInView)}
           exit={{ opacity: 0, y: -50 }}
           transition={{ duration: 0.6 }}
-          
         >
           
           <div className="relative max-w-4xl text-center text-white px-8">

@@ -8,20 +8,18 @@ const CuisinePage = ({ params }) => {
 
   useEffect(() => {
     // Fetch recipes based on cuisine
-    const c = "asian"
+    const c = "asian"; // You may want to replace this with dynamic cuisine
     fetch(`/api/recipes/cuisines/${c}`)
       .then((response) => response.json())
       .then((data) => {
         // Ensure data.recipes is an array, if not set it to an empty array
         setRecipes(data.recipes || []);
-
-        console.log(recipes);
       })
       .catch((error) => {
         console.error("Error fetching recipes:", error);
         setRecipes([]); // In case of an error, ensure recipes is empty
       });
-  }, [cuisine]);
+  }, [cuisine]); // Only depend on 'cuisine' for re-fetching
 
   return (
     <div>

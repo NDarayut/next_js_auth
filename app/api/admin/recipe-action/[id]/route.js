@@ -81,6 +81,13 @@ export async function DELETE(req, { params }) {
       return NextResponse.json({ error: "Recipe not found" }, { status: 404 });
     }
 
+    const mockRecipe = await MockRecipe.find({ originalRecipeId: id })
+
+    if (mockRecipe) {
+      // Recipe exists, delete it
+      await MockRecipe.findOneAndDelete({ originalRecipeId: id });
+    }
+
     return NextResponse.json({ message: "Recipe deleted successfully" }, { status: 200 });
   } 
   

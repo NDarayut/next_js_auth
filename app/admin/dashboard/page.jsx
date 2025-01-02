@@ -1,6 +1,7 @@
 "use client"
 
 import { useSession, signOut } from "next-auth/react";  // Import necessary hooks and signOut method
+import Image from "next/image";
 import { useRouter } from 'next/navigation'; // For client-side redirects
 
 export default function Dashboard(){
@@ -26,6 +27,7 @@ export default function Dashboard(){
         <>
   {/* Main Container */}
   <div className="flex min-h-screen">
+
     {/* Sidebar */}
     <aside className="w-1/5 bg-white p-6 border-r">
       <h1 className="text-2xl font-bold mb-6">Bites</h1>
@@ -72,8 +74,10 @@ export default function Dashboard(){
         </ul>
       </nav>
     </aside>
+
     {/* Main Content */}
     <main className="flex-1 p-8">
+
       {/* Header */}
       <header className="flex justify-between items-center mb-8">
         <h2 className="text-xl font-bold">Dashboard</h2>
@@ -88,6 +92,7 @@ export default function Dashboard(){
           </button>
         </div>
       </header>
+
       {/* Dashboard Stats */}
       <section className="grid grid-cols-3 gap-6 mb-8">
         <div className="bg-white p-6 rounded-lg shadow">
@@ -103,6 +108,7 @@ export default function Dashboard(){
           <p>Total Reviews</p>
         </div>
       </section>
+
       {/* Charts */}
       <section className="grid grid-cols-2 gap-6 mb-8">
         <div className="bg-white p-6 rounded-lg shadow">
@@ -118,6 +124,7 @@ export default function Dashboard(){
           </div>
         </div>
       </section>
+
       {/* Customer Reviews */}
       <section className="bg-white p-6 rounded-lg shadow">
         <h3 className="text-lg font-bold mb-4">Customer Reviews</h3>
@@ -130,28 +137,36 @@ export default function Dashboard(){
             </button>
             <div className="flex-1 flex overflow-hidden">
               <div className="review hidden flex flex-col items-center text-center flex-shrink-0 w-full">
-                <img
+
+                <Image 
                   src="../src/img/PFP-1.png"
                   alt="User"
-                  className="w-16 h-16 rounded-full mb-4"
+                  width={64}
+                  height={64}
+                  className="rounded-full mb-4"
                 />
+
                 <h4 className="font-bold">John Sena</h4>
                 <p>&quot;Excellent recipes! Highly recommended.&quot;</p>
               </div>
               <div className="review hidden flex flex-col items-center text-center flex-shrink-0 w-full">
-                <img
+                <Image 
                   src="../src/img/PFP-1.png"
                   alt="User"
-                  className="w-16 h-16 rounded-full mb-4"
+                  width={64}
+                  height={64}
+                  className="rounded-full mb-4"
                 />
                 <h4 className="font-bold">Sofia</h4>
                 <p>&quot;Great user experience and tasty dishes!&quot;</p>
               </div>
               <div className="review hidden flex flex-col items-center text-center flex-shrink-0 w-full">
-                <img
+                <Image 
                   src="../src/img/PFP-1.png"
                   alt="User"
-                  className="w-16 h-16 rounded-full mb-4"
+                  width={64}
+                  height={64}
+                  className="rounded-full mb-4"
                 />
                 <h4 className="font-bold">Michael</h4>
                 <p>&quot;Love the variety of recipes provided!&quot;</p>

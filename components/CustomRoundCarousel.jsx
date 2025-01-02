@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import Link from "next/link"; // Import Link from next/link
+import Image from "next/image";
 
 const CustomRoundCarousel = () => {
   const items = [
@@ -36,7 +37,13 @@ const CustomRoundCarousel = () => {
         className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 px-0 py-2"
         onClick={scrollLeft}
       >
-        <img src="/left.png" className="w-4 h-auto" />
+        <Image 
+          src="/left.png"
+          alt="Left"
+          width={0}
+          height={0}
+          className="w-4 h-auto"
+        />
       </button>
 
       {/* Carousel container */}
@@ -53,9 +60,11 @@ const CustomRoundCarousel = () => {
             href={`/recipes/cuisines/${item.label.toLowerCase()}`} // Link to the cuisine page
             className="flex flex-col items-center flex-shrink-0 w-1/6 scroll-snap-align-center"
           >
-            <img
+            <Image 
               src={item.src}
               alt={item.label}
+              width={0}
+              height={0}
               className="w-32 h-32 rounded-full object-cover border-4 border-gray-300 shadow-md"
             />
             <p className="mt-2 text-sm font-medium text-black">{item.label}</p>
@@ -68,7 +77,13 @@ const CustomRoundCarousel = () => {
         className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 px-0 py-2"
         onClick={scrollRight}
       >
-        <img src="/right.png" className="w-4 h-auto" />
+        <Image 
+          src="/right.png"
+          alt="Right"
+          width={0}
+          height={0}
+          className="w-4 h-auto"
+        />
       </button>
     </div>
   );

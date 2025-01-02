@@ -1,10 +1,11 @@
 "use client"
 
-import {Card, CardHeader, CardBody, Image, Button} from "@nextui-org/react";
+import {Card, CardHeader, CardBody, Button} from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import {useState} from "react"
 import { getSession } from "next-auth/react";
+import Image from "next/image";
 
 export default function RecipeCard({recipeId, src, title, isFavorited, sourceName, rating, readyInMinutes, onRemove}) {
 
@@ -71,10 +72,12 @@ export default function RecipeCard({recipeId, src, title, isFavorited, sourceNam
     
       <Card className="w-[300px] h-[450px] rounded-[5px]  bg-customYellow transform hover:scale-105 transition-transform duration-300 ease-in-out">
         <CardHeader className="p-0 relative" >
-          <img  
-                className="rounded-[5px] h-[200px]"
-                src={src}
-                alt={title}
+          <Image 
+            src={src}
+            alt={title}
+            width={0}
+            height={0}
+            className="rounded-[5px] w-auto h-[200px]"            
           />
 
           <Button
@@ -93,19 +96,27 @@ export default function RecipeCard({recipeId, src, title, isFavorited, sourceNam
             <div className="">{renderStars()}</div> {/* Display stars */}
             <h1 className="font-sans font-bold text-left text-[18px] text-customDarkGreen mb-3">{title}</h1>
             <div className="flex items-center gap-2"> {/* Flex container for profile picture and sourceName */}
-              <img 
+              <Image 
                 src="/default.png" 
                 alt="Profile Icon" 
+                width={0}
+                height={0}
                 className="w-6 h-6 rounded-full" 
               />
               <h1 className="font-sans font-medium text-[14px] text-customDarkGreen">{sourceName}</h1>
             </div>
-            <a href={`/recipes/${recipeId}`} className="font-sans font-medium text-[14px] text-blue-800 underline absolute bottom-0 right-3">See detail</a>
+            <p className="font-sans font-medium text-[14px] text-blue-800 underline absolute bottom-0 right-3"><u>See detail</u></p>
            <div className='flex items-center absolute bottom-0 left-3'>
-              <img src="/timer.png" className="w-[15px] h-[15px] mr-1" />    
+              <Image 
+                src="/timer.png" 
+                alt="Time to cook"
+                width={0}
+                height={0}
+                className="w-[15px] h-[15px] mr-1"
+              />  
               <h1 className='font-sans text-customDarkGreen text-[14px] font-normal'>{readyInMinutes} mins</h1>
            </div>
-            
+
           </div>
           
         </CardBody>

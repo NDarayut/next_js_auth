@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function Introduction({title, author, description, recipeImage}) {
     return <div>
       
@@ -8,11 +10,13 @@ export default function Introduction({title, author, description, recipeImage}) 
         <p
           className="text-[18px] align-left mb-[50px]"
           dangerouslySetInnerHTML={{ __html: description }} />
-        <img
+        <Image 
           src={recipeImage}
+          alt="Recipe Image"
+          width={0}
+          height={0}
           className="rounded-small w-[900px] h-auto mb-4"
-          alt="Recipe" />
-  
+        />
       </section>
     </div>
   }

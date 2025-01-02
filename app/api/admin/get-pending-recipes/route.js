@@ -1,6 +1,6 @@
 import { connectMongoDB } from "@/lib/mongodb";
 import Recipe from "@/models/recipe";
-import RecipeUpdate from "@/models/mockRecipe";
+import MockRecipe from "@/models/mockRecipe";
 
 export async function GET() {
   try {
@@ -13,7 +13,7 @@ export async function GET() {
     );
 
     // Fetch pending recipes with desired fields
-    const pendingMockRecipes = await RecipeUpdate.find(
+    const pendingMockRecipes = await MockRecipe.find(
       { status:  { $in: ["pending-update", "pending-delete"] } },
       { originalRecipeId: 1, title: 1, status: 1 } // Specify fields to retrieve
     );

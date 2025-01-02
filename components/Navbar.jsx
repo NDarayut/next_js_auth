@@ -4,6 +4,7 @@ import SearchBar from './SearchBar';
 import LoginBtn from './LoginBtn';
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 
 export default function Navbar() {
   const { data: session, status } = useSession();
@@ -100,13 +101,21 @@ export default function Navbar() {
           <div className="flex items-center ml-auto mr-4 gap-4">
             <div>
               <Link href="/recipes/create">
-                <img src="/create.png " className="w-8 h-8" />
+                <Image 
+                  src="/create.png"
+                  alt="Create Recipe"
+                  width={0}
+                  height={0}
+                  className="w-8 h-8"
+                />
               </Link>
             </div>
             <Link href={`/profile/${session.user.id}`}>
-              <img
-                src={profilePicture || "/default-avatar.png"}
+              <Image 
+                src={profilePicture || "/default.png"}
                 alt="User Avatar"
+                width={0}
+                height={0}
                 className="w-12 h-12 rounded-full cursor-pointer border border-customDarkGreen"
               />
             </Link>

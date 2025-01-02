@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import {signIn} from "next-auth/react"
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function LoginForm(){
 
@@ -74,13 +75,23 @@ export default function LoginForm(){
                 </form>
 
                 <div className="flex justify-center gap-[25px] mt-[20px] font-jura">
-                        <button className="google" onClick={() => signIn("google")}><img src="/google.ico" className="w-4 h-4 mr-[10px]" />Gmail</button>
-                       {/*  <button className="facebook" onClick={() => signIn("facebook")}><img src="/facebook.ico" className="w-6 h-6 mr-[5px]" />Facebook</button>*/}
+                        <button className="google" onClick={() => signIn("google")}>
+                            <Image 
+                                src="/google.ico"
+                                alt="Google login"
+                                width={16}
+                                height={16}
+                                className="mr-[10px]"
+                            />
+                            Gmail
+                        </button>
+
+                        {/*  <button className="facebook" onClick={() => signIn("facebook")}><img src="/facebook.ico" className="w-6 h-6 mr-[5px]" />Facebook</button>*/}
                         {/*<button className="instagram"><img src="/instagram.ico" className="w-6 h-6" />Instagram</button>*/}
                 </div>
                 
                 <Link className="text-[15px] mt-3 flex flex-col text-center gap-[10px] font-mono" href={"/register"}>
-                    <span>Don't have an account?</span> 
+                    <span>Don&apos;t have an account?</span> 
                     <span className="underline font-bold hover:text-gray-400 active:text-gray-950">Sign up now!</span>
                 </Link>
 
