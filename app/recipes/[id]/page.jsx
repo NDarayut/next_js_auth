@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
 import NutritionalFacts from "./components/NutritionalFacts"
 import { motion } from "framer-motion";
-import Introduction from "./components/introduction"
+import Introduction from "./components/Introduction"
 import KeyInformation from "./components/KeyInformation"
 import Ingredients from "./components/Ingredients"
 import Instructions from "./components/Instructions"
