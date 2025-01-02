@@ -7,17 +7,11 @@ export async function POST(req) {
     try{
         // destructuring the response to get only necessary data
         // await keyword pause the program and wait for the code to run before moving to next line
-        const {firstName, lastName, email, password, role = "user", profilePicture} = await req.json() // get the request sent from the RegisterForm and store it in the var
+        const {firstName, lastName, email, password, role = "user", profilePicture = ""} = await req.json() // get the request sent from the RegisterForm and store it in the var
         const hashedPassword = await bcrypt.hash(password, 10) // pass in string that needed to be hased and number of hashing (10 round)
 
         // connect to database
         await connectMongoDB()
-
-        // Handle the profile picture (if provided)
-        let profilePictureUrl = "";
-        if (profilePicture) {
-            profilePictureUrl = profilePicture; // Save the base64 string directly or upload to a cloud
-        }
      
         await User.create({firstName, 
                             lastName, 

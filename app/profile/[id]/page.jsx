@@ -16,9 +16,7 @@ export default function ProfilePage() {
     if(status === "loading"){
         return <p>Loading...</p>
     }
-
     
-
     return (
         <div className="bg-customYellow min-h-screen">
             <div className="sticky top-0 bg-customYellow z-50 mb-36">

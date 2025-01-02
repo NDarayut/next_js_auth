@@ -48,7 +48,8 @@ export default function RecipeDetail({params}){
         fetchRecipeById(id) 
         fetchReviews();
         fetchSimilarRecipes()
-    }, [id])
+
+      }, [id])
 
     useEffect(() => {
       if (session?.user?.id === recipeDetail?.userId) {
