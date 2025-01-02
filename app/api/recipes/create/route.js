@@ -4,11 +4,12 @@ import { NextResponse } from "next/server";
 
 export async function POST(req){
     try{
-        await connectMongoDB()
 
-        const {title, sourceName, summary, image, readyInMinutes, dishTypes = [], cuisines = [],
-            occasions = [], diets = [], nutrition = {nutrients: []}, extendedIngredients = [], analyzedInstructions = [], userId, status
-        } = await req.json()
+      await connectMongoDB()
+
+      const {title, sourceName, summary, image, readyInMinutes, dishTypes = [], cuisines = [],
+          occasions = [], diets = [], nutrition = {nutrients: []}, extendedIngredients = [], analyzedInstructions = [], userId, status
+      } = await req.json()
 
       const newRecipe = await Recipe.create({
         title,

@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
 const  {Schema, models} = mongoose;
 
-const recipeSchema = new Schema({
+const mockRecipeSchema = new Schema({
+    
+    originalRecipeId: { type: mongoose.Schema.Types.ObjectId, ref: 'Recipe', required: true },
+
     status: {
         type:String,
         required: true
@@ -96,7 +99,7 @@ const recipeSchema = new Schema({
 )
 
 // check if we have a models, if we dont, we create a new one
-const Recipe = models.Recipe ||  mongoose.model("Recipe", recipeSchema)
+const MockRecipe = models.MockRecipe ||  mongoose.model("MockRecipe", mockRecipeSchema)
 
 // we export the object so that it can be used in other file
-export default Recipe
+export default MockRecipe
