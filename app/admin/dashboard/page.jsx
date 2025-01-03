@@ -111,22 +111,6 @@ export default function Dashboard(){
         </div>
       </section>
 
-      {/* Charts */}
-      <section className="grid grid-cols-2 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-bold mb-4">Pie Chart</h3>
-          <div className="flex justify-center items-center">
-            [Insert Pie Chart]
-          </div>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-bold mb-4">User Registration Chart</h3>
-          <div className="flex justify-center items-center">
-            [Insert Line Chart]
-          </div>
-        </div>
-      </section>
-
       {/* Customer Reviews */}
       <section className="bg-white p-6 rounded-lg shadow">
         <h3 className="text-lg font-bold mb-4 px-8">Popular Recipes (20)</h3>
