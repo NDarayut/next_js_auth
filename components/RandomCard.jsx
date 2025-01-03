@@ -22,8 +22,7 @@ export default function RandomCard() {
             <div>
                 <button className="border-[1px] border-black px-4 hover:bg-gray-500 active:bg-slate-200">156 recipes</button>
             </div>
-        </div>
-        
+        </div>    
       </CardBody>
     </Card>
   );

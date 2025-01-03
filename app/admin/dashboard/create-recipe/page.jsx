@@ -11,6 +11,7 @@ import IngredientForm from "./components/IngredientForm";
 import Footer from "@/components/Footer";
 import { useRouter } from 'next/navigation'; // For client-side redirects
 import Image from "next/image";
+import SideBar from "../../components/SideBar";
 
 export default function TestRecipe() {
   const { data: session, status } = useSession();
@@ -163,14 +164,14 @@ export default function TestRecipe() {
   }
     
   return (
-    <div className="bg-customYellow min-h-screen">
+    <div className="flex min-h-screen">
 
-      {/*Nav bar*/}
-      <div className="sticky top-0 bg-customYellow z-50 mb-36">
-        <Navbar />
-      </div>
+      <SideBar />
 
       {/*The rest of the components*/}
+      <main className="flex-1 p-8 bg-customYellow">
+
+      
       <div className="font-sans mx-[100px] mb-28">
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -309,7 +310,7 @@ export default function TestRecipe() {
           </div>
         )}
       </div>
-      <Footer/>    
+      </main>
     </div>
   );
 }
