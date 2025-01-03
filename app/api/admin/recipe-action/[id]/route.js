@@ -4,7 +4,7 @@ import MockRecipe from "@/models/mockRecipe";
 import { NextResponse } from "next/server";
 
 
-export async function PATCH(req, { params }) {
+export async function PUT(req, { params }) {
   const { id } = params;
   const { status, currentStatus } = await req.json();
 

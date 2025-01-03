@@ -22,10 +22,14 @@ export default function AdminDashboard() {
       } else {
         setError(data.error || "Failed to fetch pending recipes.");
       }
-    } catch (error) {
+    } 
+    
+    catch (error) {
       console.error(error);
       setError("An error occurred while fetching pending recipes.");
-    } finally {
+    } 
+    
+    finally {
       setLoading(false);
     }
   };
@@ -49,7 +53,9 @@ export default function AdminDashboard() {
       setRecipes((prevRecipes) =>
         prevRecipes.filter((recipe) => recipe.id !== recipeId)
       );
-    } catch (error) {
+    } 
+    
+    catch (error) {
       console.error(error);
       setError(error.message);
     }
@@ -59,6 +65,7 @@ export default function AdminDashboard() {
     e.preventDefault();
 
     setLoading(true);
+
     try {
       let response;
 
@@ -76,7 +83,7 @@ export default function AdminDashboard() {
 
       // Update recipe status if not deleting
       response = await fetch(`/api/admin/recipe-action/${id}`, {
-        method: "PATCH",
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, status, currentStatus }),
       });
@@ -88,10 +95,14 @@ export default function AdminDashboard() {
         const data = await response.json();
         setError(data.error || "Failed to process the action.");
       }
-    } catch (error) {
+    } 
+    
+    catch (error) {
       console.error(error);
       setError("An error occurred while processing the action.");
-    } finally {
+    } 
+    
+    finally {
       setLoading(false);
     }
   };
