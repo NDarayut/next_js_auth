@@ -78,7 +78,7 @@ export default function Dashboard(){
     <SideBar />
 
     {/* Main Content */}
-    <main className="flex-1 p-8">
+    <main className="flex-1 p-8 bg-customYellow">
 
       {/* Header */}
       <header className="flex justify-between items-center mb-8">
