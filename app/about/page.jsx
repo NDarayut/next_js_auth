@@ -25,7 +25,9 @@ export default function About() {
         if (!response.ok) throw new Error("Failed to fetch stats");
         const data = await response.json();
         setStats(data);
-      } catch (error) {
+      } 
+      
+      catch (error) {
         console.error(error);
       }
     };
@@ -100,7 +102,7 @@ export default function About() {
         <p className="text-gray-700 text-lg leading-relaxed max-w-4xl mx-auto text-center">
           At our core, we believe cooking is an art that brings people together. Our mission is to inspire 
           and empower home chefs of all levels with personalized recipes that suit their taste, lifestyle, 
-          and preferences. Cooking should be fun, and we’re here to make it happen!
+          and preferences. Cooking should be fun, and we&apos;re here to make it happen!
         </p>
       </motion.div>
 
@@ -113,7 +115,7 @@ export default function About() {
         transition={{ duration: 0.6 }}
         className="bg-customBrown px-8 py-16"
       >
-        <h2 className="text-customDarkGreen font-serif text-4xl mb-6 text-center">What We’ve Achieved</h2>
+        <h2 className="text-customDarkGreen font-serif text-4xl mb-6 text-center">What We&apos;ve Achieved</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
           <div>
             <h3 className="text-5xl font-bold text-customGreen">{stats.recipesCount}+</h3>
@@ -195,7 +197,7 @@ export default function About() {
             <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6">Our Story</h2>
             <p className="text-lg md:text-xl leading-relaxed">
               It all started with a simple idea: to make cooking accessible, fun, and personalized for everyone. 
-              From humble beginnings as a home-based project, we’ve grown into a community-driven platform that 
+              From humble beginnings as a home-based project, we&apos;ve grown into a community-driven platform that 
               celebrates the joy of food and the art of cooking.
             </p>
           </div>

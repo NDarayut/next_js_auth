@@ -39,7 +39,7 @@ export default function Home() {
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        const response = await fetch("/api/recipes/random");
+        const response = await fetch("/api/recipes/popular");
         const data = await response.json();
         setRecipes(data);
       } catch (error) {
