@@ -10,6 +10,8 @@ export async function GET() {
     // Fetch all comments from the database
     const comments = await Review.find();
 
+    console.log("connected to comment")
+
     // Return the comments as a JSON response
     return new Response(JSON.stringify(comments), { status: 200 });
   } 
