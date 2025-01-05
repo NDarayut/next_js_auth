@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { Button, Spinner, Link } from "@nextui-org/react";
 import RecipesBoard from "./components/RecipesBoard";
-import SideBar from "../../components/SideBar";
+import SideBar from "../components/SideBar";
 import { useRouter } from "next/navigation";
 
 export default function AdminDashboard() {

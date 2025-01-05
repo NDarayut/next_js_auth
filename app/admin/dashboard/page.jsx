@@ -4,8 +4,8 @@ import { useSession, signOut } from "next-auth/react";  // Import necessary hook
 import Image from "next/image";
 import { useRouter } from 'next/navigation'; // For client-side redirects
 import { useEffect, useState } from "react";
-import SideBar from "../components/SideBar";
-import PopularCard from "../components/PopularRecipe";
+import SideBar from "./components/SideBar";
+import PopularCard from "./components/PopularRecipe";
 
 export default function Dashboard(){
 

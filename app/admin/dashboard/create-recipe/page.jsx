@@ -11,7 +11,7 @@ import IngredientForm from "./components/IngredientForm";
 import Footer from "@/components/Footer";
 import { useRouter } from 'next/navigation'; // For client-side redirects
 import Image from "next/image";
-import SideBar from "../../components/SideBar";
+import SideBar from "../components/SideBar";
 
 export default function TestRecipe() {
   const { data: session, status } = useSession();

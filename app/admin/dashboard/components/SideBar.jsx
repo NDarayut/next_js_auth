@@ -20,7 +20,7 @@ export default function SideBar() {
             <a
               href="/admin/dashboard"
               className={`flex items-center text-customDarkGreen font-semibold h-12 p-3 ${
-                  isActive("/admin/dashboard") ? "bg-customDarkBrown rounded-lg" : "hover:bg-customDarkBrown transition-colors duration-300 rounded-lg"
+                  isActive("/admin/dashboard") ? "bg-customLightBrown rounded-lg" : "hover:bg-customLightBrown transition-colors duration-300 rounded-lg"
                 }`}
             >
               <span className="mr-2">
@@ -39,7 +39,7 @@ export default function SideBar() {
             <a
               href="/admin/dashboard/pending-recipe"
               className={`flex items-center text-customDarkGreen font-semibold h-12 p-3 ${
-                isActive("/admin/dashboard/pending-recipe") ? "bg-customDarkBrown rounded-lg" : "hover:bg-customDarkBrown transition-colors duration-300 rounded-lg"
+                isActive("/admin/dashboard/pending-recipe") ? "bg-customLightBrown rounded-lg" : "hover:bg-customLightBrown transition-colors duration-300 rounded-lg"
               }`}
             >
               <span className="mr-2">
@@ -59,7 +59,7 @@ export default function SideBar() {
             <a 
               href="/admin/dashboard/comments" 
               className={`flex items-center text-customDarkGreen font-semibold h-12 p-3 ${
-                isActive("/admin/dashboard/comments") ? "bg-customDarkBrown rounded-lg" : "hover:bg-customDarkBrown transition-colors duration-300 rounded-lg"
+                isActive("/admin/dashboard/comments") ? "bg-customLightBrown rounded-lg" : "hover:bg-customLightBrown transition-colors duration-300 rounded-lg"
               }`}
             >
               <span className="mr-2">
@@ -79,7 +79,7 @@ export default function SideBar() {
             <a 
               href="/admin/dashboard/create-recipe" 
               className={`flex items-center text-customDarkGreen font-semibold h-12 p-3 ${
-                isActive("/admin/dashboard/create-recipe") ? "bg-customDarkBrown rounded-lg" : "hover:bg-customDarkBrown transition-colors duration-300 rounded-lg"
+                isActive("/admin/dashboard/create-recipe") ? "bg-customLightBrown rounded-lg" : "hover:bg-customLightBrown transition-colors duration-300 rounded-lg"
               }`}
             >
               <span className="mr-2">
@@ -99,7 +99,7 @@ export default function SideBar() {
             <a 
               href="/admin/dashboard/recipes" 
               className={`flex items-center text-customDarkGreen font-semibold h-12 p-3 ${
-                isActive("/admin/dashboard/recipes") ? "bg-customDarkBrown rounded-lg" : "hover:bg-customDarkBrown transition-colors duration-300 rounded-lg"
+                isActive("/admin/dashboard/recipes") ? "bg-customLightBrown rounded-lg" : "hover:bg-customLightBrown transition-colors duration-300 rounded-lg"
               }`}
             >
               <span className="mr-2">

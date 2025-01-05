@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import CommentBoard from "./components/CommentBoard";
-import SideBar from "../../components/SideBar";
+import SideBar from "../components/SideBar";
 
 export default function AdminDashboard() {
   const [comments, setComments] = useState([]);

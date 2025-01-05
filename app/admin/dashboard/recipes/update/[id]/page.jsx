@@ -9,7 +9,7 @@ import { useRouter, useParams } from 'next/navigation'; // For client-side redir
 import { useRecipes } from "@/app/hook/useRecipes";
 import Image from "next/image";
 import FormInputs from "./components/FormInput";
-import SideBar from "@/app/admin/components/SideBar";
+import SideBar from "@/app/admin/dashboard/components/SideBar";
 
 export default function UpdateRecipe() {
   const { data: session, status } = useSession();
