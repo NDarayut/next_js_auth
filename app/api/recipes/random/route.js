@@ -1,8 +1,9 @@
 import { connectMongoDB } from "@/lib/mongodb";
 import Recipe from "@/models/recipe"; // Adjust the path based on your file structure
 
-export async function GET() {
+export async function GET(req) {
     try {
+        req.url
         // Connect to MongoDB
         await connectMongoDB();
 

@@ -3,8 +3,10 @@ import User from "@/models/user"; // Replace with your actual user model
 import Recipe from "@/models/recipe"; // Replace with your actual recipe model
 import Review from "@/models/review"; // Replace with your actual review model
 
+console.log("Connected to stats out")
 export async function GET(req) {
     try {
+        req.url
         // Connect to MongoDB
         await connectMongoDB();
 
@@ -13,7 +15,7 @@ export async function GET(req) {
         const recipesCount = await Recipe.countDocuments();
         const reviewsCount = await Review.countDocuments();
 
-        console.log("Connected to stats")
+        console.log("Connected to stats in")
         return new Response(
             JSON.stringify({ usersCount, recipesCount, reviewsCount }),
             { status: 200 }

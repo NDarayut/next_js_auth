@@ -2,8 +2,9 @@ import { connectMongoDB } from "@/lib/mongodb";
 import Recipe from "@/models/recipe";
 import MockRecipe from "@/models/mockRecipe";
 
-export async function GET() {
+export async function GET(req) {
   try {
+    req.url
     await connectMongoDB();
 
     // Fetch pending recipes with desired fields
