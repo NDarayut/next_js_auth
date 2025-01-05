@@ -15,7 +15,7 @@ export default function AdminDashboard() {
     setLoading(true);
     setError("");
     try {
-      const response = await fetch("/api/admin/get-pending-recipes");
+      const response = await fetch('/api/admin/get-pending-recipes');
       const data = await response.json();
       if (response.ok) {
         setRecipes(data || []);
