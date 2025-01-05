@@ -2,6 +2,7 @@ import { connectMongoDB } from "@/lib/mongodb";
 import Review from "@/models/review";
 
 export async function GET() {
+  
   try {
     // Connect to MongoDB
     await connectMongoDB();

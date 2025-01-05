@@ -108,7 +108,9 @@ export const authOptions = {
                 user.username = `${user.firstName} ${user.lastName}`;
 
                 return true; // Allow sign-in
-            } catch (error) {
+            } 
+            
+            catch (error) {
                 console.error("Error during sign-in callback:", error);
                 return false; // Deny sign-in on error
             }

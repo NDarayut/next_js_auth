@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import PendingApproval from "./components/PendingApproval";
-import SideBar from "../../components/SideBar";
+import SideBar from "../components/SideBar";
 
 export default function AdminDashboard() {
   const [recipes, setRecipes] = useState([]);
@@ -18,7 +18,7 @@ export default function AdminDashboard() {
       const response = await fetch("/api/admin/get-pending-recipes");
       const data = await response.json();
       if (response.ok) {
-        setRecipes(data.recipes || []);
+        setRecipes(data || []);
       } else {
         setError(data.error || "Failed to fetch pending recipes.");
       }

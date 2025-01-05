@@ -13,7 +13,7 @@ export default function PendingApproval({ error, recipes, handleAction }) {
         <div className="overflow-x-auto">
           <table className="w-full border-collapse rounded-lg shadow-lg bg-white">
             <thead>
-              <tr className="bg-customDarkBrown text-customDarkGreen font-extrabold">
+              <tr className="bg-customLightBrown text-customDarkGreen font-extrabold">
                 <th className="px-6 py-3 text-left text-sm font-medium">ID</th>
                 <th className="px-6 py-3 text-left text-sm font-medium">Title</th>
                 <th className="px-6 py-3 text-left text-sm font-medium">Link</th>

@@ -25,6 +25,7 @@ export async function GET() {
         title: recipe.title,
         status: recipe.status,
       })),
+
       ...pendingMockRecipes.map((recipe) => ({
         id: recipe.originalRecipeId,
         title: recipe.title,
@@ -32,8 +33,10 @@ export async function GET() {
       })),
     ];
 
-    return new Response(JSON.stringify({ recipes }), { status: 200 });
-  } catch (error) {
+    return new Response(JSON.stringify(recipes), { status: 200 });
+  } 
+  
+  catch (error) {
     console.error(error);
     return new Response(
       JSON.stringify({ error: "Failed to fetch pending recipes." }),
