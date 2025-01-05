@@ -13,11 +13,14 @@ export async function GET(req) {
         const recipesCount = await Recipe.countDocuments();
         const reviewsCount = await Review.countDocuments();
 
+        console.log("Connected to stats")
         return new Response(
             JSON.stringify({ usersCount, recipesCount, reviewsCount }),
             { status: 200 }
         );
-    } catch (error) {
+    } 
+    
+    catch (error) {
         console.error("Error fetching stats:", error);
         return new Response(
             JSON.stringify({ error: "Failed to fetch stats" }),

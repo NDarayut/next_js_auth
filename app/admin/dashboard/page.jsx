@@ -51,7 +51,7 @@ export default function Dashboard(){
 
       // Fetch related recipe
       async function fetchPopularRecipes() {
-        const response = await fetch(`/api/recipes/popular`)
+        const response = await fetch('/api/recipes/popular')
         const data = await response.json()
         console.log(data)
         setPopularRecipes(data)
