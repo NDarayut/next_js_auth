@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import {signIn} from "next-auth/react"
+import {signIn, getSession} from "next-auth/react"
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
@@ -11,8 +11,7 @@ export default function LoginForm(){
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")
-
-    const router = useRouter()
+     const router = useRouter()
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -24,18 +23,50 @@ export default function LoginForm(){
                 redirect: false
             })
 
+
             if (res.error){
                 setError("Invalid credential")
                 return
             }
             
-            router.replace("/") // redirect user to homepage but they cant go back to login with back button
+            const session = await getSession()
+
+            if (session?.user?.role === "admin") {
+                router.replace("/admin/dashboard"); // Redirect to admin dashboard
+            } 
+              
+            else if (session?.user?.role === "user") {
+                router.replace("/"); // Redirect to user homepage
+            } 
+
+
+            
 
         }
         catch (error){
             console.log(error)
         }
     }
+
+    const handleGoogleLogin = async (e) => {
+        e.preventDefault()
+
+        try{
+            // Handle Google Login
+            const result = await signIn("google", {
+                callbackUrl: "/", // Redirect to this page after login
+            });
+        
+            if (result.error) {
+                console.error("Google login failed:", result.error);
+            }
+
+        }
+        catch (error){
+            console.log(error)
+        }
+    }
+
     return(
         <div className="grid place-items-center h-screen bg-[url('/auth_page.jpg')] bg-cover bg-center" >
             <div className="flex flex-col items-center border-[1px] border-black p-5 rounded-[30px] bg-customYellow w-[455px]">
@@ -75,7 +106,7 @@ export default function LoginForm(){
                 </form>
 
                 <div className="flex justify-center gap-[25px] mt-[20px] font-jura">
-                        <button className="google" onClick={() => signIn("google")}>
+                        <button className="google" onClick={handleGoogleLogin}>
                             <Image 
                                 src="/google.ico"
                                 alt="Google login"
@@ -85,9 +116,6 @@ export default function LoginForm(){
                             />
                             Gmail
                         </button>
-
-                        {/*  <button className="facebook" onClick={() => signIn("facebook")}><img src="/facebook.ico" className="w-6 h-6 mr-[5px]" />Facebook</button>*/}
-                        {/*<button className="instagram"><img src="/instagram.ico" className="w-6 h-6" />Instagram</button>*/}
                 </div>
                 
                 <Link className="text-[15px] mt-3 flex flex-col text-center gap-[10px] font-mono" href={"/register"}>

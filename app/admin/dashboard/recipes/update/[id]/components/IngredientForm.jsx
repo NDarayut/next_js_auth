@@ -14,7 +14,8 @@ const IngredientForm = ({ index, ingredient, handleChange, removeIngredient }) =
     <td>
       <input
         type="number"
-        min="1"
+        min="0"
+        step="0.01"
         value={ingredient.amount}
         onChange={(e) => handleChange(index, "amount", e.target.value)}
         placeholder="Amount"

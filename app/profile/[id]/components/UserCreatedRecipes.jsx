@@ -1,16 +1,20 @@
 import { useState, useEffect } from "react";
 import RecipeCard from "../../../../components/RecipeCard";
+import { useSession } from "next-auth/react";
 
 
 export default function UserCreatedRecipes ({ userId }) {
   const [recipeIds, setRecipeIds] = useState([]);
   const [recipes, setRecipes] = useState([]);
   const [error, setError] = useState(null);
+  const [favoritedRecipes, setFavoritedRecipes] = useState([]);
+  const {data: session} = useSession();
   
   
   useEffect(() => {
     if (!userId) return;
 
+    // Fetches only the ID of user-created recipes
     const fetchUserRecipeIds = async () => {
       try {
         const response = await fetch(`/api/userRecipe/get/${userId}`);
@@ -29,6 +33,8 @@ export default function UserCreatedRecipes ({ userId }) {
   }, [userId]);
 
   useEffect(() => {
+
+    // Fetches the recipe detail based on the ID
     const fetchRecipeDetails = async () => {
       if (recipeIds.length > 0) {
         try {
@@ -46,13 +52,24 @@ export default function UserCreatedRecipes ({ userId }) {
       }
     };
 
-    fetchRecipeDetails();
-  }, [recipeIds]);
+    // Fetches user's favorited recipe
+    // A user created recipe does not meant a user favorite recipe. So user can choose to favorite
+    // their created recipe like any other recipe
+    const fetchUserFavorites = async () => {
+      if (session?.user?.id) {
+        try {
+          const response = await fetch(`/api/favorite/get/${session.user.id}`);
+          const data = await response.json();
+          setFavoritedRecipes(data); // This should be an array of recipe IDs
+        } catch (error) {
+          console.log("Failed to fetch favorites: ", error);
+        }
+      }
+    };
 
-  const handleRemove = (removedId) => {
-    // Remove the unfavorited recipe from the state immediately
-    setRecipes((prevRecipes) => prevRecipes.filter((recipe) => recipe._id !== removedId));
-  };
+    fetchRecipeDetails();
+    fetchUserFavorites()
+  }, [recipeIds]);
 
   if (error) {
     return <div className="text-red-500">{error}</div>;
@@ -70,11 +87,10 @@ export default function UserCreatedRecipes ({ userId }) {
           recipeId={recipe._id}
           src={recipe.image}
           title={recipe.title}
-          isFavorited={true}
+          isFavorited={favoritedRecipes.includes(recipe._id)}
           sourceName={recipe.sourceName}
           rating={recipe.score}
           readyInMinutes={recipe.readyInMinutes}
-          onRemove={handleRemove}
         />
       ))}
     </div>
