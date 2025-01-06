@@ -119,7 +119,9 @@ export default function UserProfile({ userId }) {
     };
 
     if (error) return <div className="p-6 text-red-500">{error}</div>;
-    if (status === "loading" || !user) return <p>Loading...</p>;
+    if (status === "loading" || !user){
+        return <div>Loading...</div>
+    }
 
     return (
         <div className="mx-[100px]">

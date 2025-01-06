@@ -14,7 +14,6 @@ import RecipeTags from "./components/RecipeTags"
 import { useRouter } from "next/navigation";
 import Image from "next/image"
 
-
 export default function RecipeDetail({params}){
 
     const {id}  = params
@@ -111,8 +110,8 @@ export default function RecipeDetail({params}){
         }
       }
 
-    if(loading){
-        return <p>Loading...</p>
+    if(status === "loading"){
+      return <p>Loading...</p>
     }
 
     if(error){
@@ -121,9 +120,9 @@ export default function RecipeDetail({params}){
 
     if (!recipeDetail) {
         // Fallback in case recipeDetail is still null
-        return <p>No recipe details available.</p>;
+        return <p>Loading...</p>
     }
-
+    
     const introduction = {
       title: recipeDetail.title,
       author: recipeDetail.sourceName,
@@ -154,6 +153,8 @@ export default function RecipeDetail({params}){
       similarRecipes: similarRecipes
     }
 
+    
+
     return(
       <div className="bg-customYellow min-h-screen">
 
@@ -168,19 +169,22 @@ export default function RecipeDetail({params}){
             initial={{ opacity: 0, y: 50 }}  // Start hidden and offset from the bottom
             animate={{ opacity: 1, y: 0 }}    // Animate to visible and no offset
             transition={{ duration: 0.8 }}    // Duration of animation
+            className="relative"
           >
             
             <Introduction {...introduction} />
+
+            {/*Settings icon */}
             {isOwner &&(
-              <div className="absolute top-32 right-0 mr-[100px]">
-              <button onClick={handleSettingsClick}>
-                <Image 
-                  src="/setting.png"
-                  alt="Settings"
-                  width={32}
-                  height={32}
-                />
-              </button>
+              <div className="absolute top-6 right-0">
+                <button onClick={handleSettingsClick}>
+                  <Image 
+                    src="/setting.png"
+                    alt="Settings"
+                    width={32}
+                    height={32}
+                  />
+                </button>
             </div>
             )}
              
@@ -258,7 +262,7 @@ export default function RecipeDetail({params}){
               </div>
               <button type="submit">Submit Review</button>
             </form>
-            
+
             <div className="border-b-1 border-customDarkGreen border-opacity-50"/>
             <h3 className="font-[700] font-serif text-[25px] my-2 mb-4">Comments</h3>
               

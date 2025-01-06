@@ -15,7 +15,7 @@ export async function GET(request) {
         // Fetch the top 20 popular recipes based on the score
         const popularRecipes = await Recipe.aggregate([
             { $match: { status: "approved" } },
-            { $sort: { score: -1 } },
+            { $sort: { score: -1, _id:1 } },
             { $skip: (page - 1) * limit }, // Skip the appropriate number of recipes based on page
             { $limit: limit }, // Limit to the number of recipes specified by the limit
         ]);

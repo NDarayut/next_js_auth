@@ -131,7 +131,7 @@ export default function UpdateRecipe() {
     };
 
     try {
-      const response = await fetch(`/api/recipes/create-mock-recipe`, {
+      const response = await fetch(`/api/recipes/createMockRecipe`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -179,7 +179,7 @@ export default function UpdateRecipe() {
         };
 
         try {
-          const response = await fetch(`/api/recipes/create-mock-recipe`, {
+          const response = await fetch(`/api/recipes/createMockRecipe`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
@@ -224,7 +224,7 @@ export default function UpdateRecipe() {
       };
 
       try {
-        const response = await fetch(`/api/recipes/create-mock-recipe`, {
+        const response = await fetch(`/api/recipes/createMockRecipe`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),

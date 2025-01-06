@@ -14,7 +14,7 @@ export default function ProfilePage() {
     const {data: status} = useSession()
 
     if(status === "loading"){
-        return <p>Loading...</p>
+        return <div>Loading...</div>
     }
     
     return (

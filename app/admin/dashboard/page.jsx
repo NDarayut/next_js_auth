@@ -5,8 +5,6 @@ import { useEffect, useState } from "react";
 import SideBar from "./components/SideBar";
 import PopularCard from "./components/PopularRecipe";
 
-
-
 export default function Dashboard(){
 
     const { data: session, status } = useSession(); 
