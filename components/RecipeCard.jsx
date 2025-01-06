@@ -7,7 +7,7 @@ import {useState} from "react"
 import { getSession } from "next-auth/react";
 import Image from "next/image";
 
-export default function RecipeCard({recipeId, src, title, isFavorited, sourceName, rating, readyInMinutes, onRemove}) {
+export default function RecipeCard({recipeId, src, title, isFavorited, sourceName, averageRating, readyInMinutes, onRemove}) {
 
   const [favorited, setFavorited] = useState(isFavorited  || false)
   const {data: session, status} = useSession()
@@ -56,7 +56,10 @@ export default function RecipeCard({recipeId, src, title, isFavorited, sourceNam
   
 
   const renderStars = () => {
-    const stars = Array.from({ length: 5 }, (_, i) => (i < Math.round(rating/20) ? "★" : "☆"));
+    // Assuming `score` is the average rating, which should be between 1 and 5
+    const numStars = Math.round(averageRating); // Round the score to the nearest whole number
+    const stars = Array.from({ length: 5 }, (_, i) => (i < numStars ? "★" : "☆"));
+    
     return (
       <div className="flex items-center space-x-1 text-customOrange">
         {stars.map((star, index) => (

@@ -1,5 +1,6 @@
 import Review from "@/models/review";
 import { connectMongoDB } from "@/lib/mongodb";
+import { updateRecipeScore } from "@/lib/updateRecipeScore";
 
 
 export async function GET(req, { params }) {
@@ -21,8 +22,12 @@ export async function POST(req, { params }) {
   
     try {
       await connectMongoDB();
+
       const newReview = new Review({ recipeId: id, userId, username, rating, comment });
       await newReview.save();
+
+      const updatedScore = await updateRecipeScore(id);
+      
   
       return new Response(JSON.stringify(newReview), { status: 201 });
     } catch (error) {

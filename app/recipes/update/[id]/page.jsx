@@ -154,7 +154,7 @@ export default function UpdateRecipe() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    let base64Image = "";
+    let base64Image = formData.image;
     if (imageFile) {
       const reader = new FileReader();
       reader.onload = async () => {
@@ -192,7 +192,9 @@ export default function UpdateRecipe() {
           }
 
           setIsSuccess(true);
-        } catch (error) {
+        } 
+        
+        catch (error) {
           console.error(error);
           setResponse("Failed to update recipe");
         }
@@ -202,7 +204,45 @@ export default function UpdateRecipe() {
     } 
     
     else {
-      alert("Please upload an image.");
+      const payload = {
+        ...formData,
+        originalRecipeId: id,
+        status: "pending-update",
+        userId: session.user.id,
+        score: recipeDetail.score,
+        image: base64Image,
+        extendedIngredients: ingredients,
+        nutrition: { nutrients: nutritions },
+        analyzedInstructions: [
+          {
+            steps: instructions.map((instruction, index) => ({
+              number: index + 1,
+              step: instruction,
+            })),
+          },
+        ],
+      };
+
+      try {
+        const response = await fetch(`/api/recipes/create-mock-recipe`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          const { error } = await response.json();
+          setResponse(error || "Failed to update recipe");
+          return;
+        }
+
+        setIsSuccess(true);
+      } 
+      
+      catch (error) {
+        console.error(error);
+        setResponse("Failed to update recipe");
+      }
     }
   };
 

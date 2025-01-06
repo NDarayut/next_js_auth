@@ -20,7 +20,9 @@ export default function FavoriteRecipes ({ userId }) {
         } else {
           setError(data.error || "Failed to load favorite recipe IDs");
         }
-      } catch (error) {
+      } 
+      
+      catch (error) {
         setError("An error occurred while fetching the favorite recipe IDs");
       }
     };

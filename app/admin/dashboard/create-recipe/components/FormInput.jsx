@@ -1,4 +1,3 @@
-// components/FormInputs.jsx
 const FormInputs = ({ formData, handleChange, handleImageUpload }) => (
     <>
         <div className="space-y-6">

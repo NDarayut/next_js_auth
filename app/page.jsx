@@ -15,6 +15,7 @@ export default function Home() {
   const [recipes, setRecipes] = useState([]);
   const [favoritedRecipes, setFavoritedRecipes] = useState([]);
   const { data: session, status } = useSession();
+  const [page, setPage] = useState(1); // Track the current page for pagination
 
   const { ref: heroRef, inView: heroInView } = useInView({
     triggerOnce: true,
@@ -36,17 +37,34 @@ export default function Home() {
     threshold: 0.1,
   });
 
-  useEffect(() => {
-    const fetchRecipes = async () => {
-      try {
-        const response = await fetch("/api/recipes/popular");
-        const data = await response.json();
+  // Fetch recipes based on the current page
+  const fetchRecipes = async (page) => {
+    try {
+      const response = await fetch(`/api/recipes/popular?page=${page}&limit=16`);
+      const data = await response.json();
+      
+      // On the first page, simply set the recipes
+      if (page === 1) {
         setRecipes(data);
-      } catch (error) {
-        console.log("Failed to fetch recipes in homepage: ", error);
+      } 
+      else {
+        // On subsequent pages, append the new recipes
+        setRecipes((prevRecipes) => [...prevRecipes, ...data]);
       }
-    };
+    } 
+    catch (error) {
+      console.log("Failed to fetch recipes:", error);
+    }
+  };
 
+
+  useEffect(() => { 
+
+    fetchRecipes(page);
+    
+  }, [page]);
+
+  useEffect(() => {
     const fetchUserFavorites = async () => {
       if (session?.user?.id) {
         try {
@@ -59,9 +77,12 @@ export default function Home() {
       }
     };
 
-    fetchRecipes();
     fetchUserFavorites();
   }, [session]);
+
+  const handleLoadMore = () => {
+    setPage((prevPage) => prevPage + 1); // Increment the page to load more recipes
+  };
 
   if (status === "loading") {
     return <div>Loading...</div>;
@@ -127,21 +148,30 @@ export default function Home() {
         animate={{ opacity: popularDishesInView ? 1 : 0, y: popularDishesInView ? 0 : 50 }}
         transition={{ duration: 0.6 }}
       >
-        <h1 className="font-serif text-[40px] text-customDarkGreen">Popular Dishes</h1>
-        <article className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10 p-4 mb-11">
-          {recipes.map((recipe) => (
-            <RecipeCard
-              key={recipe._id}
-              recipeId={recipe._id}
-              src={recipe.image}
-              title={recipe.title}
-              isFavorited={favoritedRecipes.includes(recipe._id)}
-              sourceName={recipe.sourceName}
-              rating={recipe.score}
-              readyInMinutes={recipe.readyInMinutes}
-            />
-          ))}
-        </article>
+        <div>
+          <h1 className="font-serif text-[40px] text-customDarkGreen">Popular Dishes</h1>
+          <article className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10 p-4 mb-11">
+            {recipes.map((recipe) => (
+              <RecipeCard
+                key={recipe._id}
+                recipeId={recipe._id}
+                src={recipe.image}
+                title={recipe.title}
+                isFavorited={favoritedRecipes.includes(recipe._id)}
+                sourceName={recipe.sourceName}
+                averageRating={recipe.averageRating}
+                readyInMinutes={recipe.readyInMinutes}
+              />
+            ))}
+          </article>
+          <div className="w-full flex justify-center">
+            <button onClick={handleLoadMore} className="generalButton text-white">
+                Load More
+            </button>
+          </div>
+          
+        </div>
+        
       </motion.div>
 
       <motion.div

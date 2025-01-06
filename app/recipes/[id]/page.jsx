@@ -18,7 +18,7 @@ import Image from "next/image"
 export default function RecipeDetail({params}){
 
     const {id}  = params
-    const {data: session} = useSession()
+    const {data: session, status} = useSession()
     const {recipeDetail, loading, error, fetchRecipeById} = useRecipes()
     const [similarRecipes, setSimilarRecipes] = useState([])
 
@@ -53,9 +53,15 @@ export default function RecipeDetail({params}){
       }, [id])
 
     useEffect(() => {
-      if (session?.user?.id === recipeDetail?.userId) {
+      if(status === "authenticated"){
+        if (session?.user?.id === recipeDetail?.userId) {
           setIsOwner(true);
+        }
+        else if(session?.user?.role === "admin"){
+          setIsOwner(true)
+        }
       }
+      
     }, [session, recipeDetail]);
 
     const handleSettingsClick = () => {
@@ -252,6 +258,7 @@ export default function RecipeDetail({params}){
               </div>
               <button type="submit">Submit Review</button>
             </form>
+            
             <div className="border-b-1 border-customDarkGreen border-opacity-50"/>
             <h3 className="font-[700] font-serif text-[25px] my-2 mb-4">Comments</h3>
               

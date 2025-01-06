@@ -46,11 +46,6 @@ export const authOptions = {
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         }),
 
-        // Facebook OAuth
-        FacebookProvider({
-            clientId: process.env.FACEBOOK_CLIENT_ID,
-            clientSecret: process.env.FACEBOOK_CLIENT_SECRET
-        })
     ],
 
     session: {
@@ -91,6 +86,7 @@ export const authOptions = {
                     // Set the user's _id in the JWT
                     user.id = newUser._id.toString();
                 } 
+
                 else {
                     // If user exists, ensure profile picture is updated
                     if (user.image && !existingUser.profilePicture) {

@@ -1,6 +1,3 @@
-
-import { useState } from "react";
-
 export default function FormInputs ({ formData, handleChange, handleImageUpload }) {
 
     return(
@@ -28,6 +25,16 @@ export default function FormInputs ({ formData, handleChange, handleImageUpload 
             <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-4">
                 <h1 className="text-lg font-medium text-customDarkGreen">Upload Image</h1>
                 <div className="md:col-span-2">
+                    {formData.image && (
+                    <div className="mb-4">
+                        <h2 className="text-sm text-gray-600 mb-2">Current Image:</h2>
+                        <img
+                        src={formData.image}
+                        alt="Recipe"
+                        className="w-full h-auto max-h-40 object-cover rounded-lg border border-gray-300"
+                        />
+                    </div>
+                    )}
                     <input
                     type="file"
                     accept="image/*"

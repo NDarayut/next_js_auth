@@ -18,6 +18,7 @@ export default function NutritionForm({ nutritions, handleNutritionChange }) {
                     <input
                       type="number"
                       min="0"
+                      step="0.01"
                       value={nutrition.amount}
                       onChange={(e) =>
                         handleNutritionChange(index, "amount", e.target.value)
