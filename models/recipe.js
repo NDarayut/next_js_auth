@@ -56,16 +56,6 @@ const recipeSchema = new Schema({
         default: [],
     },
 
-    occasions: {
-        type:[String],
-        default: [],
-    },
-
-    diets: {
-        type: [String],
-        default: [],
-    },
-
     nutrition: {
         nutrients: [
             {

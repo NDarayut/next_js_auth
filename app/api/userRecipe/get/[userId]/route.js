@@ -1,5 +1,4 @@
 import { connectMongoDB } from "@/lib/mongodb";
-import mongoose from "mongoose";
 import Recipe from "@/models/recipe";
 
 export async function GET(req, { params }) {

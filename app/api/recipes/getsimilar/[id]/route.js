@@ -18,7 +18,7 @@ export async function GET(req, { params }) {
     } 
 
     // Extract relevant fields for matching
-    const { dishTypes = [], diets = [], occasions = [] } = recipeDetail;
+    const { dishTypes = [], cuisines = [] } = recipeDetail;
 
     // Step 2: Query MongoDB for similar recipes
     const dbRecipes = await Recipe.find({
@@ -35,14 +35,7 @@ export async function GET(req, { params }) {
               },
               {
                 $cond: [
-                  { $gt: [{ $size: { $setIntersection: ["$diets", diets] } }, 0] },
-                  1,
-                  0,
-                ],
-              },
-              {
-                $cond: [
-                  { $gt: [{ $size: { $setIntersection: ["$occasions", occasions] } }, 0] },
+                  { $gt: [{ $size: { $setIntersection: ["$cuisines", cuisines] } }, 0] },
                   1,
                   0,
                 ],

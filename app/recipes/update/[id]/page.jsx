@@ -273,8 +273,6 @@ if (!recipeDetail) {
           <FormInputs formData={formData} handleChange={handleChange} handleImageUpload={handleImageUpload} />
           <CheckboxGroup label="Dish Types" options={["Appetizer", "Main Course", "Dessert"]} selectedOptions={formData.dishTypes} handleChange={(option) => { /* Handle change */ }} />
           <CheckboxGroup label="Cuisines" options={["Italian", "Asian", "American"]} selectedOptions={formData.cuisines} handleChange={(option) => { /* Handle change */ }} />
-          <CheckboxGroup label="Occasions" options={["Party", "Wedding", "Funeral"]} selectedOptions={formData.occasions} handleChange={(option) => { /* Handle change */ }} />
-          <CheckboxGroup label="Diets" options={["Vegan", "Gluten-free", "Keto"]} selectedOptions={formData.diets} handleChange={(option) => { /* Handle change */ }} />
           <h2 className="text-2xl font-semibold mb-4 text-customDarkGreen">Ingredients</h2>
           <table className="w-full border border-customDarkGreen text-customDarkGreen">
             <thead>
