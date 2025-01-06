@@ -10,7 +10,7 @@ const recipeSchema = new Schema({
     userId: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User', 
-        required: true 
+        required: false 
     },
     
     title: {
@@ -20,7 +20,10 @@ const recipeSchema = new Schema({
     
     score: {
         type: Number,
-        required: true,
+    },
+
+    averageRating: {
+        type: Number,
     },
 
     sourceName: {

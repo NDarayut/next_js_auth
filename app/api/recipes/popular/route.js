@@ -1,16 +1,23 @@
 import { connectMongoDB } from "@/lib/mongodb";
 import Recipe from "@/models/recipe"; // Adjust the path based on your file structure
 
-export async function GET() {
+export async function GET(request) {
     try {
+
+        // Get page and limit from query parameters
+        const url = new URL(request.url);
+        const page = parseInt(url.searchParams.get("page")) || 1; // Default to page 1 if not provided
+        const limit = parseInt(url.searchParams.get("limit")) || 16; // Default to 16 if not provided
+
         // Connect to MongoDB
         await connectMongoDB();
 
         // Fetch the top 20 popular recipes based on the score
         const popularRecipes = await Recipe.aggregate([
-            { $match: { status: "approved" } }, // Filter for approved recipes
-            { $sort: { score: -1 } },           // Sort by score in descending order (highest first)
-            { $limit: 20 }                      // Limit to the top 20 recipes
+            { $match: { status: "approved" } },
+            { $sort: { score: -1 } },
+            { $skip: (page - 1) * limit }, // Skip the appropriate number of recipes based on page
+            { $limit: limit }, // Limit to the number of recipes specified by the limit
         ]);
 
         // Return the recipes as a JSON response

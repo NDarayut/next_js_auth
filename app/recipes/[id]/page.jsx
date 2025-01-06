@@ -258,6 +258,7 @@ export default function RecipeDetail({params}){
               </div>
               <button type="submit">Submit Review</button>
             </form>
+            
             <div className="border-b-1 border-customDarkGreen border-opacity-50"/>
             <h3 className="font-[700] font-serif text-[25px] my-2 mb-4">Comments</h3>
               
