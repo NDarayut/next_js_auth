@@ -1,228 +1,120 @@
-"use client"
+"use client";
 
-import React, { useCallback } from 'react'
-import useEmblaCarousel from 'embla-carousel-react'
-import Image from 'next/image'
+import React, { useState, useEffect, useCallback } from "react";
+import useEmblaCarousel from "embla-carousel-react";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function CustomCarousel() {
-  
-  const [emblaRef, emblaApi] = useEmblaCarousel()
+    const [recipes, setRecipes] = useState([]);
+    const [emblaRef, emblaApi] = useEmblaCarousel({
+        loop: true,  // Enable looping to make the carousel infinite
+    });
 
-  const scrollPrev = useCallback(() => {
-    if (emblaApi) emblaApi.scrollPrev()
-  }, [emblaApi])
+    const scrollPrev = useCallback(() => {
+        if (emblaApi) emblaApi.scrollPrev();
+    }, [emblaApi]);
 
-  const scrollNext = useCallback(() => {
-    if (emblaApi) emblaApi.scrollNext()
-  }, [emblaApi])
+    const scrollNext = useCallback(() => {
+        if (emblaApi) emblaApi.scrollNext();
+    }, [emblaApi]);
 
-  return (
-    
-    <div className='embla flex flex-row'>
+    useEffect(() => {
+        // Fetch data from the API
+        const fetchRecipes = async () => {
+            try {
+                const response = await fetch("/api/recipes/random");
+                const data = await response.json();
+                setRecipes(data);
+            } catch (error) {
+                console.error("Error fetching recipes:", error);
+            }
+        };
 
-      <div className='flex'>
-        <button className="embla__prev" onClick={scrollPrev}>
-          <Image 
-            src="/left.png"
-            alt='Left Image' 
-            width={0}
-            height={0} 
-            className='w-2/3 h-auto' 
-          />
-        </button>
-      </div>
-      
-      <div className="embla__viewport h-[400px]" ref={emblaRef}>
+        fetchRecipes();
 
-          <div className="embla__container h-full">
-            
-            <div className="embla__slide flex">
-              {/*Cuisine image*/}
-              <div className=''>
-                <Image 
-                  src="/japanese.jpg" 
-                  alt="Japanese food"
-                  width={0}
-                  height={0}
-                  className='w-[1000px] h-[400px] object-cover rounded-none'
-                />
-              </div>
+        // Auto scroll the carousel every 3 seconds
+        const autoScroll = setInterval(() => {
+            if (emblaApi) {
+                emblaApi.scrollNext(); // Continue scrolling next
+            }
+        }, 3000); // 3000ms = 3 seconds
 
-              <div className='flex flex-col px-9 w-[1500px]'>
-                <h1 className='text-[50px] font-bold text-customDarkGreen font-serif'>Japanese cuisine</h1>
-                <h1 className='text-[30px] font-semibold text-customDarkGreen font-sans'>Curry chicken rice</h1>
+        // Clear the interval on component unmount
+        return () => clearInterval(autoScroll);
 
-                 {/*Timer and task image*/}
-                <div className='flex flex-row items-center mt-3'>
-                  <div className='flex mr-16 items-center'>
-                    <Image
-                      src="/timer.png"
-                      alt="Timer"
-                      width={0}
-                      height={0}
-                      className="w-[20px] h-[20px] mr-3"
-                    />
-                    <h1 className='font-sans text-customDarkGreen text-[16px] font-semibold'>10 min</h1>
-                  </div>
+    }, [emblaApi]);
 
-                  <div className='flex items-center'>
-                    <Image
-                      src="/task.png"
-                      alt="Task"
-                      width={0}
-                      height={0}
-                      className="w-[20px] h-auto mr-3 rounded-none"
+    return (
+        <div className="embla flex flex-row">
 
-                    />    
-                    <h1 className='font-sans text-customDarkGreen text-[16px] font-semibold'>Easy</h1>
-                  </div>
+            <div className="flex">
+                <button className="embla__prev" onClick={scrollPrev}>
+                    <Image src="/left.png" alt="Left" width={0} height={0} className="w-2/3 h-auto" />
+                </button>
+            </div>
+          
+            <div className="embla__viewport h-[400px]" ref={emblaRef}>
+                <div className="embla__container h-full">
+                    {recipes.map((recipe, index) => (
+                        <Link key={index} href={`/recipes/${recipe._id}`}>
+                          <div className="embla__slide flex w-[1000px]">
+
+                              <Image
+                                  src={recipe.image}
+                                  alt={recipe.cuisine}
+                                  width={0}
+                                  height={0}
+                                  className="w-[500px] h-[400px] object-cover rounded-none"
+                              />
+
+                              <div className="flex flex-col px-9 w-[1500px]">
+                                  <h1 className="text-4xl font-bold text-customDarkGreen font-serif">
+                                      {recipe.title}
+                                  </h1>
+
+                                  <div className="flex flex-row items-center mt-3">
+                                      <div className="flex mr-16 items-center">
+                                          <Image
+                                              src="/timer.png"
+                                              alt="Timer"
+                                              width={20}
+                                              height={20}
+                                              className="mr-3"
+                                          />
+                                          <h1 className="font-sans text-customDarkGreen text-[16px] font-semibold">
+                                              {recipe.readyInMinutes} min
+                                          </h1>
+                                      </div>
+                                  </div>
+
+                                  <div className="flex flex-col mt-8">
+                                    <div dangerouslySetInnerHTML={{ __html: recipe.summary }}></div> 
+                                    <hr className="border-customGreen border-[2px] mt-7" />
+                                  </div>
+
+                                  <div className="mt-7">
+                                    <h1 className="font-sans text-customDarkGreen text-[16px] font-bold">{recipe.sourceName}</h1>
+                                    <h1 className="font-sans text-customDarkGreen text-[16px]">
+                                      {new Date(recipe.createdAt).toLocaleDateString("en-US", {
+                                        month: "long",
+                                        day: "numeric",
+                                        year: "numeric",
+                                      })}
+                                    </h1>
+                                  </div>
+                              </div>
+                          </div>
+                        </Link>
+                    ))}
                 </div>
-
-                {/*Description*/}
-                <div className='flex flex-col mt-8'>
-                  <p className='text-[18px] font-sans text-customDarkGreen text-justify font-medium'>Japanese curry is characterized by its mild, slightly sweet flavor and thick,
-                    gravy-like texture, setting it apart from traditional indian curry or southeast asian curries, which are
-                      usually spicier, less sweet, and thinner in consistency.
-                  </p>
-
-                  <hr className='border-customGreen border-[2px] mt-7'/>
-                </div>
-                
-              </div>
-              
             </div>
 
-            <div className="embla__slide flex">
-              {/*Cuisine image*/}
-              <div className=''>
-                <Image 
-                  src="/italian.jpg" 
-                  alt="Japanese food"
-                  width={0}
-                  height={0}
-                  className='w-[1000px] h-[400px] object-cover rounded-none'
-                />
-              </div>
-
-              <div className='flex flex-col px-9 w-[1500px]'>
-                <h1 className='text-[50px] font-bold text-customDarkGreen font-serif'>Italian cuisine</h1>
-                <h1 className='text-[30px] font-semibold text-customDarkGreen font-sans'>Carbonara pasta</h1>
-
-                 {/*Timer and task image*/}
-                <div className='flex flex-row items-center mt-3'>
-                  <div className='flex mr-16 items-center'>
-                    <Image
-                      src="/timer.png"
-                      alt="Timer"
-                      width={0}
-                      height={0}
-                      className="w-[20px] h-[20px] mr-3"
-                    />    
-                    <h1 className='font-sans text-customDarkGreen text-[16px] font-semibold'>20 min</h1>
-                  </div>
-
-                  <div className='flex items-center'>
-                    <Image
-                      src="/task.png"
-                      alt="Task"
-                      width={0}
-                      height={0}
-                      className="w-[20px] h-auto mr-3 rounded-none"
-
-                    />    
-                    <h1 className='font-sans text-customDarkGreen text-[16px] font-semibold'>Easy</h1>
-                  </div>
-                </div>
-
-                {/*Description*/}
-                <div className='flex flex-col mt-8'>
-                  <p className='text-[18px] font-sans text-customDarkGreen text-justify font-medium'>
-                    Italian pasta, a global culinary icon, is celebrated for its simplicity and versatility. With diverse shapes 
-                    and regional sauces like creamy Alfredo or Naples&apos; ragù, it embodies Italy&apos;s rich food traditions 
-                    and love for bringing people together.
-                  </p>
-
-                  <hr className='border-customGreen border-[2px] mt-7'/>
-                </div>
-                
-              </div>
-              
+            <div className="flex">
+                <button className="embla__next" onClick={scrollNext}>
+                    <Image src="/right.png" alt="Right" width={0} height={0} className="w-2/3 h-auto" />
+                </button>
             </div>
-
-            <div className="embla__slide flex">
-              {/*Cuisine image*/}
-              <div className=''>
-                <Image 
-                  src="/chinese.jpg" 
-                  alt="Japanese food"
-                  width={0}
-                  height={0}
-                  className='w-[1000px] h-[400px] object-cover rounded-none'
-                />
-              </div>
-
-              <div className='flex flex-col px-9 w-[1500px]'>
-                <h1 className='text-[50px] font-bold text-customDarkGreen font-serif'>Chinese cuisine</h1>
-                <h1 className='text-[30px] font-semibold text-customDarkGreen font-sans'>Longevity noodle</h1>
-
-                 {/*Timer and task image*/}
-                <div className='flex flex-row items-center mt-3'>
-                  <div className='flex mr-16 items-center'>
-                    <Image
-                      src="/timer.png"
-                      alt="Timer"
-                      width={0}
-                      height={0}
-                      className="w-[20px] h-[20px] mr-3"
-                    />     
-                    <h1 className='font-sans text-customDarkGreen text-[16px] font-semibold'>15 min</h1>
-                  </div>
-
-                  <div className='flex items-center'>
-                    <Image
-                      src="/task.png"
-                      alt="Task"
-                      width={0}
-                      height={0}
-                      className="w-[20px] h-auto mr-3 rounded-none"
-
-                    />    
-                    <h1 className='font-sans text-customDarkGreen text-[16px] font-semibold'>Easy</h1>
-                  </div>
-                </div>
-
-                {/*Description*/}
-                <div className='flex flex-col mt-8'>
-                  <p className='text-[18px] font-sans text-customDarkGreen text-justify font-medium'>
-                   Chinese noodles, a staple of Chinese cuisine, come in various forms like wheat, rice, or egg-based. They are often 
-                   stir-fried, served in soups, or tossed with flavorful sauces, reflecting China&apos;s rich culinary diversity and 
-                   regional flavors.
-                  </p>
-
-                  <hr className='border-customGreen border-[2px] mt-7'/>
-                </div>
-                
-              </div>
-              
-            </div>
-
-          </div>
-      </div>
-      
-      <div className='flex'>
-        <button className="embla__next" onClick={scrollNext}>
-          <Image 
-            src="/right.png"
-            alt='Right Image' 
-            width={0}
-            height={0} 
-            className='w-2/3 h-auto' 
-          />
-        </button>
-      </div>
-
-      
-    </div>
-    
-  )
+        </div>
+    );
 }

@@ -4,7 +4,7 @@ import {Card, CardHeader, CardBody, Button} from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import {useState} from "react"
-import { getSession } from "next-auth/react";
+
 import Image from "next/image";
 
 export default function RecipeCard({recipeId, src, title, isFavorited, sourceName, averageRating, readyInMinutes, onRemove}) {
@@ -19,9 +19,9 @@ export default function RecipeCard({recipeId, src, title, isFavorited, sourceNam
 
   const handleFavorite = async () => {
     try {
-      const session = await getSession();
+
   
-      if (!session || !session.user.role) {
+      if (!session?.user?.role) {
         setError("Please log in to favorite recipes");
         return;
       }

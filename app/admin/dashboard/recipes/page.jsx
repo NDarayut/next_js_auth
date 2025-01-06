@@ -17,7 +17,7 @@ export default function AdminDashboard() {
     setLoading(true);
     setError("");
     try {
-      const response = await fetch(`/api/recipes/get-all-recipes?page=${page}&limit=20`);
+      const response = await fetch(`/api/recipes/getAllRecipes?page=${page}&limit=20`);
       const data = await response.json();
 
       if (response.ok) {
