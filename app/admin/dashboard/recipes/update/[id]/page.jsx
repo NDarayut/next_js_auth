@@ -23,8 +23,6 @@ export default function UpdateRecipe() {
     readyInMinutes: "",
     dishTypes: [],
     cuisines: [],
-    occasions: [],
-    diets: [],
   });
   const [ingredients, setIngredients] = useState([{ name: "", amount: "", unit: "" }]);
   const [nutritions, setNutritions] = useState([
@@ -43,6 +41,10 @@ export default function UpdateRecipe() {
   const [response, setResponse] = useState(null);
   const {recipeDetail, loading, error, fetchRecipeById} = useRecipes()
 
+  // For storing cuisines and dishtypes fetched from the API
+  const [cuisinesList, setCuisinesList] = useState([]);
+  const [dishtypesList, setDishtypesList] = useState([]);
+
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/login"); // Redirect if the user is not authenticated
@@ -50,6 +52,23 @@ export default function UpdateRecipe() {
   }, [status]);
 
   useEffect(() => {
+    // Fetch cuisines and dishtypes from the API
+    const fetchCategories = async () => {
+      try {
+        const cuisinesResposne = await fetch('/api/categories/cuisines');
+        const dishtypesResponse = await fetch('/api/categories/dishtypes')
+        const dataCuisines = await cuisinesResposne.json();
+        const dataDishtypes = await dishtypesResponse.json();
+        setCuisinesList(dataCuisines);
+        setDishtypesList(dataDishtypes);
+        
+      } 
+      
+      catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
+    fetchCategories()
     fetchRecipeById(id);
   }, [id]); // Fetch recipe when the ID changes
 
@@ -63,8 +82,6 @@ export default function UpdateRecipe() {
         readyInMinutes: recipeDetail.readyInMinutes,
         dishTypes: recipeDetail.dishTypes || [],
         cuisines: recipeDetail.cuisines || [],
-        occasions: recipeDetail.occasions || [],
-        diets: recipeDetail.diets || [],
       });
       setIngredients(recipeDetail.extendedIngredients || []);
       setNutritions(recipeDetail?.nutrition || []);
@@ -125,6 +142,7 @@ export default function UpdateRecipe() {
     e.preventDefault();
 
     let base64Image = formData.image;
+    // If user upload image run this code
     if (imageFile) {
       const reader = new FileReader();
       reader.onload = async () => {
@@ -147,8 +165,9 @@ export default function UpdateRecipe() {
           ],
         };
 
+        // update the recipe
         try {
-          const response = await fetch(`/api/recipes/update`, {
+          const response = await fetch(`/api/recipes/update/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
@@ -161,7 +180,9 @@ export default function UpdateRecipe() {
           }
 
           setIsSuccess(true);
-        } catch (error) {
+        } 
+        
+        catch (error) {
           console.error(error);
           setResponse("Failed to update recipe");
         }
@@ -170,10 +191,10 @@ export default function UpdateRecipe() {
       reader.readAsDataURL(imageFile);
     } 
     
+    // if user doesnt upload any image, use the one from the database
     else {
       const payload = {
         ...formData,
-        originalRecipeId: id,
         status: "approved",
         userId: recipeDetail.userId,
         score: recipeDetail.score,
@@ -191,8 +212,8 @@ export default function UpdateRecipe() {
       };
 
       try {
-        const response = await fetch(`/api/recipes/create-mock-recipe`, {
-          method: "POST",
+        const response = await fetch(`/api/recipes/update/${id}`, {
+          method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
@@ -212,10 +233,6 @@ export default function UpdateRecipe() {
       }
     }
   };
-
-  if(loading){
-    return <p>Loading...</p>
-}
 
 if(error){
     return <p>Error: {error}</p>
@@ -237,10 +254,35 @@ if (!recipeDetail) {
             <div className="font-sans mx-[100px] mb-28">
                 <form onSubmit={handleSubmit} className="space-y-4">
                 <FormInputs formData={formData} handleChange={handleChange} handleImageUpload={handleImageUpload} />
-                <CheckboxGroup label="Dish Types" options={["Appetizer", "Main Course", "Dessert"]} selectedOptions={formData.dishTypes} handleChange={(option) => { /* Handle change */ }} />
-                <CheckboxGroup label="Cuisines" options={["Italian", "Asian", "American"]} selectedOptions={formData.cuisines} handleChange={(option) => { /* Handle change */ }} />
-                <CheckboxGroup label="Occasions" options={["Party", "Wedding", "Funeral"]} selectedOptions={formData.occasions} handleChange={(option) => { /* Handle change */ }} />
-                <CheckboxGroup label="Diets" options={["Vegan", "Gluten-free", "Keto"]} selectedOptions={formData.diets} handleChange={(option) => { /* Handle change */ }} />
+                
+                <CheckboxGroup 
+                  label="Dish Types" 
+                  options={dishtypesList.map((dishtype) => dishtype.name)} 
+                  selectedOptions={formData.dishTypes} 
+                  handleChange={(option) => { 
+                    const checked = formData.dishTypes.includes(option);
+                    setFormData({
+                      ...formData,
+                      dishTypes: checked
+                        ? formData.dishTypes.filter((item) => item !== option)
+                        : [...formData.dishTypes, option],
+                    });
+                }}/>
+
+                <CheckboxGroup 
+                  label="Cuisines" 
+                  options={cuisinesList.map((cuisine) => cuisine.name)} 
+                  selectedOptions={formData.cuisines} 
+                  handleChange={(option) => { 
+                    const checked = formData.cuisines.includes(option);
+                    setFormData({
+                      ...formData,
+                      cuisines: checked
+                        ? formData.cuisines.filter((item) => item !== option)
+                        : [...formData.cuisines, option],
+                    });
+                 }}/>
+                
                 <h2 className="text-2xl font-semibold mb-4 text-customDarkGreen">Ingredients</h2>
                 <table className="w-full border border-customDarkGreen text-customDarkGreen">
                     <thead>

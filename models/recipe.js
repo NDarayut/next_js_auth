@@ -38,7 +38,7 @@ const recipeSchema = new Schema({
 
     image: {
         type: String,
-        required: true
+        required: true,
     },
 
     readyInMinutes: {
@@ -52,16 +52,6 @@ const recipeSchema = new Schema({
     },
 
     cuisines: {
-        type: [String],
-        default: [],
-    },
-
-    occasions: {
-        type:[String],
-        default: [],
-    },
-
-    diets: {
         type: [String],
         default: [],
     },

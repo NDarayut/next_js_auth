@@ -24,8 +24,6 @@ export default function TestRecipe() {
     readyInMinutes: "",
     dishTypes: [],
     cuisines: [],
-    occasions: [],
-    diets: [],
   });
   const [ingredients, setIngredients] = useState([{ name: "", amount: "", unit: "" }]);
   const [nutritions, setNutritions] = useState([
@@ -43,6 +41,11 @@ export default function TestRecipe() {
   const [imageFile, setImageFile] = useState(null);
   const [response, setResponse] = useState(null);
 
+  // For storing cuisines and dishtypes fetched from the API
+  const [cuisinesList, setCuisinesList] = useState([]);
+  const [dishtypesList, setDishtypesList] = useState([]);
+
+
   useEffect(() => {
     if (session && session.user) {
       setFormData((prev) => ({
@@ -50,6 +53,23 @@ export default function TestRecipe() {
         sourceName: session.user.username,
       }));
     }
+
+    // Fetch cuisines and dishtypes from the API
+    const fetchData = async () => {
+      try {
+        const cuisinesResposne = await fetch('/api/categories/cuisines');
+        const dishtypesResponse = await fetch('/api/categories/dishtypes')
+        const dataCuisines = await cuisinesResposne.json();
+        const dataDishtypes = await dishtypesResponse.json();
+        setCuisinesList(dataCuisines);
+        setDishtypesList(dataDishtypes);
+        
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
+    fetchData();
+
   }, [session]);
 
   const handleChange = (e) => {
@@ -180,10 +200,10 @@ export default function TestRecipe() {
           {/*Title, Author, Image, Description, and Prep time */} 
           <FormInputs formData={formData} handleChange={handleChange} handleImageUpload={handleImageUpload}/>
 
-          {/*Dishtypes*/}
+          {/* Dishtypes */}
           <CheckboxGroup
             label="Dish Types"
-            options={["Appetizer", "Main Course", "Dessert"]}
+            options={dishtypesList.map((dishtype) => dishtype.name)}
             selectedOptions={formData.dishTypes}
             handleChange={(option) => {
               const checked = formData.dishTypes.includes(option);
@@ -196,10 +216,10 @@ export default function TestRecipe() {
             }}
           />
 
-          {/*Cuisines*/}
+          {/* Cuisines */}
           <CheckboxGroup
             label="Cuisines"
-            options={["Italian", "Asian", "American"]}
+            options={cuisinesList.map((cuisine) => cuisine.name)}
             selectedOptions={formData.cuisines}
             handleChange={(option) => {
               const checked = formData.cuisines.includes(option);
@@ -208,38 +228,6 @@ export default function TestRecipe() {
                 cuisines: checked
                   ? formData.cuisines.filter((item) => item !== option)
                   : [...formData.cuisines, option],
-              });
-            }}
-          />
-
-          {/*Occasions*/}
-          <CheckboxGroup
-            label="Occasions"
-            options={["Party", "Wedding", "Funeral"]}
-            selectedOptions={formData.occasions}
-            handleChange={(option) => {
-              const checked = formData.occasions.includes(option);
-              setFormData({
-                ...formData,
-                occasions: checked
-                  ? formData.occasions.filter((item) => item !== option)
-                  : [...formData.occasions, option],
-              });
-            }}
-          />
-
-          {/*Diets*/}
-          <CheckboxGroup
-            label="Diets"
-            options={["Vegan", "Gluten-free", "Keto"]}
-            selectedOptions={formData.diets}
-            handleChange={(option) => {
-              const checked = formData.diets.includes(option);
-              setFormData({
-                ...formData,
-                diets: checked
-                  ? formData.diets.filter((item) => item !== option)
-                  : [...formData.diets, option],
               });
             }}
           />

@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import PendingApproval from "./components/PendingApproval";
 import SideBar from "../components/SideBar";
 
-export default function AdminDashboard() {
+export default function PendingRecipeDashboard() {
   const [recipes, setRecipes] = useState([]);
   const { data: session, status } = useSession();
   const [loading, setLoading] = useState(false);

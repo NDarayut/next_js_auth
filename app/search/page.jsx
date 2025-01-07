@@ -1,139 +1,117 @@
 "use client";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import RecipeCard from "@/components/RecipeCard";
 import Navbar from "@/components/Navbar";
+import Filter from "@/components/Filter";
+import { useSession } from "next-auth/react";
 
 export default function SearchResults() {
   const searchParams = useSearchParams(); // Access URL query parameters
-  const router = useRouter(); // Use router for navigation and updating query parameters
-
+  const { data: session, status } = useSession();
   const [recipes, setRecipes] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [cuisines, setCuisines] = useState([]); // Example cuisines
+  const [dishTypes, setDishTypes] = useState([]); // Example dish types
+  const [favoritedRecipes, setFavoritedRecipes] = useState([]);
+  const [loading, setLoading] = useState(true); // New loading state
 
-  // Extract the initial search query and filters from the URL
+  // Extract the query params directly from the searchParams object
   const query = searchParams.get("query");
-  const dishTypes = searchParams.get("dishTypes");
-  const cuisines = searchParams.get("cuisines");
-  const occasions = searchParams.get("occasions");
-  const diets = searchParams.get("diets");
+  const selectedDishType = searchParams.get("dishTypes");
+  const selectedCuisine = searchParams.get("cuisines");
 
-  // Function to fetch recipes based on current query and filters
-  const fetchRecipes = async (filters = {}) => {
-    setLoading(true);
-    setError(null);
-  
+  // Fetch cuisines and dish types from your APIs
+  const fetchCuisinesAndDishTypes = async () => {
     try {
-      // Build the filter parameters dynamically and omit empty filters
-      const filterParams = new URLSearchParams();
-      if (dishTypes) filterParams.set("dishTypes", dishTypes);
-      if (cuisines) filterParams.set("cuisines", cuisines);
-      if (occasions) filterParams.set("occasions", occasions);
-      if (diets) filterParams.set("diets", diets);
-  
-      // Construct API URL without encoding query
-      const apiUrl = `/api/recipes/search?query=${query}&${filterParams.toString()}`;
-  
-      console.log('API URL:', apiUrl); // Debugging line
-  
-      const response = await fetch(apiUrl);
-      if (!response.ok) throw new Error("Failed to fetch recipes");
-  
+      const cuisinesResponse = await fetch("/api/categories/cuisines");
+      const dishTypesResponse = await fetch("/api/categories/dishtypes");
+
+      const cuisinesData = await cuisinesResponse.json();
+      const dishTypesData = await dishTypesResponse.json();
+
+      setCuisines(cuisinesData); // Set fetched cuisines
+      setDishTypes(dishTypesData); // Set fetched dish types
+    } catch (error) {
+      console.error("Error fetching cuisines and dish types:", error);
+    }
+  };
+
+  // Fetch recipes based on the filters
+  const fetchRecipes = async () => {
+    setLoading(true);
+    const queryParams = {};
+
+    // Add filters to the queryParams object if they exist
+    if (query) queryParams.query = query;
+    if (selectedCuisine) queryParams.cuisines = selectedCuisine;
+    if (selectedDishType) queryParams.dishTypes = selectedDishType;
+    
+
+    const queryString = new URLSearchParams(queryParams).toString();
+    console.log(queryString)
+    try {
+      const response = await fetch(`/api/recipes/search?${queryString}`);
       const data = await response.json();
-      setRecipes(data); // Update recipes state
-    } catch (err) {
-      console.error("Error Fetching Recipes:", err);
-      setError("Failed to fetch recipes.");
+      setRecipes(data); // Set the filtered recipes
+    } catch (error) {
+      console.error("Error fetching recipes:", error);
     } finally {
-      setLoading(false);
+      setLoading(false); // Set loading to false once the data is fetched
     }
   };
-  
 
-  // Fetch recipes initially and whenever filters change
+  const fetchUserFavorites = async () => {
+    if (session?.user?.id) {
+      try {
+        const response = await fetch(`/api/favorite/get/${session.user.id}`);
+        const data = await response.json();
+        setFavoritedRecipes(data); // This should be an array of recipe IDs
+      } catch (error) {
+        console.log("Failed to fetch favorites: ", error);
+      }
+    }
+  };
+
   useEffect(() => {
-    const filters = { dishTypes, cuisines, occasions, diets }; // Collect filters from URL
-    fetchRecipes(filters);
-  }, [query, dishTypes, cuisines, occasions, diets]);
-
-  // Handle filter changes and update the URL
-  const handleFilterChange = (key, value) => {
-    const newParams = new URLSearchParams(searchParams.toString());
-    if (value) {
-      newParams.set(key, value); // Add or update filter
-    } else {
-      newParams.delete(key); // Remove filter if value is empty
-    }
-    router.push(`/search?${newParams.toString()}`); // Update URL
-  };
+    fetchUserFavorites();
+    fetchCuisinesAndDishTypes(); // Fetch cuisines and dish types
+    fetchRecipes(); // Fetch recipes when the component mounts or search params change
+  }, [searchParams]); // Re-fetch when search params change
 
   return (
     <div className="bg-customYellow min-h-screen">
       <div className="mb-20">
         <Navbar />
       </div>
-      
-      <h1 className="text-xl font-bold mb-4">Search Results for &quot;{query}&quot;</h1>
+      <Filter cuisines={cuisines} dishTypes={dishTypes} query={query}/>
 
-      {/* Filter Controls */}
-      <div className="mb-4">
-        <select
-          onChange={(e) => handleFilterChange("dishTypes", e.target.value)}
-          value={dishTypes || ""}
-        >
-          <option value="">Select Dish Type</option>
-          <option value="dessert">Dessert</option>
-          <option value="main course">Main Course</option>
-        </select>
-        <select
-          onChange={(e) => handleFilterChange("cuisines", e.target.value)}
-          value={cuisines || ""}
-        >
-          <option value="">Select Cuisine</option>
-          <option value="Italian">Italian</option>
-          <option value="Mexican">Mexican</option>
-        </select>
-        <select
-          onChange={(e) => handleFilterChange("occasions", e.target.value)}
-          value={occasions || ""}
-        >
-          <option value="">Select Occasion</option>
-          <option value="Birthday">Birthday</option>
-          <option value="Holiday">Holiday</option>
-        </select>
-        <select
-          onChange={(e) => handleFilterChange("diets", e.target.value)}
-          value={diets || ""}
-        >
-          <option value="">Select Diet</option>
-          <option value="Vegetarian">Vegetarian</option>
-          <option value="Vegan">Vegan</option>
-        </select>
-      </div>
-
-      {loading && <p>Loading...</p>}
-      {error && <p className="text-red-500">{error}</p>}
-
-      {/* Display Recipes */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10 p-4 mb-11">
-        {recipes.length > 0 ? (
-          recipes.map((recipe) => (
-            <RecipeCard
-              key={recipe._id}
-              recipeId={recipe._id}
-              src={recipe.image}
-              title={recipe.title}
-              isFavorited={false}
-              sourceName={recipe.sourceName}
-              rating={recipe.score}
-              readyInMinutes={recipe.readyInMinutes}
-            />
-          ))
-        ) : (
-          <p>No recipes found.</p>
-        )}
-      </div>
+      {/* Display loading message or spinner */}
+      {loading ? (
+        <div className="text-center p-4">
+          <p>Loading recipes...</p>
+          {/* Optionally, you can add a spinner here */}
+        </div>
+      ) : (
+        // Display Recipes once data is loaded
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10 p-4 mb-11">
+          {recipes.length > 0 ? (
+            recipes.map((recipe) => (
+              <RecipeCard
+                key={recipe._id}
+                recipeId={recipe._id}
+                src={recipe.image}
+                title={recipe.title}
+                isFavorited={favoritedRecipes.includes(recipe._id)}
+                sourceName={recipe.sourceName}
+                averageRating={recipe.averageRating}
+                readyInMinutes={recipe.readyInMinutes}
+              />
+            ))
+          ) : (
+            <p>No recipes found.</p>
+          )}
+        </div>
+      )}
     </div>
   );
 }

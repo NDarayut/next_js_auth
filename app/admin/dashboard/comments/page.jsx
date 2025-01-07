@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import CommentBoard from "./components/CommentBoard";
 import SideBar from "../components/SideBar";
 
-export default function AdminDashboard() {
+export default function CommentDashboard() {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
 

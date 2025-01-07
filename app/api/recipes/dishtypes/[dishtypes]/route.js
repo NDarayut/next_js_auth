@@ -6,12 +6,12 @@ export async function GET(req, { params }) {
     // Connect to the database
     await connectMongoDB();
 
-    // Destructure the cuisines from the URL
-    const { cuisines } = params;
+    // Destructure the dishTypes from the URL
+    const { dishtypes } = params;
 
-    // Query the Recipe model to find recipes with the provided cuisines
+    // Query the Recipe model to find recipes with the provided dishTypes
     const recipes = await Recipe.find({
-      cuisines: { $in: [cuisines] }  // Find recipes where the cuisines array contains the given cuisines
+      dishTypes: { $in: [dishtypes] }  // Find recipes where the dishTypes array contains the given dishtypes
     });
 
     // Return the matching recipes as JSON
@@ -22,7 +22,7 @@ export async function GET(req, { params }) {
   } 
   
   catch (error) {
-    console.error("Error fetching recipes by cuisines:", error);
+    console.error("Error fetching recipes by dishType:", error);
     return new Response(JSON.stringify({ error: "Failed to fetch recipes" }), {
       status: 500,
     });

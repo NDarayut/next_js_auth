@@ -5,7 +5,7 @@ import RecipesBoard from "./components/RecipesBoard";
 import SideBar from "../components/SideBar";
 import { useRouter } from "next/navigation";
 
-export default function AdminDashboard() {
+export default function RecipesDashboard() {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -21,8 +21,18 @@ export default function AdminDashboard() {
       const data = await response.json();
 
       if (response.ok) {
-        setRecipes((prevRecipes) => [...prevRecipes, ...data]); // Append new recipes to the list
-      } else {
+        if (page === 1) {
+          // For the first page, replace the entire list
+          setRecipes(data);
+        } 
+        
+        else {
+          // For subsequent pages, append the data
+          setRecipes((prevRecipes) => [...prevRecipes, ...data]);
+        }
+      } 
+      
+      else {
         setError(data.error || "Failed to fetch recipes.");
       }
     } catch (error) {
