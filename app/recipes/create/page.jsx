@@ -24,8 +24,6 @@ export default function TestRecipe() {
     readyInMinutes: "",
     dishTypes: [],
     cuisines: [],
-    occasions: [],
-    diets: [],
   });
   const [ingredients, setIngredients] = useState([{ name: "", amount: "", unit: "" }]);
   const [nutritions, setNutritions] = useState([

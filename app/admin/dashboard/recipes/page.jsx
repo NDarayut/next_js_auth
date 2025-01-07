@@ -5,7 +5,7 @@ import RecipesBoard from "./components/RecipesBoard";
 import SideBar from "../components/SideBar";
 import { useRouter } from "next/navigation";
 
-export default function AdminDashboard() {
+export default function RecipesDashboard() {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
