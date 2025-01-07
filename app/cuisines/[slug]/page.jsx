@@ -5,13 +5,13 @@ import RecipeCard from "@/components/RecipeCard";
 import Image from "next/image";
 import Footer from "@/components/Footer";
 
-export default function CategoryPage({params}) {
+export default function CuisinePage({params}) {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const { slug } = params// Get the category slug from the URL
-  const category = unslugify(slug);
+  const { slug } = params// Get the cuisines slug from the URL
+  const cuisine = unslugify(slug);
 
   // Unslugify function
   function unslugify(slug) {
@@ -23,10 +23,10 @@ export default function CategoryPage({params}) {
   useEffect(() => {
     if (!slug) return; // Wait for the slug to be available (avoid undefined errors)
     
-    // Fetch recipes based on the selected category (slug)
+    // Fetch recipes based on the selected cusines(slug)
     const fetchRecipes = async () => {
       try {
-        const res = await fetch(`/api/recipes/dishtypes/${slug}`);
+        const res = await fetch(`/api/recipes/cuisines/${slug}`);
         if (!res.ok) {
           throw new Error('Failed to fetch recipes');
         }
@@ -44,7 +44,7 @@ export default function CategoryPage({params}) {
   }, [slug]); // Run the effect when the slug changes
 
   // Extract 1 image so we can use the image as an example
-  const categoryExample = recipes[0];
+  const cuisineExample = recipes[0];
   
   if (loading) {
     return <p>Loading...</p>;
@@ -64,13 +64,13 @@ export default function CategoryPage({params}) {
         <main className="px-[60px]">
             <div className="flex items-center mb-28 px-14 gap-10">
                 <Image 
-                    src={categoryExample.image}
-                    alt={categoryExample.title}
+                    src={cuisineExample.image}
+                    alt={cuisineExample.title}
                     width={0}
                     height={0}
                     className="w-52 h-52 rounded-full"
                 />
-                <h1 className="text-customDarkGreen text-5xl font-serif font-bold">{category}</h1>
+                <h1 className="text-customDarkGreen text-5xl font-serif font-bold">{cuisine} Cuisines</h1>
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10 p-4 mb-11">

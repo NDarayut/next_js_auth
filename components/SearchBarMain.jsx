@@ -32,7 +32,14 @@ export default function SearchBarMain () {
         recognition.onresult = (event) => {
             const transcript = event.results[0][0].transcript; // Get recognized text
             setQuery(transcript); // Update query state
-          };
+
+            // Perform search automatically after updating the query
+            setTimeout(() => {
+                if (transcript.trim() !== "") {
+                router.push(`/search?query=${transcript}`);
+                }
+            }, 0);
+        };
         
           recognition.onend = () => {
             setListening(false);

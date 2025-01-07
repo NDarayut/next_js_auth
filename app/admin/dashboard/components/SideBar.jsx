@@ -134,6 +134,24 @@ export default function SideBar() {
             </a>
           </li>
 
+          {/* Button to navigate to the homepage */}
+          <li className="absolute bottom-5 left-0 w-full px-4">
+            <a
+              href="/"
+              className="flex items-center text-customDarkGreen font-semibold h-12 p-3 hover:bg-customLightBrown transition-colors duration-300 rounded-lg"
+            >
+              <span className="mr-2">
+                <Image
+                  src="/exit.png" // Choose an appropriate home icon
+                  alt="Home"
+                  width={20}
+                  height={20}
+                />
+              </span>
+              Exit
+            </a>
+          </li>
+
         </ul>
       </nav>
     </aside>

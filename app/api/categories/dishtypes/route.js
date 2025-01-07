@@ -3,26 +3,11 @@ import Dishtypes from "@/models/dishtypes";
 import { NextResponse } from "next/server";
 import slugify from "slugify";  // Install slugify: npm install slugify
 
-// Unslugify function
-function unslugify(slug) {
-  return slug
-    .replace(/-/g, ' ') // Replace hyphens with spaces
-    .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize the first letter of each word
-}
-
 export async function GET(request) {
   try {
     await connectMongoDB();
 
     const dishTypes = await Dishtypes.find();
-
-    // Unslugify the `slug` field for each cuisine
-    /*
-    const unslugifiedDishtypes = dishTypes.map(dishtype => ({
-      ...dishtype.toObject(),
-      name: unslugify(dishtype.name) // Unslugify the slug field to make it human-readable
-    }));
-    */
 
     return new Response(JSON.stringify(dishTypes), { status: 200 });
 

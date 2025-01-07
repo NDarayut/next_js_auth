@@ -21,8 +21,18 @@ export default function RecipesDashboard() {
       const data = await response.json();
 
       if (response.ok) {
-        setRecipes((prevRecipes) => [...prevRecipes, ...data]); // Append new recipes to the list
-      } else {
+        if (page === 1) {
+          // For the first page, replace the entire list
+          setRecipes(data);
+        } 
+        
+        else {
+          // For subsequent pages, append the data
+          setRecipes((prevRecipes) => [...prevRecipes, ...data]);
+        }
+      } 
+      
+      else {
         setError(data.error || "Failed to fetch recipes.");
       }
     } catch (error) {

@@ -3,26 +3,11 @@ import Cuisines from "@/models/cuisines";
 import slugify from "slugify";  // Install slugify: npm install slugify
 
 
-// Unslugify function
-function unslugify(slug) {
-  return slug
-    .replace(/-/g, ' ') // Replace hyphens with spaces
-    .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize the first letter of each word
-}
-
 export async function GET(request) {
   try {
     await connectMongoDB();
 
     const cuisines = await Cuisines.find();
-
-    // Unslugify the `slug` field for each cuisine
-    /*
-    const unslugifiedCuisines = cuisines.map(cuisine => ({
-      ...cuisine.toObject(),
-      name: unslugify(cuisine.name) // Unslugify the slug field to make it human-readable
-    }));
-    */
 
     return new Response(JSON.stringify(cuisines), { status: 200 });
   } 

@@ -69,7 +69,7 @@ export default function Navbar() {
       try {
         const dishTypesResponse = await fetch("/api/categories/dishtypes");
         const dishTypes = dishTypesResponse.ok ? await dishTypesResponse.json() : [];
-        setCategories([...dishTypes]); // Combine cuisines and dishTypes
+        setCategories([...dishTypes]); //  dishTypes
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -141,20 +141,35 @@ export default function Navbar() {
           </div>
         ) : null}
 
-        {/* Avatar Section */}
+        
         {status === "authenticated" && session?.user && (
           <div className="flex items-center ml-auto mr-4 gap-4">
-            <div>
-              <Link href="/recipes/create">
+            
+            {/* Create recipe */}
+            <Link href="/recipes/create">
+              <Image 
+                src="/create.png"
+                alt="Create Recipe"
+                width={0}
+                height={0}
+                className="w-8 h-8"
+              />
+            </Link>
+
+            {/*Admin dashboard navigation */}
+            {session?.user?.role === "admin" && (
+              <Link href="/admin/dashboard">
                 <Image 
-                  src="/create.png"
-                  alt="Create Recipe"
-                  width={0}
-                  height={0}
-                  className="w-8 h-8"
-                />
+                src="/admin.png"
+                alt="admin navigation"
+                width={0}
+                height={0}
+                className="w-8 h-8"
+              />
               </Link>
-            </div>
+            )}
+
+            {/* Avatar Section */}
             <Link href={`/profile/${session.user.id}`}>
               <Image 
                 src={profilePicture || "/default.png"}
