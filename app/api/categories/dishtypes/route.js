@@ -1,23 +1,47 @@
 import { connectMongoDB } from "@/lib/mongodb";
 import Dishtypes from "@/models/dishtypes";
 import { NextResponse } from "next/server";
+import slugify from "slugify";  // Install slugify: npm install slugify
 
+// Unslugify function
+function unslugify(slug) {
+  return slug
+    .replace(/-/g, ' ') // Replace hyphens with spaces
+    .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize the first letter of each word
+}
 
 export async function GET(request) {
   try {
     await connectMongoDB();
+
     const dishTypes = await Dishtypes.find();
+
+    // Unslugify the `slug` field for each cuisine
+    /*
+    const unslugifiedDishtypes = dishTypes.map(dishtype => ({
+      ...dishtype.toObject(),
+      name: unslugify(dishtype.name) // Unslugify the slug field to make it human-readable
+    }));
+    */
+
     return new Response(JSON.stringify(dishTypes), { status: 200 });
-  } catch (error) {
+
+  } 
+  catch (error) {
     return new Response("Failed to fetch dish types", { status: 500 });
   }
 }
 
 export async function POST(request) {
   try {
+
     await connectMongoDB()
     const { name } = await request.json(); // Expecting name of the dish type
-    const newDishType = await Dishtypes.create({ name });
+
+    // Slugify the dish type name to standardize it (lowercase, hyphenated)
+    const slugifiedName = slugify(name.toLowerCase(), { lower: true });
+
+    const newDishType = await Dishtypes.create({ name: slugifiedName });
     return NextResponse.json(newDishType, {status: 201})
   } 
   catch (error) {
@@ -29,10 +53,16 @@ export async function PUT(request) {
   try {
     await connectMongoDB()
     const { id, name } = await request.json(); // Expecting id and name for updating
-    const updatedDishType = await Dishtypes.findByIdAndUpdate(id, { name }, { new: true });
+    // Slugify the name to ensure consistency in format (lowercase, hyphenated)
+    const slugifiedName = slugify(name.toLowerCase(), { lower: true });
+
+    // Update the dish type with the slugified name
+    const updatedDishType = await Dishtypes.findByIdAndUpdate(id, { name: slugifiedName }, { new: true });
+
     if (!updatedDishType) {
       return new Response("Dish type not found", { status: 404 });
     }
+
     return new Response(JSON.stringify(updatedDishType), { status: 200 });
   } catch (error) {
     return new Response("Failed to update dish type", { status: 500 });
