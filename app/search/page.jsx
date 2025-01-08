@@ -5,6 +5,7 @@ import RecipeCard from "@/components/RecipeCard";
 import Navbar from "@/components/Navbar";
 import Filter from "@/components/Filter";
 import { useSession } from "next-auth/react";
+import Footer from "@/components/Footer";
 
 export default function SearchResults() {
   const searchParams = useSearchParams(); // Access URL query parameters
@@ -80,38 +81,44 @@ export default function SearchResults() {
 
   return (
     <div className="bg-customYellow min-h-screen">
-      <div className="mb-20">
-        <Navbar />
-      </div>
-      <Filter cuisines={cuisines} dishTypes={dishTypes} query={query}/>
+        <div className="mb-40">
+          <Navbar />
+        </div>
 
-      {/* Display loading message or spinner */}
-      {loading ? (
-        <div className="text-center p-4">
-          <p>Loading recipes...</p>
-          {/* Optionally, you can add a spinner here */}
-        </div>
-      ) : (
-        // Display Recipes once data is loaded
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10 p-4 mb-11">
-          {recipes.length > 0 ? (
-            recipes.map((recipe) => (
-              <RecipeCard
-                key={recipe._id}
-                recipeId={recipe._id}
-                src={recipe.image}
-                title={recipe.title}
-                isFavorited={favoritedRecipes.includes(recipe._id)}
-                sourceName={recipe.sourceName}
-                averageRating={recipe.averageRating}
-                readyInMinutes={recipe.readyInMinutes}
-              />
-            ))
+        <main className="mx-[100px]">
+          <div className="mb-20">
+            <Filter cuisines={cuisines} dishTypes={dishTypes} query={query}/>
+          </div>
+          
+          {/* Display loading message or spinner */}
+          {loading ? (
+            <div className="text-center p-4">
+              <p>Loading recipes...</p>
+              {/* Optionally, you can add a spinner here */}
+            </div>
           ) : (
-            <p>No recipes found.</p>
+            // Display Recipes once data is loaded
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10 p-4 mb-11">
+              {recipes.length > 0 ? (
+                recipes.map((recipe) => (
+                  <RecipeCard
+                    key={recipe._id}
+                    recipeId={recipe._id}
+                    src={recipe.image}
+                    title={recipe.title}
+                    isFavorited={favoritedRecipes.includes(recipe._id)}
+                    sourceName={recipe.sourceName}
+                    averageRating={recipe.averageRating}
+                    readyInMinutes={recipe.readyInMinutes}
+                  />
+                ))
+              ) : (
+                <p>No recipes found.</p>
+              )}
+            </div>
           )}
-        </div>
-      )}
+        </main>
+        <Footer />
     </div>
   );
 }

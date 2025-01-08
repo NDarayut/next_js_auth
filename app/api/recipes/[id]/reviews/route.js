@@ -26,8 +26,8 @@ export async function POST(req, { params }) {
       const newReview = new Review({ recipeId: id, userId, username, rating, comment });
       await newReview.save();
 
-      const updatedScore = await updateRecipeScore(id);
-      
+      // When user post a comment, we will re-calculate the Score and Rating of that recipes
+      await updateRecipeScore(id);
   
       return new Response(JSON.stringify(newReview), { status: 201 });
     } catch (error) {

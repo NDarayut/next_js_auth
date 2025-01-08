@@ -37,6 +37,7 @@ export default function ContactUs() {
         <h1 className="text-4xl font-bold text-center text-customDarkGreen mb-6">
           Contact now
         </h1>
+        
         <form className="flex justify-center flex-col">
           {/* Name Field */}
           <div className="mb-4">

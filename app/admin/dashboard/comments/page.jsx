@@ -26,12 +26,12 @@ export default function CommentDashboard() {
   }, []);
 
   // Handle deletion of comment
-  const handleDelete = async (commentId) => {
+  const handleDelete = async (commentId, recipeId) => {
     try {
       const response = await fetch('/api/recipes/comments', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ commentId })
+        body: JSON.stringify({ commentId, recipeId })
       });
 
       if (!response.ok) {
