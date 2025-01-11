@@ -24,7 +24,7 @@ export default function CommentBoard({loading, comments, handleDelete}) {
                             <p className="mt-2 text-gray-800">{comment.comment}</p>
                             <div className="mt-4 flex justify-between">
                                 <button
-                                    onClick={() => handleDelete(comment._id)}
+                                    onClick={() => handleDelete(comment._id, comment.recipeId)}
                                     className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
                                 >
                                     Delete

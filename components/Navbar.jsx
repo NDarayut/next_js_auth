@@ -143,7 +143,7 @@ export default function Navbar() {
 
         
         {status === "authenticated" && session?.user && (
-          <div className="flex items-center ml-auto mr-4 gap-4">
+          <div className="flex items-center ml-auto mr-4 gap-6">
             
             {/* Create recipe */}
             <Link href="/recipes/create">
