@@ -25,13 +25,13 @@ export default function CommentBoard({loading, comments, handleDelete}) {
                             <div className="mt-4 flex justify-between">
                                 <button
                                     onClick={() => handleDelete(comment._id, comment.recipeId)}
-                                    className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                                    className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-200"
                                 >
                                     Delete
                                 </button>
                                 <a
                                     href={`/recipes/${comment.recipeId}`} // Dynamically set link using `recipeId`
-                                    className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                                    className="generalButton text-white"
                                 >
                                     View Recipe
                                 </a>

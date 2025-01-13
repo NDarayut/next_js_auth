@@ -8,9 +8,7 @@ import {useState} from "react"
 
 export default function PopularCard({recipeId, src, title, rating}) {
     
-
     const {data: session, status} = useSession()
-    const [error, setError] = useState("")
 
     if (status === "loading") {
     return <div>Loading...</div>; // Or return a loading spinner
@@ -39,9 +37,6 @@ export default function PopularCard({recipeId, src, title, rating}) {
                             <h1 className="mb-1">Ratings: {Math.round(rating)}</h1> {/* Display rating */}
                         </div>
                     </CardHeader>
-
-                    {/* Error Message */}
-                    {error && <p className="text-red-500 text-sm">{error}</p>}
                 </Card>
             </Link>
         </div>

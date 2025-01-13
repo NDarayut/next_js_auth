@@ -50,11 +50,11 @@ export default function RegisterForm(){
                 body: JSON.stringify({email}),
             })
 
-            // destructure the response and only getting the user
-            const {user} = await resUserExists.json()
+            // destructure the response and only getting the user's ID
+            const {id} = await resUserExists.json()
 
-            // if the email exist, we notify the user
-            if(user){
+            // if ID is valid, it means that the email is taken
+            if(id){
                 setError("User already exist")
                 return
             }
@@ -130,7 +130,7 @@ export default function RegisterForm(){
                             )
                         }
 
-                        <button class="signupButton" type="submit">Sign up</button>
+                        <button className="signupButton" type="submit">Sign up</button>
                     </div>
 
                     <div className="items-center flex justify-center">

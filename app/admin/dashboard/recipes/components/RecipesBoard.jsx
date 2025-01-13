@@ -1,7 +1,6 @@
-import { Spinner } from "@nextui-org/react";
 import Link from "next/link";
 
-export default function RecipesBoard({error, recipes, loading, loadMoreRecipes, handleDelete, handleEdit}) {
+export default function RecipesBoard({error, recipes, handleDelete, handleEdit}) {
 
     return (
         
@@ -28,7 +27,7 @@ export default function RecipesBoard({error, recipes, loading, loadMoreRecipes, 
                             {recipes.map((recipe, index) => (
                                 <tr
                                     key={recipe._id}
-                                    className={`${index % 2 === 0 ? "bg-customYellow" : "bg-customLightBrown"} hover:bg-[#EDE6D6] ${index % 2 !== 0 && "hover:bg-[#D6C7BC]"} transition duration-150`}
+                                    className={`${index % 2 === 0 ? "bg-customYellow" : "bg-customLightBrown"} hover:bg-[#EDE6D6] ${index % 2 !== 0 && "hover:bg-[#D6C7BC]"} transition duration-200`}
                                 >
                                     <td className="px-6 py-4 text-sm font-light">{recipe.sourceName || "Untitled"}</td>
                                     <td className="text-sm text-gray-500">{new Date(recipe.createdAt).toLocaleString()}</td>
@@ -42,10 +41,10 @@ export default function RecipesBoard({error, recipes, loading, loadMoreRecipes, 
                                         </Link>
                                     </td>
                                     <td className="px-6 py-4 text-sm font-light">
-                                        <button onClick={() => handleEdit(recipe._id)}  className="px-4 py-2 text-white bg-green-600 rounded-md shadow-md hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-400 mr-2">
+                                        <button onClick={() => handleEdit(recipe._id)}  className="px-4 py-2 text-white mr-2 rounded-md bg-customGreen hover:bg-[#4E8A5A] active:bg-[#335C3D] transition duration-200">
                                             Edit
                                         </button>
-                                        <button onClick={() => handleDelete(recipe._id)} className="px-4 py-2 text-white bg-red-600 rounded-md shadow-md hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-400">
+                                        <button onClick={() => handleDelete(recipe._id)} className="px-4 py-2 text-white bg-red-600 rounded-md shadow-md hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-400 transition duration-200">
                                             Delete
                                         </button>
                                     </td>
@@ -53,18 +52,6 @@ export default function RecipesBoard({error, recipes, loading, loadMoreRecipes, 
                             ))}
                         </tbody>
                     </table>
-                </div>
-            )}
-
-            {loading ? (
-                <div className="flex justify-center mt-6">
-                    <Spinner />
-                </div>
-            ) : (
-                <div className="flex justify-center mt-6">
-                    <button onClick={loadMoreRecipes} color="primary" size="lg">
-                        Load More Recipes
-                    </button>
                 </div>
             )}
         </div>

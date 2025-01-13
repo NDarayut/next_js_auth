@@ -21,11 +21,11 @@ export async function GET(req) {
 
     // Apply additional filters only if they are present
     if (dishTypes) {
-      filterQuery.dishTypes = { $in: dishTypes.split(',') };
+      filterQuery.dishTypes = { $all: dishTypes.split(',') };
     }
     
     if (cuisines) {
-      filterQuery.cuisines = { $in: cuisines.split(',') };
+      filterQuery.cuisines = { $all: cuisines.split(',') };
     }
 
     // Fetch recipes based on the constructed query

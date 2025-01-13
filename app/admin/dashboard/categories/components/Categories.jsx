@@ -74,7 +74,7 @@ export default function Categories({cuisines, dishTypes, handleAdd, handleEdit, 
                               setEditMode({ type: "cuisine", id: cuisine._id });
                               setEditInput(cuisine.name);
                             }}
-                            className="text-white px-3 py-1 bg-green-600 rounded-md shadow-md hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-400 mr-2"
+                            className="text-white px-3 py-1 mr-2 rounded-md bg-customGreen hover:bg-[#4E8A5A] active:bg-[#335C3D] transition duration-200"
                           >
                             Edit
                           </button>
@@ -105,7 +105,7 @@ export default function Categories({cuisines, dishTypes, handleAdd, handleEdit, 
                 handleAdd("cuisine", cuisineInput);
                 setCuisineInput("");
               }}
-              className="text-white px-3 py-1 bg-green-600 rounded-md shadow-md hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-400 mr-2"
+              className="text-white px-3 py-1 mr-2 rounded-md bg-customGreen hover:bg-[#4E8A5A] active:bg-[#335C3D] transition duration-200"
             >
               Add Cuisine
             </button>
@@ -174,7 +174,7 @@ export default function Categories({cuisines, dishTypes, handleAdd, handleEdit, 
                               setEditMode({ type: "dishType", id: dishType._id });
                               setEditInput(dishType.name);
                             }}
-                            className="text-white px-3 py-1 bg-green-600 rounded-md shadow-md hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-400 mr-2"
+                            className="text-white px-3 py-1 mr-2 rounded-md bg-customGreen hover:bg-[#4E8A5A] active:bg-[#335C3D] transition duration-200"
                           >
                             Edit
                           </button>
@@ -205,7 +205,7 @@ export default function Categories({cuisines, dishTypes, handleAdd, handleEdit, 
                 handleAdd("dishType", dishTypeInput);
                 setDishTypeInput("");
               }}
-              className="text-white px-3 py-1 bg-green-600 rounded-md shadow-md hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-400 mr-2"
+              className="text-white px-3 py-1 mr-2 bg-customGreen hover:bg-[#4E8A5A] active:bg-[#335C3D] transition duration-200 rounded-md"
             >
               Add Dish Type
             </button>
