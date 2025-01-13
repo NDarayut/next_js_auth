@@ -1,5 +1,6 @@
-// components/CheckboxGroup.jsx
-const CheckboxGroup = ({ label, options, selectedOptions, handleChange }) => (
+export default function CheckboxGroup({ label, options, selectedOptions, handleChange }){
+
+  return(
     <div className="flex flex-col space-y-2">
       <h2 className="text-lg font-bold mt-4">{label}</h2>
       <div className="space-x-2">
@@ -17,6 +18,6 @@ const CheckboxGroup = ({ label, options, selectedOptions, handleChange }) => (
       </div>
     </div>
   );
+};
   
-  export default CheckboxGroup;
   

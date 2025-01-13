@@ -1,4 +1,3 @@
-// app/test-recipe/page.jsx
 "use client";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -14,9 +13,11 @@ import Image from "next/image";
 
 
 export default function TestRecipe() {
+
   const { data: session, status } = useSession();
   const router = useRouter();
   const [isSuccess, setIsSuccess] = useState(false);
+
   const [formData, setFormData] = useState({
     title: "",
     sourceName: "",
@@ -47,14 +48,15 @@ export default function TestRecipe() {
 
 
   useEffect(() => {
+    // Get the username from the session, and updates the form data
     if (session && session.user) {
       setFormData((prev) => ({
         ...prev,
-        sourceName: session.user.username,
+        sourceName: session.user.username, // Setting the name of recipe's creator
       }));
     }
 
-    // Fetch cuisines and dishtypes from the API
+    // Fetch cuisines and dishtypes from the API, so we can use to create checkboxes
     const fetchData = async () => {
       try {
         const cuisinesResposne = await fetch('/api/categories/cuisines');
@@ -68,31 +70,37 @@ export default function TestRecipe() {
         console.error("Error fetching data: ", error);
       }
     };
+
     fetchData();
 
   }, [session]);
 
+  // Updates the value in form field
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const { name, value } = e.target; // extract the "name" and "value" prooperties
+    setFormData({ ...formData, [name]: value }); // Update the form based on the name and value given
   };
 
+  // Update individual ingredient's field
   const handleIngredientChange = (index, field, value) => {
     const updatedIngredients = [...ingredients];
-    updatedIngredients[index][field] = value;
+    updatedIngredients[index][field] = value; // index is the row, and field is the name, amount or unit
     setIngredients(updatedIngredients);
   };
 
+  // Update individual nutrition's field
   const handleNutritionChange = (index, field, value) => {
     const updatedNutritions = [...nutritions];
     updatedNutritions[index][field] = value;
     setNutritions(updatedNutritions);
   };
 
+  // add new rows/ingredients
   const addIngredientRow = () => {
     setIngredients([...ingredients, { name: "", amount: "", unit: "" }]);
   };
 
+  // remove the rows/ingredients
   const removeIngredientRow = (index) => {
     const updatedIngredients = ingredients.filter((_, i) => i !== index);
     setIngredients(updatedIngredients);
@@ -113,6 +121,7 @@ export default function TestRecipe() {
     setInstructions(updatedInstructions);
   };
 
+
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     setImageFile(file);
@@ -122,16 +131,16 @@ export default function TestRecipe() {
     e.preventDefault();
 
     let base64Image = "";
+    // If there is an image, convert it to base64 string and store it
     if (imageFile) {
       const reader = new FileReader();
       reader.onload = async () => {
         base64Image = reader.result;
         const payload = {
           ...formData,
-          status: "pending-create",
+          status: "pending-create", // Ensure that recipe will not show up on the website
           score: 0,
           userId: session.user.id,
-          sourceName: session.user.username,
           image: base64Image,
           extendedIngredients: ingredients,
           nutrition: { nutrients: nutritions },
@@ -145,6 +154,7 @@ export default function TestRecipe() {
           ],
         };
 
+        // Sending the payload through the API
         try {
           const response = await fetch("/api/recipes/create", {
             method: "POST",
@@ -158,14 +168,16 @@ export default function TestRecipe() {
             return;
           }
 
-          setIsSuccess(true);
+          setIsSuccess(true); // A success message will pop up
         } 
+
         catch (error) {
           console.error(error);
           setResponse({ error: "Failed to create recipe" });
         }
       };
 
+      // Convert the image to a base64 string
       reader.readAsDataURL(imageFile);
     } 
     
@@ -173,6 +185,18 @@ export default function TestRecipe() {
       alert("Please upload an image.");
     }
   };
+
+  // An error, or a success response will pop up for 5 second, then disappear
+  useEffect(() => {
+    if (response || isSuccess) {
+      const timer = setTimeout(() => {
+        setResponse(null);
+        setIsSuccess(false); // Reset the success message
+      }, 5000); // Clear after 5 seconds
+  
+      return () => clearTimeout(timer); // Cleanup on unmount or state change
+    }
+  }, [response, isSuccess]);
 
   if (status === "loading") {
     return <div>Loading...</div>;
@@ -201,6 +225,10 @@ export default function TestRecipe() {
           <FormInputs formData={formData} handleChange={handleChange} handleImageUpload={handleImageUpload}/>
 
           {/* Dishtypes */}
+          {/* 
+            It gets all the option of dishtypes list, and render them as checkbox.
+            Whenever a checkbox is pressed, it checks whether or not the value is in the form.
+          */}
           <CheckboxGroup
             label="Dish Types"
             options={dishtypesList.map((dishtype) => dishtype.name)}
@@ -210,8 +238,8 @@ export default function TestRecipe() {
               setFormData({
                 ...formData,
                 dishTypes: checked
-                  ? formData.dishTypes.filter((item) => item !== option)
-                  : [...formData.dishTypes, option],
+                  ? formData.dishTypes.filter((item) => item !== option) // This creates a new array, excluding the options
+                  : [...formData.dishTypes, option], //This creates a new array, with the option appended
               });
             }}
           />
@@ -292,11 +320,19 @@ export default function TestRecipe() {
           </div>
           
         </form>
+
         {isSuccess && (
                 <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-customGreen text-white px-4 py-2 rounded-md shadow-lg z-50">
                     Recipe submitted successfully
                 </div>
             )}
+
+        {/* Error message */}
+        {response && (
+          <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-md shadow-lg z-50">
+            {response}
+          </div>
+        )}
       </div>
 
       <Footer/>

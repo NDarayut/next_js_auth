@@ -44,7 +44,7 @@ export default function CuisinePage({params}) {
   }, [slug]); // Run the effect when the slug changes
 
   // Extract 1 image so we can use the image as an example
-  const cuisineExample = recipes[0];
+  const cuisineExample = recipes.length > 0 ? recipes[0] : null;
   
   if (loading) {
     return <p>Loading...</p>;
@@ -62,16 +62,30 @@ export default function CuisinePage({params}) {
 
         {/* Display Recipes */}
         <main className="px-[60px]">
-            <div className="flex items-center mb-28 px-14 gap-10">
-                <Image 
+
+
+            {/* Display Recipes */}
+              {cuisineExample ? (
+                <div className="flex items-center mb-28 px-14 gap-10">
+                  <Image
                     src={cuisineExample.image}
                     alt={cuisineExample.title}
                     width={0}
                     height={0}
                     className="w-52 h-52 rounded-full"
-                />
-                <h1 className="text-customDarkGreen text-5xl font-serif font-bold">{cuisine} Cuisines</h1>
-            </div>
+                  />
+                  <h1 className="text-customDarkGreen text-5xl font-serif font-bold">
+                    {cuisine}
+                  </h1>
+                </div>
+              ) : (
+                <div className="mb-28 px-14">
+                  <h1 className="text-customDarkGreen text-5xl font-serif font-bold">
+                    {cuisine}
+                  </h1>
+                  <p className="text-gray-600 mt-4">No image available for this cuisine.</p>
+                </div>
+            )}
             
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10 p-4 mb-11">
             {recipes.length > 0 ? (

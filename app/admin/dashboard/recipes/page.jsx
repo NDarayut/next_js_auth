@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Button, Spinner, Link } from "@nextui-org/react";
 import RecipesBoard from "./components/RecipesBoard";
 import SideBar from "../components/SideBar";
 import { useRouter } from "next/navigation";
@@ -84,15 +83,34 @@ export default function RecipesDashboard() {
     <div className="flex min-h-screen">
       <SideBar />
       <main className="flex-1 p-8">
+
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-100 text-red-700 p-4 rounded-md mb-6">
+            {error}
+          </div>
+        )}
+
+        {/* Recipes Board */}
         <RecipesBoard
-            key={recipes.length} // Ensures re-render on state change
-            error={error}
-            recipes={recipes}
-            loading={loading}
-            loadMoreRecipes={loadMoreRecipes}
-            handleDelete={handleDelete}
-            handleEdit={handleEdit}
+          recipes={recipes}
+          handleDelete={handleDelete}
+          handleEdit={handleEdit}
+          loading={loading}
         />
+
+        {/* Load More Button */}
+        {recipes.length > 0 && (
+          <div className="mt-8 flex justify-center">
+            <button
+              onClick={loadMoreRecipes}
+              disabled={loading}
+              className="generalButton text-white"
+            >
+              {loading ? "Loading..." : "Load More"}
+            </button>
+          </div>
+        )}
       </main>
     </div>
   );

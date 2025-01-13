@@ -1,5 +1,5 @@
 "use client"
-import { useSession, signOut } from "next-auth/react";  // Import necessary hooks and signOut method
+import { useSession } from "next-auth/react";  // Import necessary hooks and signOut method
 import { useRouter } from 'next/navigation'; // For client-side redirects
 import { useEffect, useState } from "react";
 import SideBar from "./components/SideBar";
@@ -19,7 +19,7 @@ export default function Dashboard(){
 
     // Check user role
   const role = session?.user?.role;
-  console.log(role);
+
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -61,9 +61,9 @@ export default function Dashboard(){
 
 
      // Show a loading state while session info is being retrieved
-  if (status === "loading") {
-    return <div>Loading...</div>;
-  }
+    if (status === "loading") {
+      return <div>Loading...</div>;
+    }
 
     // if it is admin, show this
     return(

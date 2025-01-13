@@ -1,7 +1,7 @@
 import Image from "next/image";
 
-// components/Instructions.jsx
-const Instructions = ({ instructions, handleChange, addStep, removeStep }) => (
+export default function Instructions ({ instructions, handleChange, addStep, removeStep }){
+  return(
     <div>
       <h2 className="text-2xl font-semibold mb-4 text-customDarkGreen">Instructions</h2>
       {instructions.map((instruction, index) => (
@@ -43,6 +43,5 @@ const Instructions = ({ instructions, handleChange, addStep, removeStep }) => (
       </button>
     </div>
   );
-  
-  export default Instructions;
+};
   

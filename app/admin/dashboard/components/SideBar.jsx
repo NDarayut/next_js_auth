@@ -134,6 +134,26 @@ export default function SideBar() {
             </a>
           </li>
 
+          {/*Navigate to users dashboard*/}
+          <li>
+            <a 
+              href="/admin/dashboard/users" 
+              className={`flex items-center text-customDarkGreen font-semibold h-12 p-3 ${
+                isActive("/admin/dashboard/users") ? "bg-customLightBrown rounded-lg" : "hover:bg-customLightBrown transition-colors duration-300 rounded-lg"
+              }`}
+            >
+              <span className="mr-2">
+                <Image 
+                  src="/user.png"
+                  alt="users"
+                  width={20}
+                  height={20}
+                />
+              </span>
+              Users
+            </a>
+          </li>
+
           {/* Button to navigate to the homepage */}
           <li className="absolute bottom-5 left-0 w-full px-4">
             <a

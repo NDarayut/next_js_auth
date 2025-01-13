@@ -53,7 +53,7 @@ html, body, #__next {
 }
 
 .generalButton{
-  @apply  rounded-[30px] px-4 py-2 bg-customGreen font-jura hover:bg-[#4E8A5A] active:bg-[#335C3D];
+  @apply  rounded-lg px-4 py-2 bg-customGreen hover:bg-[#4E8A5A] active:bg-[#335C3D] transition duration-200;
 }
 
 

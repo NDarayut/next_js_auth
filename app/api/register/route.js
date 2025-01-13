@@ -20,8 +20,6 @@ export async function POST(req) {
                             role,
                             profilePicture}) // input the detail into database
 
-        console.log("Registration success")
-
         return NextResponse.json({message: "User registered"}, {status:201}) // send response to confirm success
     }   
     catch (error){
