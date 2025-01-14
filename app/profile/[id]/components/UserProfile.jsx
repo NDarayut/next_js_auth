@@ -15,7 +15,6 @@ export default function UserProfile({ userId }) {
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
-        email: "",
         profilePicture: "",
     });
     
@@ -39,7 +38,7 @@ export default function UserProfile({ userId }) {
                     setFormData({
                         firstName: data.firstName,
                         lastName: data.lastName,
-                        email: data.email,
+                        //email: data.email,
                         profilePicture: data.profilePicture || "", // Add this to handle profile picture
                     });
                 }
@@ -72,23 +71,13 @@ export default function UserProfile({ userId }) {
             reader.readAsDataURL(file);
         }
     };
-
-    const validateEmail = (email) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    };
     
     // Save changes
     const handleSaveChanges = async (e) => {
         e.preventDefault();
         try {
-            // Validate email before submitting
-            if (!validateEmail(formData.email)) {
-                setError("Please enter a valid email address.");
-                return;
-    }
             const response = await fetch(`/api/users/${userId}`, {
-                method: "PATCH",
+                method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
             });
@@ -113,7 +102,6 @@ export default function UserProfile({ userId }) {
     const handleCancelChanges = () => {
         setFormData({ firstName: user.firstName, 
                         lastName: user.lastName, 
-                        email: user.email, 
                         profilePicture: user.profilePicture,
                      });
     };
@@ -215,21 +203,6 @@ export default function UserProfile({ userId }) {
                             />
                         ) : (
                             <p className="w-[429px]">{user.lastName}</p>
-                        )}
-                    </div>
-
-                    <div>
-                        <h2>Email</h2>
-                        {isOwner ? (
-                            <input
-                                type="text"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleInputChange}
-                                className="border border-customDarkGreen rounded-[10px] p-2 w-[429px] bg-customYellow"
-                            />
-                        ) : (
-                            <p className="w-[429px]">{user.email}</p>
                         )}
                     </div>
                     

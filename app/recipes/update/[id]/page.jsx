@@ -42,7 +42,7 @@ export default function UpdateRecipe() {
   const [instructions, setInstructions] = useState([""]);
   const [imageFile, setImageFile] = useState(null);
   const [response, setResponse] = useState(null);
-  const {recipeDetail, loading, error, fetchRecipeById} = useRecipes()
+  const {recipeDetail, error, fetchRecipeById} = useRecipes()
 
   // For storing cuisines and dishtypes fetched from the API
   const [cuisinesList, setCuisinesList] = useState([]);
@@ -75,6 +75,8 @@ export default function UpdateRecipe() {
     fetchRecipeById(id);
   }, [id]); // Fetch recipe and categories when the ID changes
 
+
+  // Fetches all the detail of a recipe and set it in the variable
   useEffect(() => {
     if (recipeDetail) {
       setFormData({
@@ -100,31 +102,38 @@ export default function UpdateRecipe() {
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleNutritionChange = (index, field, value) => {
+     /*
+      --index: Specific nutrition in the nutrition array
+      --field: Key that needs to be changed (Nutrition name, Amount, and Unit )
+      --value: The new value that we input
+     */
+    const updatedNutritions = [...nutritions]; // creates a copy of the array (even if it's empty)
+    updatedNutritions[index][field] = value; // access the array at specific index to update its value
+    setNutritions(updatedNutritions); // Set the new value
+  };
+
   const handleIngredientChange = (index, field, value) => {
     const updatedIngredients = [...ingredients];
     updatedIngredients[index][field] = value;
     setIngredients(updatedIngredients);
   };
 
-  const handleNutritionChange = (index, field, value) => {
-    const updatedNutritions = [...nutritions];
-    updatedNutritions[index][field] = value;
-    setNutritions(updatedNutritions);
+  // add new empty row into the array with the existing row
+  const addIngredientRow = () => {
+    setIngredients([...ingredients, { name: "", amount: "", unit: "" }]);
+  };
+
+  // Creates a new array with the selected index removed 
+  const removeIngredientRow = (index) => {
+    const updatedIngredients = ingredients.filter((_, i) => i !== index);
+    setIngredients(updatedIngredients);
   };
 
   const handleInstructionChange = (index, value) => {
     const updatedInstructions = [...instructions];
     updatedInstructions[index] = value;
     setInstructions(updatedInstructions);
-  };
-
-  const addIngredientRow = () => {
-    setIngredients([...ingredients, { name: "", amount: "", unit: "" }]);
-  };
-
-  const removeIngredientRow = (index) => {
-    const updatedIngredients = ingredients.filter((_, i) => i !== index);
-    setIngredients(updatedIngredients);
   };
 
   const addInstructionStep = () => {
@@ -142,8 +151,13 @@ export default function UpdateRecipe() {
   };
 
   const handleDelete = async (e) => {
+    /* 
+      Create a mock recipe with its status to "pending-delete" so that it will appear on admin dashboard.
+      The original recipe will still be visible on the website, only when it is deleted when admin approved.
+    */
     e.preventDefault();
 
+    // Send only the original ID and the status, because deletion does not require full detail check
     const payload = {
       originalRecipeId: id,
       status: "pending-delete",
@@ -171,6 +185,9 @@ export default function UpdateRecipe() {
     };
 
   const handleSubmit = async (e) => {
+    /*
+     If the image file 
+    */
     e.preventDefault();
 
     let base64Image = formData.image;
@@ -265,18 +282,26 @@ export default function UpdateRecipe() {
     }
   };
 
-  if(loading){
-    return <p>Loading...</p>
-}
+  // An error, or a success response will pop up for 5 second, then disappear
+  useEffect(() => {
+    if (response || isSuccess) {
+      const timer = setTimeout(() => {
+        setResponse(null);
+        setIsSuccess(false); // Reset the success message
+      }, 5000); // Clear after 5 seconds
+  
+      return () => clearTimeout(timer); // Cleanup on unmount or state change
+    }
+  }, [response, isSuccess]);
 
-if(error){
-    return <p>Error: {error}</p>
-}
+  if(error){
+      return <p>Error: {error}</p>
+  }
 
-if (!recipeDetail) {
-    // Fallback in case recipeDetail is still null
-    return <p>No recipe details available.</p>;
-}
+  if (!recipeDetail) {
+      // Fallback in case recipeDetail is still null
+      return <p>No recipe details available.</p>;
+  }
 
   if (status === "loading") {
     return <div>Loading...</div>;
@@ -356,9 +381,17 @@ if (!recipeDetail) {
             <button type="button"  onClick={handleDelete} className="text-white text-lg rounded-md px-4 py-2 bg-red-800 font-jura hover:bg-red-500 active:bg-red-800">Delete Recipe</button>
           </div>
         </form>
+
         {isSuccess && (
           <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-customGreen text-white px-4 py-2 rounded-md shadow-lg z-50">
             Request Submitted Successfully
+          </div>
+        )}
+
+        {/* Error message */}
+        {response && (
+          <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-md shadow-lg z-50">
+            {response}
           </div>
         )}
       </div>

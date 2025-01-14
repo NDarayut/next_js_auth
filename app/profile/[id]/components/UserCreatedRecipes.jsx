@@ -89,7 +89,7 @@ export default function UserCreatedRecipes ({ userId }) {
           title={recipe.title}
           isFavorited={favoritedRecipes.includes(recipe._id)}
           sourceName={recipe.sourceName}
-          rating={recipe.score}
+          averageRating={recipe.averageRating}
           readyInMinutes={recipe.readyInMinutes}
         />
       ))}
