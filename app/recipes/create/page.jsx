@@ -79,6 +79,18 @@ export default function TestRecipe() {
   const handleChange = (e) => {
     const { name, value } = e.target; // extract the "name" and "value" prooperties
     setFormData({ ...formData, [name]: value }); // Update the form based on the name and value given
+  };  
+
+  // Update individual nutrition's field
+  const handleNutritionChange = (index, field, value) => {
+    /*
+      --index: Specific nutrition in the nutrition array
+      --field: Key that needs to be changed (Nutrition name, Amount, and Unit )
+      --value: The new value that we input
+     */
+    const updatedNutritions = [...nutritions]; // creates a copy of the array (even if it's empty)
+    updatedNutritions[index][field] = value; // access the array at specific index to update its value
+    setNutritions(updatedNutritions); // Set the new value
   };
 
   // Update individual ingredient's field
@@ -88,21 +100,14 @@ export default function TestRecipe() {
     setIngredients(updatedIngredients);
   };
 
-  // Update individual nutrition's field
-  const handleNutritionChange = (index, field, value) => {
-    const updatedNutritions = [...nutritions];
-    updatedNutritions[index][field] = value;
-    setNutritions(updatedNutritions);
-  };
-
-  // add new rows/ingredients
+  // add new empty row along with existing rows
   const addIngredientRow = () => {
     setIngredients([...ingredients, { name: "", amount: "", unit: "" }]);
   };
 
-  // remove the rows/ingredients
+  // Creates a new array with the selected index removed
   const removeIngredientRow = (index) => {
-    const updatedIngredients = ingredients.filter((_, i) => i !== index);
+    const updatedIngredients = ingredients.filter((_, i) => i !== index); 
     setIngredients(updatedIngredients);
   };
 
@@ -113,17 +118,17 @@ export default function TestRecipe() {
   };
 
   const addInstructionStep = () => {
-    setInstructions([...instructions, ""]);
+    setInstructions([...instructions, ""]); // Calling it again would produce ["", ""]
   };
 
   const removeInstructionStep = (index) => {
-    const updatedInstructions = instructions.filter((_, i) => i !== index);
+    const updatedInstructions = instructions.filter((_, i) => i !== index); 
     setInstructions(updatedInstructions);
   };
 
 
   const handleImageUpload = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files[0]; // Single file upload
     setImageFile(file);
   };
 
@@ -234,12 +239,12 @@ export default function TestRecipe() {
             options={dishtypesList.map((dishtype) => dishtype.name)}
             selectedOptions={formData.dishTypes}
             handleChange={(option) => {
-              const checked = formData.dishTypes.includes(option);
+              const checked = formData.dishTypes.includes(option); // A boolean to check if am option has been selected
               setFormData({
-                ...formData,
+                ...formData, // ensure all field in formData remained unchanged
                 dishTypes: checked
-                  ? formData.dishTypes.filter((item) => item !== option) // This creates a new array, excluding the options
-                  : [...formData.dishTypes, option], //This creates a new array, with the option appended
+                  ? formData.dishTypes.filter((item) => item !== option) // IF the option is checked, remove it to uncheck
+                  : [...formData.dishTypes, option], // ELSE check the option (appending the option)
               });
             }}
           />

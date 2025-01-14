@@ -29,7 +29,7 @@ export async function GET(req, { params }) {
     }
 }
 
-export async function PATCH(req, { params }) {
+export async function PUT(req, { params }) {
     const { id } = params;
     const { firstName, lastName, email, profilePicture } = await req.json(); // Retrieve updated data
 

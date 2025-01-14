@@ -76,6 +76,7 @@ export default function FavoriteRecipes ({ userId }) {
           sourceName={recipe.sourceName}
           rating={recipe.score}
           readyInMinutes={recipe.readyInMinutes}
+          averageRating={recipe.averageRating}
           onRemove={handleRemove}
         />
       ))}

@@ -9,7 +9,7 @@ export default function CheckboxGroup({ label, options, selectedOptions, handleC
             <input
               type="checkbox"
               value={option}
-              checked={selectedOptions.includes(option)}
+              checked={selectedOptions.includes(option)} // check form data dishtypes/cuisines array to see if the option is selected
               onChange={() => handleChange(option)}
             />
             {option}
