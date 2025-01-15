@@ -28,6 +28,7 @@ export async function GET(req) {
       filterQuery.cuisines = { $all: cuisines.split(',') };
     }
 
+    console.log(filterQuery)
     // Fetch recipes based on the constructed query
     const userRecipes = await Recipe.find(filterQuery);
 

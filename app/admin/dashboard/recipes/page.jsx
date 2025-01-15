@@ -11,22 +11,23 @@ export default function RecipesDashboard() {
   const [page, setPage] = useState(1); // Track the current page
   const router = useRouter();
 
-  // Function to fetch recipes
+  // Function to fetch all recipes from the database and display them
   const fetchRecipes = async (page) => {
     setLoading(true);
     setError("");
+
     try {
       const response = await fetch(`/api/recipes/getAllRecipes?page=${page}&limit=20`);
       const data = await response.json();
 
       if (response.ok) {
         if (page === 1) {
-          // For the first page, replace the entire list
+          // For the first page, replace the entire list with 20 recipes
           setRecipes(data);
         } 
         
         else {
-          // For subsequent pages, append the data
+          // For subsequent pages, append the data fetch subsequently
           setRecipes((prevRecipes) => [...prevRecipes, ...data]);
         }
       } 
@@ -34,14 +35,20 @@ export default function RecipesDashboard() {
       else {
         setError(data.error || "Failed to fetch recipes.");
       }
-    } catch (error) {
+    } 
+    
+    catch (error) {
       console.error(error);
       setError("An error occurred while fetching recipes.");
-    } finally {
+    } 
+    
+    finally {
       setLoading(false);
     }
   };
 
+
+  // If user delete a recipe, call API to delete it immediately
   const handleDelete = async (recipeId) => {
     try {
       const response = await fetch(`/api/recipes/delete/${recipeId}`, {
@@ -65,6 +72,7 @@ export default function RecipesDashboard() {
     }
   };
 
+  // Redirect to a new page that handles recipe update
   const handleEdit = (recipeId) => {
     router.push(`/admin/dashboard/recipes/update/${recipeId}`); // Redirect to the update page
   };

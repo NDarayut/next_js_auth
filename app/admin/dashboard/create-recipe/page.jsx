@@ -15,6 +15,7 @@ export default function CreateRecipe() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [isSuccess, setIsSuccess] = useState(false);
+
   const [formData, setFormData] = useState({
     title: "",
     sourceName: "",
@@ -45,6 +46,8 @@ export default function CreateRecipe() {
   const [cuisinesList, setCuisinesList] = useState([]);
   const [dishtypesList, setDishtypesList] = useState([]);
 
+  // Fetch the cuisines and dishtypes from the API to display for user.
+  // Automatically input the creator name based on their session
   useEffect(() => {
     if (session && session.user) {
       setFormData((prev) => ({
@@ -69,23 +72,30 @@ export default function CreateRecipe() {
     };
     fetchData();
 
-  }, [session]);
+  }, []);
 
+  // Extract the "name" and "value" prooperties, and apply changes. 
+  // Name includes: title, summary..etc
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleIngredientChange = (index, field, value) => {
-    const updatedIngredients = [...ingredients];
-    updatedIngredients[index][field] = value;
-    setIngredients(updatedIngredients);
+  const handleNutritionChange = (index, field, value) => {
+    /*
+      --index: Specific nutrition in the nutrition array
+      --field: Key that needs to be changed (Nutrition name, Amount, and Unit )
+      --value: The new value that we input
+    */
+    const updatedNutritions = [...nutritions]; // creates a copy of the array (even if it's empty)
+    updatedNutritions[index][field] = value; // access the array at specific index to update its value
+    setNutritions(updatedNutritions); // Set the new value
   };
 
-  const handleNutritionChange = (index, field, value) => {
-    const updatedNutritions = [...nutritions];
-    updatedNutritions[index][field] = value;
-    setNutritions(updatedNutritions);
+  const handleIngredientChange = (index, field, value) => {
+    const updatedIngredients = [...ingredients];
+    updatedIngredients[index][field] = value; // index is the row, and field is the name, amount or unit
+    setIngredients(updatedIngredients);
   };
 
   const addIngredientRow = () => {
@@ -99,7 +109,7 @@ export default function CreateRecipe() {
 
   const handleInstructionChange = (index, value) => {
     const updatedInstructions = [...instructions];
-    updatedInstructions[index] = value;
+    updatedInstructions[index] = value; // Instruction is a 1 Dimensional array with no columns
     setInstructions(updatedInstructions);
   };
 
@@ -113,13 +123,14 @@ export default function CreateRecipe() {
   };
 
   const handleImageUpload = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files[0]; // Single file upload (Get the first and only file)
     setImageFile(file);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // IF user submit an image, convert it to base64 string and store it on the database
     let base64Image = "";
     if (imageFile) {
       const reader = new FileReader();
@@ -127,7 +138,7 @@ export default function CreateRecipe() {
         base64Image = reader.result;
         const payload = {
           ...formData,
-          status: "approved",
+          status: "approved", // Admin created recipes no need admin approval
           image: base64Image,
           extendedIngredients: ingredients,
           nutrition: { nutrients: nutritions },
@@ -163,7 +174,7 @@ export default function CreateRecipe() {
         }
       };
 
-      reader.readAsDataURL(imageFile);
+      reader.readAsDataURL(imageFile); // convert the image file into a base64 string
     } 
     
     else {
@@ -171,6 +182,7 @@ export default function CreateRecipe() {
     }
   };
 
+  // Reset the pop-up message after 5 second
   useEffect(() => {
     if (response || isSuccess) {
       const timer = setTimeout(() => {

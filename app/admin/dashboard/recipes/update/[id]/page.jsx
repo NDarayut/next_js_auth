@@ -60,10 +60,8 @@ export default function UpdateRecipe() {
         const dataCuisines = await cuisinesResposne.json();
         const dataDishtypes = await dishtypesResponse.json();
         setCuisinesList(dataCuisines);
-        setDishtypesList(dataDishtypes);
-        
+        setDishtypesList(dataDishtypes);  
       } 
-      
       catch (error) {
         console.error("Error fetching data: ", error);
       }
@@ -72,6 +70,7 @@ export default function UpdateRecipe() {
     fetchRecipeById(id);
   }, [id]); // Fetch recipe when the ID changes
 
+  // Populate all the froms and table based on the recipe's detail
   useEffect(() => {
     if (recipeDetail) {
       setFormData({
@@ -91,10 +90,18 @@ export default function UpdateRecipe() {
     }
   }, [recipeDetail]); // Update form data when recipeDetail changes
 
-
+  // Update the formData when user edit something in title, image, sourceName...etc
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  // Populate the array with previous data, and create new array (with previous populated data)
+  // if user change any Nutrition field
+  const handleNutritionChange = (index, field, value) => {
+    const updatedNutritions = [...nutritions];
+    updatedNutritions[index][field] = value;
+    setNutritions(updatedNutritions);
   };
 
   const handleIngredientChange = (index, field, value) => {
@@ -103,25 +110,21 @@ export default function UpdateRecipe() {
     setIngredients(updatedIngredients);
   };
 
-  const handleNutritionChange = (index, field, value) => {
-    const updatedNutritions = [...nutritions];
-    updatedNutritions[index][field] = value;
-    setNutritions(updatedNutritions);
+  // Add an entirely new row of array with empty field (name, amount, ad unit)
+  const addIngredientRow = () => {
+    setIngredients([...ingredients, { name: "", amount: "", unit: "" }]);
+  };
+
+  // Creates a new array with the selected index removed
+  const removeIngredientRow = (index) => {
+    const updatedIngredients = ingredients.filter((_, i) => i !== index);
+    setIngredients(updatedIngredients);
   };
 
   const handleInstructionChange = (index, value) => {
     const updatedInstructions = [...instructions];
     updatedInstructions[index] = value;
     setInstructions(updatedInstructions);
-  };
-
-  const addIngredientRow = () => {
-    setIngredients([...ingredients, { name: "", amount: "", unit: "" }]);
-  };
-
-  const removeIngredientRow = (index) => {
-    const updatedIngredients = ingredients.filter((_, i) => i !== index);
-    setIngredients(updatedIngredients);
   };
 
   const addInstructionStep = () => {
@@ -134,15 +137,17 @@ export default function UpdateRecipe() {
   };
 
   const handleImageUpload = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files[0]; // Get the firt and only image from upload
     setImageFile(file);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Store the base64 string image from previous data
     let base64Image = formData.image;
-    // If user upload image run this code
+
+    // If user upload image, convert the new image and store it
     if (imageFile) {
       const reader = new FileReader();
       reader.onload = async () => {
@@ -234,14 +239,14 @@ export default function UpdateRecipe() {
     }
   };
 
-if(error){
+  if(error){
     return <p>Error: {error}</p>
-}
+  }
 
-if (!recipeDetail) {
+  if (!recipeDetail) {
     // Fallback in case recipeDetail is still null
     return <p>No recipe details available.</p>;
-}
+  }
 
   if (status === "loading") {
     return <div>Loading...</div>;

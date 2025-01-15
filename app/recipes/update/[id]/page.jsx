@@ -186,7 +186,8 @@ export default function UpdateRecipe() {
 
   const handleSubmit = async (e) => {
     /*
-     If the image file 
+     If the image file is given, convert it to base64 string and store it in the database.
+     Else, do not need send any image
     */
     e.preventDefault();
 

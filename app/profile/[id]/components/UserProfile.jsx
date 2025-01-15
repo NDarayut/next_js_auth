@@ -38,7 +38,6 @@ export default function UserProfile({ userId }) {
                     setFormData({
                         firstName: data.firstName,
                         lastName: data.lastName,
-                        //email: data.email,
                         profilePicture: data.profilePicture || "", // Add this to handle profile picture
                     });
                 }
