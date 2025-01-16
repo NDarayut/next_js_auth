@@ -74,8 +74,9 @@ export default function CreateRecipe() {
     };
 
     fetchData();
+    
 
-  }, []);
+  }, [session]);
 
   // Updates the value in form field
   const handleChange = (e) => {

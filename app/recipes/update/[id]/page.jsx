@@ -161,6 +161,7 @@ export default function UpdateRecipe() {
     const payload = {
       originalRecipeId: id,
       status: "pending-delete",
+      title: recipeDetail.title,
     };
 
     try {

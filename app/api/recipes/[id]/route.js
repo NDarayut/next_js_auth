@@ -14,6 +14,7 @@ export async function GET(req, { params }) {
     return new Response(JSON.stringify(userRecipe.toObject()), { status: 200 });
 
   } 
+  
   catch (error) {
     // Handle any errors and return error response
     console.error(error); // Optionally log the error for debugging

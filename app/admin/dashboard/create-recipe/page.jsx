@@ -49,14 +49,15 @@ export default function CreateRecipe() {
   // Fetch the cuisines and dishtypes from the API to display for user.
   // Automatically input the creator name based on their session
   useEffect(() => {
-    if (session && session.user) {
+    // // Get the username from the session, and updates the form data
+    if (status === "authenticated") {
       setFormData((prev) => ({
         ...prev,
-        sourceName: session.user.username,
+        sourceName: session.user.username, // Setting the name of recipe's creator
       }));
-    }
+   }
 
-    // Fetch cuisines and dishtypes from the API
+    // Fetch cuisines and dishtypes from the API, so we can use to create checkboxes
     const fetchData = async () => {
       try {
         const cuisinesResposne = await fetch('/api/categories/cuisines');
@@ -70,9 +71,10 @@ export default function CreateRecipe() {
         console.error("Error fetching data: ", error);
       }
     };
+
     fetchData();
 
-  }, []);
+  }, [session]);
 
   // Extract the "name" and "value" prooperties, and apply changes. 
   // Name includes: title, summary..etc

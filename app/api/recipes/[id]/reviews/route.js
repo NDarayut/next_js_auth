@@ -12,6 +12,7 @@ export async function GET(req, { params }) {
     const reviews = await Review.find({ recipeId: id }).populate("userId", "username"); // Include username
     return new Response(JSON.stringify(reviews), { status: 200 });
   } 
+  
   catch (error) {
     return new Response(JSON.stringify({ error: "Failed to fetch reviews" }), { status: 500 });
   }
@@ -35,7 +36,9 @@ export async function POST(req, { params }) {
       await updateRecipeScore(id);
   
       return new Response(JSON.stringify(newReview), { status: 201 });
-    } catch (error) {
+    } 
+    
+    catch (error) {
       return new Response(JSON.stringify({ error: "Failed to add review" }), { status: 500 });
     }
   }

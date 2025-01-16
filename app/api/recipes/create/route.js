@@ -33,9 +33,9 @@ export async function POST(req){
         analyzedInstructions,
       })
 
-      return NextResponse.json(newRecipe, {status: 201})
+      return new Response(JSON.stringify(newRecipe), {status: 201});
     }
     catch (error){
-        return NextResponse.json({error: error.message}, {status: 500})
+        return new Response(JSON.stringify({error: error.message}), {status: 500});
     }
 }
