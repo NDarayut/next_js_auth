@@ -56,10 +56,6 @@ export async function DELETE(req) {
   } 
   
   catch (error) {
-    console.error(error);
-    return new Response(
-      JSON.stringify({ message: "An error occurred while removing the recipe" }),
-      { status: 500 }
-    );
+    return new Response(JSON.stringify({ message: "An error occurred while removing the recipe" }), { status: 500 });
   }
 }

@@ -9,7 +9,7 @@ import Footer from "@/components/Footer";
 
 export default function SearchResults() {
   const searchParams = useSearchParams(); // Access URL query parameters
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const [recipes, setRecipes] = useState([]);
   const [cuisines, setCuisines] = useState([]); // Example cuisines
   const [dishTypes, setDishTypes] = useState([]); // Example dish types
@@ -32,7 +32,9 @@ export default function SearchResults() {
 
       setCuisines(cuisinesData); // Set fetched cuisines
       setDishTypes(dishTypesData); // Set fetched dish types
-    } catch (error) {
+    } 
+    
+    catch (error) {
       console.error("Error fetching cuisines and dish types:", error);
     }
   };
@@ -47,16 +49,19 @@ export default function SearchResults() {
     if (selectedCuisine) queryParams.cuisines = selectedCuisine;
     if (selectedDishType) queryParams.dishTypes = selectedDishType;
     
-
     const queryString = new URLSearchParams(queryParams).toString();
-    console.log(queryString)
+
     try {
       const response = await fetch(`/api/recipes/search?${queryString}`);
       const data = await response.json();
       setRecipes(data); // Set the filtered recipes
-    } catch (error) {
+    } 
+    
+    catch (error) {
       console.error("Error fetching recipes:", error);
-    } finally {
+    } 
+    
+    finally {
       setLoading(false); // Set loading to false once the data is fetched
     }
   };
@@ -67,7 +72,9 @@ export default function SearchResults() {
         const response = await fetch(`/api/favorite/get/${session.user.id}`);
         const data = await response.json();
         setFavoritedRecipes(data); // This should be an array of recipe IDs
-      } catch (error) {
+      } 
+      
+      catch (error) {
         console.log("Failed to fetch favorites: ", error);
       }
     }
@@ -79,6 +86,10 @@ export default function SearchResults() {
     fetchRecipes(); // Fetch recipes when the component mounts or search params change
   }, [searchParams]); // Re-fetch when search params change
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  
   return (
     <div className="bg-customYellow min-h-screen">
         <div className="mb-40">

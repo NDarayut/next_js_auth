@@ -15,10 +15,13 @@ export default function Home() {
   const [recipes, setRecipes] = useState([]);
   const [latestRecipes, setLatestRecipe] = useState([]);
   const [favoritedRecipes, setFavoritedRecipes] = useState([]);
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const [popularPage, setPopularPage] = useState(1); // Separate page for Popular Recipes
   const [latestPage, setLatestPage] = useState(1); // Separate page for Latest Recipes
+  const [loading, setLoading] = useState(true); // State to track loading
 
+  // Use to determine if the motion.div element is 10% within view.
+  // If 10% of the herosection is in view, it will trigger an animation
   const { ref: heroRef, inView: heroInView } = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -94,11 +97,20 @@ export default function Home() {
 
 
   useEffect(() => {
-    fetchRecipes(popularPage); 
-    fetchLatestRecipe(latestPage); 
-    fetchUserFavorites(); 
+    const fetchData = async () => {
+      await Promise.all([
+        fetchRecipes(popularPage),
+        fetchLatestRecipe(latestPage),
+        fetchUserFavorites(),
+      ]);
+      setLoading(false); // Set loading to false after all data is fetched
+    };
+    fetchData();
   }, [popularPage, latestPage, session]);
-  
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   const handleLoadMorePopular = () => {
     setPopularPage((prevPage) => prevPage + 1); // Increment popular page
@@ -107,10 +119,6 @@ export default function Home() {
   const handleLoadMoreLatest = () => {
     setLatestPage((prevPage) => prevPage + 1); // Increment latest page
   };
-
-  if (status === "loading") {
-    return <div>Loading...</div>
-  }
 
   return (
     <>
@@ -126,10 +134,10 @@ export default function Home() {
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center flex-col gap-8">
           {/* Motion content */}
           <motion.div
-            ref={heroRef}
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: heroInView ? 1 : 0, y: heroInView ? 0 : 50 }}
-            transition={{ duration: 0.6 }}
+            ref={heroRef} // Use to reference if the object is within view
+            initial={{ opacity: 0, y: 50 }} // Transparent and 50 pixel lower on y-axis
+            animate={{ opacity: heroInView ? 1 : 0, y: heroInView ? 0 : 50 }} // If the component is in view it will go visible
+            transition={{ duration: 0.6 }} // The transition last for 0.6 seconds
             className="text-center"
           >
             <h1 className="text-white text-6xl font-bold px-4 font-serif">

@@ -1,4 +1,3 @@
-import { NextResponse } from "next/server";
 import RecipeUpdate from "@/models/mockRecipe";
 import { connectMongoDB } from "@/lib/mongodb";
 
@@ -7,7 +6,6 @@ import { connectMongoDB } from "@/lib/mongodb";
     This will help ensure that the original recipe will still be visible on the website, while the user's
     updated recipe is waiting for admin's approval.
 */
-
 export async function POST(req) {
     try {
         await connectMongoDB();
@@ -35,9 +33,9 @@ export async function POST(req) {
           analyzedInstructions,
         })
 
-        return NextResponse.json(newRecipe, {status: 201})
+        return new Response(JSON.stringify(newRecipe), {status: 200});
     }   
     catch (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return new Response(JSON.stringify({ error: error.message }), { status: 500 });
     }
 }

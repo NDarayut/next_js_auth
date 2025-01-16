@@ -1,6 +1,5 @@
 import { connectMongoDB } from "@/lib/mongodb";
 import User from "@/models/user";
-import { NextResponse } from "next/server";
 
 /*
     This API is used to send the email to the database and checking if the email existed
@@ -18,8 +17,9 @@ export async function POST(req){
         // With the email, we find the id from the database
         const id = await User.findOne({email}).select("_id") 
 
-        return NextResponse.json({id}); // we pass the id back to the client
+        return new Response(JSON.stringify({id}), {status: 200}); // we pass the id back to the client
     }
+
     catch(error){
         console.log(error)
     }

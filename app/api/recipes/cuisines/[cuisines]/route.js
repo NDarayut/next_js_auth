@@ -15,14 +15,12 @@ export async function GET(req, { params }) {
 
     // Query the Recipe model to find recipes with the provided cuisines
     const recipes = await Recipe.find({
-      cuisines: { $in: [cuisines] }  // Find recipes where the cuisines array contains the given cuisines
+      cuisines: { $in: [cuisines] },  // Find recipes where the cuisines array contains the given cuisines
+      status: "approved",
     });
 
     // Return the matching recipes as JSON
-    return new Response(JSON.stringify(recipes), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(JSON.stringify(recipes), {status: 200});
   } 
   
   catch (error) {

@@ -4,11 +4,14 @@ import Navbar from "@/components/Navbar";
 import RecipeCard from "@/components/RecipeCard";
 import Image from "next/image";
 import Footer from "@/components/Footer";
+import { useSession } from "next-auth/react";
 
 export default function CuisinePage({params}) {
+  const {data: session} = useSession();
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [favoritedRecipes, setFavoritedRecipes] = useState([]);
 
   const { slug } = params// Get the cuisines slug from the URL
   const cuisine = unslugify(slug);
@@ -19,6 +22,20 @@ export default function CuisinePage({params}) {
       .replace(/-/g, ' ') // Replace hyphens with spaces
       .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize the first letter of each word
   }
+
+  const fetchUserFavorites = async () => {
+    if (session?.user?.id) {
+      try {
+        const response = await fetch(`/api/favorite/get/${session.user.id}`);
+        const data = await response.json();
+        setFavoritedRecipes(data); // This should be an array of recipe IDs
+      } 
+      
+      catch (error) {
+        console.log("Failed to fetch favorites: ", error);
+      }
+    }
+  };
   
   useEffect(() => {
     if (!slug) return; // Wait for the slug to be available (avoid undefined errors)
@@ -40,6 +57,7 @@ export default function CuisinePage({params}) {
     };
     
     fetchRecipes(); // Call the function to fetch recipes
+    fetchUserFavorites()
     
   }, [slug]); // Run the effect when the slug changes
 
@@ -95,7 +113,7 @@ export default function CuisinePage({params}) {
                     recipeId={recipe._id}
                     src={recipe.image}
                     title={recipe.title}
-                    isFavorited={false}
+                    isFavorited={favoritedRecipes.includes(recipe._id)}
                     sourceName={recipe.sourceName}
                     rating={recipe.score}
                     readyInMinutes={recipe.readyInMinutes}

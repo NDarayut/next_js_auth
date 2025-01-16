@@ -21,7 +21,9 @@ export async function GET(req) {
 
     // Return the recipes as a JSON response
     return new Response(JSON.stringify(recipes), { status: 200 });
-  } catch (error) {
+  } 
+  
+  catch (error) {
     console.error("Error fetching recipes:", error);
     return new Response(JSON.stringify({ error: "Failed to fetch recipes" }), { status: 500 });
   }

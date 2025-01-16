@@ -13,7 +13,7 @@ import { useRecipes } from "@/app/hook/useRecipes";
 import Image from "next/image";
 
 export default function UpdateRecipe() {
-  const { data: session, status } = useSession();
+  const { data: status } = useSession();
   const router = useRouter();
   const { id } = useParams(); // Assuming the recipe ID is passed in the URL as a parameter
   const [isSuccess, setIsSuccess] = useState(false);
@@ -201,7 +201,7 @@ export default function UpdateRecipe() {
           ...formData,
           originalRecipeId: id,
           status: "pending-update",
-          userId: session.user.id,
+          userId:  recipeDetail.userId,
           score: recipeDetail.score,
           image: base64Image,
           extendedIngredients: ingredients,
@@ -246,7 +246,7 @@ export default function UpdateRecipe() {
         ...formData,
         originalRecipeId: id,
         status: "pending-update",
-        userId: session.user.id,
+        userId: recipeDetail.userId,
         score: recipeDetail.score,
         image: base64Image,
         extendedIngredients: ingredients,

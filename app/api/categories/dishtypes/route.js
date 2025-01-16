@@ -1,7 +1,6 @@
 import { connectMongoDB } from "@/lib/mongodb";
 import Dishtypes from "@/models/dishtypes";
-import { NextResponse } from "next/server";
-import slugify from "slugify";  // Install slugify: npm install slugify
+import slugify from "slugify";  
 
 export async function GET(request) {
   try {

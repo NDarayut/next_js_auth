@@ -1,4 +1,3 @@
-
 import { connectMongoDB } from "@/lib/mongodb";
 import Recipe from "@/models/recipe";
 

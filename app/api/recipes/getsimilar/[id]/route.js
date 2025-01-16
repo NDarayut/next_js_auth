@@ -59,7 +59,6 @@ export async function GET(req, { params }) {
   } 
   
   catch (error) {
-    console.error("Fetch similar recipe error:", error);
     return new Response(JSON.stringify({ error: "Failed to fetch recipes" }), { status: 500 });
   }
 }
