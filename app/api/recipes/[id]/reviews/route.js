@@ -2,7 +2,9 @@ import Review from "@/models/review";
 import { connectMongoDB } from "@/lib/mongodb";
 import { updateRecipeScore } from "@/lib/updateRecipeScore";
 
-
+/* 
+  This API will get all the comments from a recipe based on the recipe's ID
+*/
 export async function GET(req, { params }) {
   const { id } = params; // Recipe ID
   try {
@@ -15,7 +17,10 @@ export async function GET(req, { params }) {
   }
 }
 
-
+/*
+  This API will input a comment's information based on the recipe's ID
+  comment's information includes: recipeID, userID, username (user who commented), rating, and the comment itself
+*/
 export async function POST(req, { params }) {
     const { id } = params; // Recipe ID
     const { userId, username, rating, comment } = await req.json();

@@ -1,6 +1,10 @@
 import { connectMongoDB } from "@/lib/mongodb";
 import Recipe from "@/models/recipe";
 
+/*
+  This API fetch all recipe on the website.
+  This API is used by the admin to monitor all recipe on the website.
+*/
 export async function GET(req) {
   try {
     // Get the query parameters for pagination (default values if not provided)

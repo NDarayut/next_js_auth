@@ -3,7 +3,9 @@ import Recipe from "@/models/recipe";
 import MockRecipe from "@/models/mockRecipe";
 import { NextResponse } from "next/server";
 
-
+/*
+  This API will make changes to the recipe if the admin does not approve of deleteing the recipe
+*/
 export async function PUT(req, { params }) {
   const { id } = params;
   const { status, currentStatus } = await req.json();
@@ -68,6 +70,9 @@ export async function PUT(req, { params }) {
   }
 }
 
+/*
+  This API will delete the recipe from both the original recipe model and the temporary recipe model
+*/
 export async function DELETE(req, { params }) {
   const { id } = params;
 

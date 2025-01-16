@@ -2,6 +2,10 @@ import { connectMongoDB } from "@/lib/mongodb";
 import Recipe from "@/models/recipe";
 import { NextResponse } from "next/server";
 
+/*
+  This API creates a recipe with all the necessary information.
+  The API is used by both Admin and User
+*/
 export async function POST(req){
     try{
 

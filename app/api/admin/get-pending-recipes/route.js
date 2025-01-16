@@ -2,6 +2,9 @@ import { connectMongoDB } from "@/lib/mongodb";
 import Recipe from "@/models/recipe";
 import MockRecipe from "@/models/mockRecipe";
 
+/*
+  This API will fetch all "pending" recipe to display on the dashboard for admin approval
+*/
 export async function GET(req) {
   try {
     req.url

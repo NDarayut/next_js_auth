@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation';
 import Image from "next/image";
 
 
-export default function TestRecipe() {
+export default function CreateRecipe() {
 
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -26,7 +26,9 @@ export default function TestRecipe() {
     dishTypes: [],
     cuisines: [],
   });
+
   const [ingredients, setIngredients] = useState([{ name: "", amount: "", unit: "" }]);
+
   const [nutritions, setNutritions] = useState([
     { name: "Calories", amount: "", unit: "kcal" },
     { name: "Fat", amount: "", unit: "g" },
@@ -38,6 +40,7 @@ export default function TestRecipe() {
     { name: "Protein", amount: "", unit: "g" },
     { name: "Potassium", amount: "", unit: "mg" },
   ]);
+
   const [instructions, setInstructions] = useState([""]);
   const [imageFile, setImageFile] = useState(null);
   const [response, setResponse] = useState(null);
@@ -45,7 +48,6 @@ export default function TestRecipe() {
   // For storing cuisines and dishtypes fetched from the API
   const [cuisinesList, setCuisinesList] = useState([]);
   const [dishtypesList, setDishtypesList] = useState([]);
-
 
   useEffect(() => {
     // Get the username from the session, and updates the form data
@@ -73,7 +75,7 @@ export default function TestRecipe() {
 
     fetchData();
 
-  }, [session]);
+  }, []);
 
   // Updates the value in form field
   const handleChange = (e) => {

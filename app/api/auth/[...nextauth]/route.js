@@ -3,11 +3,11 @@ import User from "@/models/user";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import FacebookProvider from "next-auth/providers/facebook";
 import bcrypt from "bcryptjs";
 
 export const authOptions = {
     providers: [
+        // Custom authentication
         CredentialsProvider({
             name: "credentials",
             credentials: {},
@@ -15,17 +15,20 @@ export const authOptions = {
                 const { email, password } = credentials;
                 try {
                     await connectMongoDB();
-                    const user = await User.findOne({ email });
+                    const user = await User.findOne({ email }); // Find mathcing email from Database
 
+                    // Login fail if email is not found
                     if (!user) {
                         return null;
                     }
-
+                    
+                    // Compare password from database to the one user input
                     const passwordMatch = await bcrypt.compare(password, user.password);
                     if (!passwordMatch) {
                         return null;
                     }
 
+                    // Return user information once logged in
                     return {
                         id: user._id.toString(),  // Store MongoDB _id as the id
                         email: user.email,
@@ -33,14 +36,16 @@ export const authOptions = {
                         firstName: user.firstName,  // Add firstName and lastName
                         lastName: user.lastName,
                     };
-                } catch (error) {
+                } 
+                
+                catch (error) {
                     console.log("Authorization error:", error);
                     return null;
                 }
             }
         }),
 
-        // Google OAuth
+        // Google OAuth (Google authentication)
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -52,8 +57,11 @@ export const authOptions = {
         strategy: "jwt",
     },
 
+    // Callback in NextAuth are function that run differently during different phase of authentication flow
     callbacks: {
-        async signIn({ user, account, profile }) {
+
+        // This callback trigger when user is login with google or custom
+        async signIn({ user, account}) {
             console.log("SignIn User:", user);  // Log the user object to ensure it's correct
 
             try {
@@ -62,12 +70,14 @@ export const authOptions = {
                 // Check if the user already exists in the database using the email
                 let existingUser = await User.findOne({ email: user.email });
 
+                // If the user dont exist we create the user
                 if (!existingUser) {
                     // Split the full name into firstName and lastName
                     let firstName = "No Name";
                     let lastName = "No Name";
 
-                    if (user.name) {
+                    // If the user logs in via Google, use the full name from Google to set firstName and lastName
+                    if (account.provider === 'google' && user.name) {
                         const nameParts = user.name.split(" ");
                         firstName = nameParts[0];
                         lastName = nameParts.slice(1).join(" ");
@@ -100,8 +110,14 @@ export const authOptions = {
                     user.lastName = existingUser.lastName;
                 }
 
-                // Combine firstName and lastName to create username
-                user.username = `${user.firstName} ${user.lastName}`;
+                // Ensure that if firstName and lastName are undefined, username is derived from name
+                if (!user.firstName || !user.lastName) {
+                    user.username = user.name; // Fallback to the full name from Google
+                } 
+                
+                else {
+                    user.username = `${user.firstName} ${user.lastName}`;
+                }
 
                 return true; // Allow sign-in
             } 
@@ -112,18 +128,24 @@ export const authOptions = {
             }
         },
 
+        // JWT callback are used to modify or add custom field to the JWT.
+        // JWT are token stored in the client side and used for authentication
         async jwt({ token, user }) {
+            // When user logged in, this function takes data from the "user" object and add it to the token
+            // The token will include all the information below.
+            // The token allow for efficient access without having to query the user's info all the time
             if (user) {
                 token.id = user.id;  // Set the MongoDB _id from the user object
                 token.email = user.email;
                 token.role = user.role || "user";
                 token.username = user.username;  // Store the username in the JWT token
             }
-            console.log("JWT Callback User:", user);
 
             return token;
         },
 
+        // Session callback is used to pass data from the JWT into the session object which is accesible
+        // on the client side
         async session({ session, token }) {
             if (token) {
                 console.log("Session Callback Token:", token);  // Log the token here
@@ -133,11 +155,15 @@ export const authOptions = {
                 session.user.username = token.username;  // Set the username in the session
             }
             console.log("Session in next auth: ", session);
+
+            // Session is returned and can used by useSession() hook to access
             return session;
         }
     },
 
+    // Key to hash the JWT
     secret: process.env.NEXTAUTH_SECRET,
+
     pages: {
         signIn: "/",
     },

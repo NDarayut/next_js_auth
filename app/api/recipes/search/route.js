@@ -1,6 +1,11 @@
 import { connectMongoDB } from '@/lib/mongodb';
 import Recipe from '@/models/recipe';
 
+/*
+  This API will fetch the recipe based on the query string.
+  This API will also fetch recipe based on filter option
+  Example: If the query is "hamburger" and cuisines is "american", it will fetch all american hamburger recipes.
+*/
 export async function GET(req) {
   const { searchParams } = new URL(req.url); // Parse query strings from the request URL
   const query = searchParams.get('query'); // Extract the search query
@@ -28,6 +33,7 @@ export async function GET(req) {
       filterQuery.cuisines = { $all: cuisines.split(',') };
     }
 
+    console.log(filterQuery)
     // Fetch recipes based on the constructed query
     const userRecipes = await Recipe.find(filterQuery);
 

@@ -2,6 +2,9 @@ import { connectMongoDB } from "@/lib/mongodb";
 import User from "@/models/user";
 import { NextResponse } from "next/server";
 
+/*
+    This API will fetch the user's information based on their userID to display them on their profile
+*/
 export async function GET(req, { params }) {
     const { id } = params;
 
@@ -17,7 +20,6 @@ export async function GET(req, { params }) {
         return NextResponse.json({
             firstName: user.firstName,
             lastName: user.lastName,
-            email: user.email,
             profilePicture: user.profilePicture,
         });
     } catch (error) {
@@ -29,6 +31,9 @@ export async function GET(req, { params }) {
     }
 }
 
+/*
+    This API will update any changes made by the user on their profile
+*/
 export async function PUT(req, { params }) {
     const { id } = params;
     const { firstName, lastName, email, profilePicture } = await req.json(); // Retrieve updated data
@@ -37,7 +42,7 @@ export async function PUT(req, { params }) {
         await connectMongoDB();
 
         // Find the user by ID and update their details, including the profile picture if provided
-        const updateFields = { firstName, lastName, email };
+        const updateFields = { firstName, lastName};
 
         if (profilePicture) {
             updateFields.profilePicture = profilePicture; // Only update profile picture if provided
@@ -55,7 +60,9 @@ export async function PUT(req, { params }) {
             email: user.email,
             profilePicture: user.profilePicture,
         });
-    } catch (error) {
+    } 
+    
+    catch (error) {
         console.error("Error updating user:", error);
         return NextResponse.json(
             { error: "An internal server error occurred" },

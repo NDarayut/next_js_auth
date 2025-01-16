@@ -1,6 +1,9 @@
 import { connectMongoDB } from "@/lib/mongodb";
 import User from "@/models/user";
 
+/*
+  This API will fetch all user on the website and display them on the admin dashbaord
+*/
 export async function GET(req) {
   try {
     // Get the query parameters for pagination (default values if not provided)
@@ -17,7 +20,9 @@ export async function GET(req) {
 
     // Return the recipes as a JSON response
     return new Response(JSON.stringify(recipes), { status: 200 });
-  } catch (error) {
+  } 
+  
+  catch (error) {
     console.error("Error fetching recipes:", error);
     return new Response(JSON.stringify({ error: "Failed to fetch recipes" }), { status: 500 });
   }
