@@ -1,5 +1,4 @@
 import { connectMongoDB } from "@/lib/mongodb" // importing the object we wrote in lib folder
-import { NextResponse } from "next/server"
 import bcrypt from "bcryptjs"
 import User from "@/models/user"
 
@@ -22,11 +21,12 @@ export async function POST(req) {
                             password: hashedPassword,
                             role,
                             profilePicture}) // input the detail into database
-
-        return NextResponse.json({message: "User registered"}, {status:201}) // send response to confirm success
+        
+        // send response to confirm success
+        return new Response(JSON.stringify({message: "User registered"}), {status:201}); 
     }   
     catch (error){
-        return NextResponse.json({message: "An error occured while registering the user"}, {status: 500})
+        return new Response(JSON.stringify({message: "An error occured while registering the user"}), {status: 500})
 
     }
 }

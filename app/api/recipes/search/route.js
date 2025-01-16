@@ -42,13 +42,7 @@ export async function GET(req) {
   } 
   
   catch (error) {
-    // Log the error for debugging
-    console.error('Search API Error:', error);
-
     // Return an error response
-    return new Response(
-      JSON.stringify({ error: 'Failed to fetch recipes' }),
-      { status: 500 }
-    );
+    return new Response(JSON.stringify({ error: 'Failed to fetch recipes' }), { status: 500 });
   }
 }

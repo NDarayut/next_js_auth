@@ -13,7 +13,7 @@ export default function SimilarRecipe({loading, error, similarRecipes}) {
               recipeId={recipe._id}
               src={recipe.image} // Image URL
               title={recipe.title} // Recipe title
-              rating={recipe.score} />
+              averageRating={recipe.averageRating} />
           ))
         ) : (
           !loading && <p>No similar recipes found.</p>

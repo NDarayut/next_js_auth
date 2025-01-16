@@ -11,12 +11,12 @@ import Footer from "@/components/Footer";
 import { useRouter } from 'next/navigation';
 import Image from "next/image";
 
-
 export default function CreateRecipe() {
 
   const { data: session, status } = useSession();
   const router = useRouter();
   const [isSuccess, setIsSuccess] = useState(false);
+  const [loading, setLoading] = useState(false); // New state variable for loading
 
   const [formData, setFormData] = useState({
     title: "",
@@ -68,8 +68,14 @@ export default function CreateRecipe() {
         setCuisinesList(dataCuisines);
         setDishtypesList(dataDishtypes);
         
-      } catch (error) {
+      } 
+      
+      catch (error) {
         console.error("Error fetching data: ", error);
+      }
+
+      finally {
+        setLoading(false);
       }
     };
 
@@ -206,7 +212,7 @@ export default function CreateRecipe() {
     }
   }, [response, isSuccess]);
 
-  if (status === "loading") {
+  if (loading) {
     return <div>Loading...</div>;
   }
 

@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {useState} from "react"
 
-export default function RelatedCard({recipeId, src, title, rating}) {
+export default function RelatedCard({recipeId, src, title, averageRating}) {
     
 
     const {data: session, status} = useSession()
@@ -17,17 +17,20 @@ export default function RelatedCard({recipeId, src, title, rating}) {
     }
 
     const renderStars = () => {
-    const stars = Array.from({ length: 5 }, (_, i) => (i < Math.round(rating/20) ? "★" : "☆"));
-    return (
-        <div className="flex items-center space-x-1 text-customOrange">
-        {stars.map((star, index) => (
-            <span key={index} className="text-2xl">
-            {star}
-            </span>
-        ))}
-        </div>
-    );
-    };
+        // Assuming `score` is the average rating, which should be between 1 and 5
+        const numStars = Math.round(averageRating); // Round the score to the nearest whole number
+        const stars = Array.from({ length: 5 }, (_, i) => (i < numStars ? "★" : "☆"));
+        
+        return (
+          <div className="flex items-center space-x-1 text-customOrange">
+            {stars.map((star, index) => (
+              <span key={index} className="text-2xl">
+                {star}
+              </span>
+            ))}
+          </div>
+        );
+      };
 
     return (
         <div className="flex flex-col space-y-4">

@@ -1,6 +1,5 @@
 import { connectMongoDB } from "@/lib/mongodb";
 import User from "@/models/user";
-import { NextResponse } from "next/server";
 
 /*
     This API will fetch the user's information based on their userID to display them on their profile
@@ -14,18 +13,17 @@ export async function GET(req, { params }) {
         const user = await User.findById(id);
 
         if (!user) {
-            return NextResponse.json({ error: "User not found" }, { status: 404 });
+            return new Response(JSON.stringify({ error: "User not found" }), { status: 404 });
         }
 
-        return NextResponse.json({
+        return new Response(JSON.stringify({
             firstName: user.firstName,
             lastName: user.lastName,
             profilePicture: user.profilePicture,
-        });
+        }), {status: 200});
     } catch (error) {
-        console.error("Error fetching user:", error);
-        return NextResponse.json(
-            { error: "An internal server error occurred" },
+
+        return new Response(JSON.stringify({ error: "An internal server error occurred" }),
             { status: 500 }
         );
     }
@@ -51,21 +49,19 @@ export async function PUT(req, { params }) {
         const user = await User.findByIdAndUpdate(id, updateFields, { new: true });
 
         if (!user) {
-            return NextResponse.json({ error: "User not found" }, { status: 404 });
+            return new Response(JSON.stringify({ error: "User not found" }), { status: 404 });
         }
 
-        return NextResponse.json({
+        return new Response(JSON.stringify({
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
             profilePicture: user.profilePicture,
-        });
+        }), {status: 200});
     } 
     
     catch (error) {
-        console.error("Error updating user:", error);
-        return NextResponse.json(
-            { error: "An internal server error occurred" },
+        return new Response(JSON.stringify({ error: "An internal server error occurred" }),
             { status: 500 }
         );
     }

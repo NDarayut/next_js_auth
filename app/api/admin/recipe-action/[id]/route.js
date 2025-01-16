@@ -49,7 +49,9 @@ export async function PUT(req, { params }) {
       await MockRecipe.findOneAndDelete({ originalRecipeId: id });
       return new Response(JSON.stringify({ message: "Status updated successfully"}), { status: 200 });
     }
-  } catch (error) {
+  } 
+  
+  catch (error) {
     return new Response(JSON.stringify({ error: error.message }), { status: 500 });
   }
 }
@@ -76,7 +78,9 @@ export async function DELETE(req, { params }) {
     }
 
     return new Response(JSON.stringify({ message: "Recipe deleted successfully" }), { status: 200 });
-  } catch (error) {
+  } 
+  
+  catch (error) {
     return new Response(JSON.stringify({ error: error.message }), { status: 500 });
   }
 }

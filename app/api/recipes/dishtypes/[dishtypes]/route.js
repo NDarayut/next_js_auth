@@ -15,18 +15,15 @@ export async function GET(req, { params }) {
 
     // Query the Recipe model to find recipes with the provided dishTypes
     const recipes = await Recipe.find({
-      dishTypes: { $in: [dishtypes] }  // Find recipes where the dishTypes array contains the given dishtypes
+      dishTypes: { $in: [dishtypes] },  // Find recipes where the dishTypes array contains the given dishtypes
+      status: "approved",
     });
 
     // Return the matching recipes as JSON
-    return new Response(JSON.stringify(recipes), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(JSON.stringify(recipes), { status: 200 });
   } 
   
   catch (error) {
-    console.error("Error fetching recipes by dishType:", error);
     return new Response(JSON.stringify({ error: "Failed to fetch recipes" }), {
       status: 500,
     });

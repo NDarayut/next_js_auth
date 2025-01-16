@@ -24,7 +24,6 @@ export async function GET(req) {
     } 
     
     catch (error) {
-        console.error("Error fetching stats:", error);
         return new Response(
             JSON.stringify({ error: "Failed to fetch stats" }),
             { status: 500 }

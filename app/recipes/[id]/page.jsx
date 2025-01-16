@@ -112,7 +112,7 @@ export default function RecipeDetail({params}){
         }
       }
 
-    if(status === "loading"){
+    if(loading){
       return <p>Loading...</p>
     }
 
@@ -154,8 +154,6 @@ export default function RecipeDetail({params}){
       error: error,
       similarRecipes: similarRecipes
     }
-
-    
 
     return(
       <div className="bg-customYellow min-h-screen">

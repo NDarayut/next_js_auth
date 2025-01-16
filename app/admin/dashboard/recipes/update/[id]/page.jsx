@@ -239,6 +239,18 @@ export default function UpdateRecipe() {
     }
   };
 
+  // An error, or a success response will pop up for 5 second, then disappear
+  useEffect(() => {
+    if (response || isSuccess) {
+      const timer = setTimeout(() => {
+        setResponse(null);
+        setIsSuccess(false); // Reset the success message
+      }, 5000); // Clear after 5 seconds
+  
+      return () => clearTimeout(timer); // Cleanup on unmount or state change
+    }
+  }, [response, isSuccess]);
+
   if(error){
     return <p>Error: {error}</p>
   }
@@ -328,6 +340,13 @@ export default function UpdateRecipe() {
                 <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-customGreen text-white px-4 py-2 rounded-md shadow-lg z-50">
                     Update Successfully
                 </div>
+                )}
+
+                {/* Error message */}
+                {response && (
+                  <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-md shadow-lg z-50">
+                    {response}
+                  </div>
                 )}
             </div>
         </main>

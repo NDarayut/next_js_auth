@@ -1,6 +1,5 @@
 import Recipe from "@/models/recipe";
 import { connectMongoDB } from "@/lib/mongodb";
-import { NextResponse } from "next/server";
 
 /*
     This API will update the recipe information based on its ID.
@@ -21,13 +20,13 @@ export async function PUT(req, { params }) {
 
         // validation if the ID wasnt found
         if (!updatedRecipe) {
-            return NextResponse.json({ error: "Recipe not found" }, { status: 404 });
+            return new Response(JSON.stringify({ error: "Recipe not found" }), { status: 404 });
         }
 
-        return NextResponse.json(updatedRecipe, { status: 200 });
-        } 
+        return new Response(JSON.stringify(updatedRecipe), { status: 200 });
+    } 
 
     catch (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return new Response(JSON.stringify({ error: error.message }), { status: 500 });
     }
 }
