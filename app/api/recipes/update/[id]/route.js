@@ -2,6 +2,10 @@ import Recipe from "@/models/recipe";
 import { connectMongoDB } from "@/lib/mongodb";
 import { NextResponse } from "next/server";
 
+/*
+    This API will update the recipe information based on its ID.
+    This API is used by the admin to automatically update a recipe's detail.
+*/
 export async function PUT(req, { params }) {
     const { id } = params;
 

@@ -1,6 +1,10 @@
 import { connectMongoDB } from "@/lib/mongodb";
 import Recipe from "@/models/recipe"; // Adjust the path based on your file structure
 
+/*
+    This API will fetch recipes starting with the most score all the way to score = 1
+    This API ensure that only recipe with a score of 1 and above will get fetched.
+*/
 export async function GET(request) {
     try {
 
@@ -14,7 +18,7 @@ export async function GET(request) {
 
         // Fetch the top 20 popular recipes based on the score
         const popularRecipes = await Recipe.aggregate([
-            { $match: { status: "approved" } },
+            { $match: { status: "approved", score: {$gte : 1} } },
             { $sort: { score: -1, _id:1 } },
             { $skip: (page - 1) * limit }, // Skip the appropriate number of recipes based on page
             { $limit: limit }, // Limit to the number of recipes specified by the limit

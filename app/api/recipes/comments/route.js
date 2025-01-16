@@ -2,6 +2,10 @@ import { connectMongoDB } from "@/lib/mongodb";
 import { updateRecipeScore } from "@/lib/updateRecipeScore";
 import Review from "@/models/review";
 
+/*
+  This API is responsible for retrieving all the comment from the website and displaying them
+  on the admin's dashboard
+*/
 export async function GET() {
   
   try {
@@ -23,6 +27,10 @@ export async function GET() {
   }
 }
 
+/*
+  This API will delete comment from the website and re-calculate the recipe's score once the comment is 
+  deleted.
+*/
 export async function DELETE(req) {
     try {
       const { commentId, recipeId } = await req.json(); // Get the commentId from the request body

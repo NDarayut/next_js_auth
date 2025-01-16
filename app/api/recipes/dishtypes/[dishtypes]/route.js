@@ -1,6 +1,10 @@
 import { connectMongoDB } from "@/lib/mongodb";
 import Recipe from "@/models/recipe";
 
+/*
+  This API will fetch all the recipe with the associated dishtypes value.
+  Example, if dishtypes/dessert is called, then it will fetch all dessert recipes.
+*/
 export async function GET(req, { params }) {
   try {
     // Connect to the database

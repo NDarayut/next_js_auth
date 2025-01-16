@@ -1,6 +1,10 @@
 import { connectMongoDB } from '@/lib/mongodb';
 import Recipe from '@/models/recipe';
 
+/*
+  This api will get a recipe's detailed information based on their ID
+*/
+
 export async function GET(req, { params }) {
   const { id } = params; // Extract the dynamic `id` parameter from the route
   try {

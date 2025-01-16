@@ -95,7 +95,7 @@ export default function Dashboard(){
 
             {/* Customer Reviews */}
             <section className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-lg font-bold mb-4 px-8">Popular Recipes (20)</h3>
+              <h3 className="text-lg font-bold mb-4 px-8">Popular Recipes</h3>
               <div id="reviews" className="relative">
                 <div className="flex items-center">
                   <div className="px-8 overflow-y-auto w-full max-h-[700px] grid grid-cols-1 gap-x-6 gap-y-8" style={{ scrollBehavior: "smooth" }}>

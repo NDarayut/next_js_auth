@@ -1,6 +1,10 @@
 import { connectMongoDB } from "@/lib/mongodb";
 import Recipe from "@/models/recipe";
 
+/*
+    This API will fetch all recipe that has a specific userID associated with it.
+    This API ensure that it fetch the correct recipe that the user created to display on their profile
+*/
 export async function GET(req, { params }) {
     try {
         const { userId } = params; // Extract userId from the route parameters

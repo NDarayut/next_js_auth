@@ -3,6 +3,9 @@ import { NextResponse } from "next/server"
 import bcrypt from "bcryptjs"
 import User from "@/models/user"
 
+/*
+    This API is used to create a user in the mongodb database will all the necessary field entered.
+*/
 export async function POST(req) {
     try{
         // destructuring the response to get only necessary data

@@ -2,6 +2,10 @@ import { connectMongoDB } from "@/lib/mongodb";
 import Recipe from "@/models/recipe";
 import { NextResponse } from "next/server";
 
+/*
+    This API will delete any recipe based on their ID.
+    This API is used by the admin to quickly delete any recipe.
+*/
 export async function DELETE(req, { params }) {
     const { id } = params;
 

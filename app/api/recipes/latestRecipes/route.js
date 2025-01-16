@@ -2,7 +2,9 @@
 import { connectMongoDB } from "@/lib/mongodb";
 import Recipe from "@/models/recipe";
 
-
+/*
+    This API will fetch all recipe starting with the most recently created recipes
+*/
 export async function GET(request) {
     try {
         // Get page and limit from query parameters
@@ -23,7 +25,9 @@ export async function GET(request) {
 
         // Return the recipes as a JSON response
         return new Response(JSON.stringify(latestRecipes), { status: 200 });
-    } catch (error) {
+    }
+    
+    catch (error) {
         console.error("Error fetching latest recipes:", error);
         return new Response(JSON.stringify({ error: "Failed to fetch recipes" }), { status: 500 });
     }
