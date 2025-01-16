@@ -27,10 +27,10 @@ export async function POST(request) {
     const slugifiedName = slugify(name.toLowerCase(), { lower: true });
 
     const newDishType = await Dishtypes.create({ name: slugifiedName });
-    return NextResponse.json(newDishType, {status: 201})
+    return new Response(JSON.stringify(newDishType), {status: 201})
   } 
   catch (error) {
-    return NextResponse.json({error: error.message}, {status: 500})
+    return new Response(JSON.stringify("Failed to create dishtypes"), {status: 500})
   }
 }
 
@@ -49,7 +49,8 @@ export async function PUT(request) {
     }
 
     return new Response(JSON.stringify(updatedDishType), { status: 200 });
-  } catch (error) {
+  } 
+  catch (error) {
     return new Response("Failed to update dish type", { status: 500 });
   }
 }
@@ -63,7 +64,8 @@ export async function DELETE(request) {
       return new Response("Dish type not found", { status: 404 });
     }
     return new Response(JSON.stringify(deletedDishType), { status: 200 });
-  } catch (error) {
+  } 
+  catch (error) {
     return new Response("Failed to delete dish type", { status: 500 });
   }
 }

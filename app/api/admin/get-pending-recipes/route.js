@@ -3,22 +3,21 @@ import Recipe from "@/models/recipe";
 import MockRecipe from "@/models/mockRecipe";
 
 /*
-  This API will fetch all "pending" recipe to display on the dashboard for admin approval
+  This API will fetch all "pending" recipes to display on the dashboard for admin approval
 */
 export async function GET(req) {
   try {
-    req.url
     await connectMongoDB();
 
     // Fetch pending recipes with desired fields
     const pendingRecipes = await Recipe.find(
-      { status:  { $in: ["pending-create"] } },
+      { status: { $in: ["pending-create"] } },
       { _id: 1, title: 1, status: 1 } // Specify fields to retrieve
     );
 
-    // Fetch pending recipes with desired fields
+    // Fetch pending mock recipes with desired fields
     const pendingMockRecipes = await MockRecipe.find(
-      { status:  { $in: ["pending-update", "pending-delete"] } },
+      { status: { $in: ["pending-update", "pending-delete"] } },
       { originalRecipeId: 1, title: 1, status: 1 } // Specify fields to retrieve
     );
 
@@ -43,8 +42,6 @@ export async function GET(req) {
   catch (error) {
     console.error(error);
     return new Response(
-      JSON.stringify({ error: "Failed to fetch pending recipes." }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
-    );
+      JSON.stringify("Failed to fetch pending recipes."), { status: 500 });
   }
 }

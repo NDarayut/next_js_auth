@@ -3,6 +3,10 @@ import Favorite from "@/models/favorite";
 import { authOptions } from "../../auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 
+/*
+  This API remove recipe from the user's favorite list.
+  This API will delete the recipe from the favorite model.
+*/
 export async function DELETE(req) {
   try {
     // Check if the user is authenticated
@@ -49,7 +53,9 @@ export async function DELETE(req) {
     return new Response(JSON.stringify({ message: "Recipe removed from favorites" }), {
       status: 200,
     });
-  } catch (error) {
+  } 
+  
+  catch (error) {
     console.error(error);
     return new Response(
       JSON.stringify({ message: "An error occurred while removing the recipe" }),
