@@ -7,6 +7,8 @@ import MockRecipe from "@/models/mockRecipe";
 */
 export async function GET(req) {
   try {
+
+    const url = new URL(req.url); // Forces the API to render server side
     await connectMongoDB();
 
     // Fetch pending recipes with desired fields
