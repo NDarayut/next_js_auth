@@ -151,8 +151,8 @@ export default function About() {
               height={0} // This will be ignored when using layout="intrinsic"
               className="mx-auto mb-4" 
             />
-            <h3 className="text-2xl font-bold">Step 1</h3>
-            <p className="text-gray-600">Tell us the recipe.</p>
+            <h3 className="text-2xl font-bold text-customDarkGreen">Step 1</h3>
+            <p className="text-customDarkGreen">Tell us the recipe.</p>
           </div>
           <div className="text-center">
             <Image 
@@ -162,8 +162,8 @@ export default function About() {
               height={0} // This will be ignored when using layout="intrinsic"
               className="mx-auto mb-4" 
             />
-            <h3 className="text-2xl font-bold">Step 2</h3>
-            <p className="text-gray-600">Get detailed instruction.</p>
+            <h3 className="text-2xl font-bold text-customDarkGreen">Step 2</h3>
+            <p className="text-customDarkGreen">Get detailed instruction.</p>
           </div>
           <div className="text-center">
             <Image 
@@ -173,8 +173,8 @@ export default function About() {
               height={0} // This will be ignored when using layout="intrinsic"
               className="mx-auto mb-4" 
             />
-            <h3 className="text-2xl font-bold">Step 3</h3>
-            <p className="text-gray-600">Cook, enjoy, and share your creations!</p>
+            <h3 className="text-2xl font-bold text-customDarkGreen">Step 3</h3>
+            <p className="text-customDarkGreen">Cook, enjoy, and share your creations!</p>
           </div>
         </div>
       </motion.div>

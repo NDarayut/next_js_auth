@@ -6,13 +6,15 @@ export default function Filter({ cuisines, dishTypes, query }) {
   const [selectedCuisines, setSelectedCuisines] = useState([]);
   const [selectedDishTypes, setSelectedDishTypes] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Track dropdown state
-  const router = useRouter();
+  const router = useRouter(); // Use to dynamically change the URL string
 
   const handleCuisineChange = (cuisine) => {
+    // If cuisine is already selected, remove it
+    // If cuisine is not selected, add it
     setSelectedCuisines((prevSelected) =>
-      prevSelected.includes(cuisine)
-        ? prevSelected.filter((item) => item !== cuisine)
-        : [...prevSelected, cuisine]
+      prevSelected.includes(cuisine) // Check if cuisine is alreayd selected
+        ? prevSelected.filter((item) => item !== cuisine) // If true, filter out the cuisine (removing it)
+        : [...prevSelected, cuisine] // If false, add cuisine to the existing array
     );
   };
 
@@ -26,8 +28,10 @@ export default function Filter({ cuisines, dishTypes, query }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     const filterParams = new URLSearchParams();
     filterParams.set("query", query);
+    
     if (selectedCuisines.length > 0) {
       filterParams.set("cuisines", selectedCuisines.join(","));
     }

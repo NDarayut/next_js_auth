@@ -10,28 +10,32 @@ import Footer from "@/components/Footer";
 export default function SearchResults() {
   const searchParams = useSearchParams(); // Access URL query parameters
   const { data: session } = useSession();
+
   const [recipes, setRecipes] = useState([]);
-  const [cuisines, setCuisines] = useState([]); // Example cuisines
-  const [dishTypes, setDishTypes] = useState([]); // Example dish types
+  const [cuisines, setCuisines] = useState([]);
+  const [dishTypes, setDishTypes] = useState([]);
   const [favoritedRecipes, setFavoritedRecipes] = useState([]);
-  const [loading, setLoading] = useState(true); // New loading state
+  const [loading, setLoading] = useState(true); // Full-page loading state
+  const [isFiltering, setIsFiltering] = useState(false); // Filtering state
 
   // Extract the query params directly from the searchParams object
   const query = searchParams.get("query");
   const selectedDishType = searchParams.get("dishTypes");
   const selectedCuisine = searchParams.get("cuisines");
 
-  // Fetch cuisines and dish types from your APIs
+  // Fetch cuisines and dish types
   const fetchCuisinesAndDishTypes = async () => {
     try {
+      // Fetching an array of cuisines and dishtypes to use as filter option
       const cuisinesResponse = await fetch("/api/categories/cuisines");
       const dishTypesResponse = await fetch("/api/categories/dishtypes");
 
       const cuisinesData = await cuisinesResponse.json();
       const dishTypesData = await dishTypesResponse.json();
 
-      setCuisines(cuisinesData); // Set fetched cuisines
-      setDishTypes(dishTypesData); // Set fetched dish types
+      // Setting the array
+      setCuisines(cuisinesData);
+      setDishTypes(dishTypesData);
     } 
     
     catch (error) {
@@ -39,22 +43,22 @@ export default function SearchResults() {
     }
   };
 
-  // Fetch recipes based on the filters
-  const fetchRecipes = async () => {
-    setLoading(true);
-    const queryParams = {};
+  // Fetch recipes based on filters
+  const fetchRecipes = async (isInitialLoad = false) => {
+    if (isInitialLoad) setLoading(true);
+    else setIsFiltering(true);
 
-    // Add filters to the queryParams object if they exist
+    const queryParams = {};
     if (query) queryParams.query = query;
     if (selectedCuisine) queryParams.cuisines = selectedCuisine;
     if (selectedDishType) queryParams.dishTypes = selectedDishType;
-    
+
     const queryString = new URLSearchParams(queryParams).toString();
 
     try {
       const response = await fetch(`/api/recipes/search?${queryString}`);
       const data = await response.json();
-      setRecipes(data); // Set the filtered recipes
+      setRecipes(data);
     } 
     
     catch (error) {
@@ -62,74 +66,80 @@ export default function SearchResults() {
     } 
     
     finally {
-      setLoading(false); // Set loading to false once the data is fetched
+      if (isInitialLoad) setLoading(false);
+      else setIsFiltering(false);
     }
   };
 
   const fetchUserFavorites = async () => {
     if (session?.user?.id) {
       try {
-        const response = await fetch(`/api/favorite/get/${session.user.id}`);
+        const response = await fetch(`/api/favorite/get/${session?.user?.id}`);
         const data = await response.json();
         setFavoritedRecipes(data); // This should be an array of recipe IDs
-      } 
-      
-      catch (error) {
+      } catch (error) {
         console.log("Failed to fetch favorites: ", error);
       }
     }
   };
 
+  // Fetch all the neccessary information upon page load and show loading scree
   useEffect(() => {
+    fetchCuisinesAndDishTypes();
     fetchUserFavorites();
-    fetchCuisinesAndDishTypes(); // Fetch cuisines and dish types
-    fetchRecipes(); // Fetch recipes when the component mounts or search params change
-  }, [searchParams]); // Re-fetch when search params change
+    fetchRecipes(true); // Fetch recipes for the initial page load which triggers a loading screen
+  }, []);
+
+  // Do not reset the filter and show loading screen when filtering for specific recipe
+  useEffect(() => {
+    fetchRecipes(false); // Fetch recipes when search params change (when filtering)
+    fetchUserFavorites();
+  }, [searchParams]);
 
   if (loading) {
     return <div>Loading...</div>;
   }
-  
+
   return (
     <div className="bg-customYellow min-h-screen">
-        <div className="mb-40">
-          <Navbar />
+      <div className="mb-36">
+        <Navbar />
+      </div>
+
+      <main className="mx-[100px]">
+        <h1 className="mb-20 font-semibold text-2xl text-customDarkGreen">Result for {query}</h1>
+        <div className="mb-20">
+          <Filter cuisines={cuisines} dishTypes={dishTypes} query={query} />
         </div>
 
-        <main className="mx-[100px]">
-          <div className="mb-20">
-            <Filter cuisines={cuisines} dishTypes={dishTypes} query={query}/>
+        {/* Show filtering spinner without resetting options */}
+        {isFiltering && (
+          <div className="text-center p-4">
+            <p>Updating recipes...</p>
           </div>
-          
-          {/* Display loading message or spinner */}
-          {loading ? (
-            <div className="text-center p-4">
-              <p>Loading recipes...</p>
-              {/* Optionally, you can add a spinner here */}
-            </div>
+        )}
+
+        {/* Recipes display */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10 p-4 mb-11">
+          {recipes.length > 0 ? (
+            recipes.map((recipe) => (
+              <RecipeCard
+                key={recipe._id}
+                recipeId={recipe._id}
+                src={recipe.image}
+                title={recipe.title}
+                isFavorited={favoritedRecipes.includes(recipe._id)}
+                sourceName={recipe.sourceName}
+                averageRating={recipe.averageRating}
+                readyInMinutes={recipe.readyInMinutes}
+              />
+            ))
           ) : (
-            // Display Recipes once data is loaded
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10 p-4 mb-11">
-              {recipes.length > 0 ? (
-                recipes.map((recipe) => (
-                  <RecipeCard
-                    key={recipe._id}
-                    recipeId={recipe._id}
-                    src={recipe.image}
-                    title={recipe.title}
-                    isFavorited={favoritedRecipes.includes(recipe._id)}
-                    sourceName={recipe.sourceName}
-                    averageRating={recipe.averageRating}
-                    readyInMinutes={recipe.readyInMinutes}
-                  />
-                ))
-              ) : (
-                <p>No recipes found.</p>
-              )}
-            </div>
+            <p>No recipes found.</p>
           )}
-        </main>
-        <Footer />
+        </div>
+      </main>
+      <Footer />
     </div>
   );
 }

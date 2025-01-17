@@ -3,7 +3,6 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState, useRef } from "react";
 import LogoutBtn from "./LogoutBtn";
-import DeleteBtn from "./DeleteButton";
 import Image from "next/image";
 
 export default function UserProfile({ userId }) {
@@ -164,9 +163,6 @@ export default function UserProfile({ userId }) {
                     <div className="flex flex-row mt-10 gap-2">
                         <div>
                             {isOwner && <LogoutBtn />}
-                        </div>
-                        <div>
-                            {isOwner && <DeleteBtn />}
                         </div>
                     </div>
                     

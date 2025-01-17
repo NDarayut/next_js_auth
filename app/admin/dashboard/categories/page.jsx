@@ -15,6 +15,7 @@ export default function AdminDashboard() {
     fetchDishTypes();
   }, []);
 
+  // Fetch cuisines from the API
   const fetchCuisines = async () => {
     const res = await fetch("/api/categories/cuisines");
     if (res.ok) {
@@ -23,6 +24,7 @@ export default function AdminDashboard() {
     }
   };
 
+  // Fetch dishtypes from the API
   const fetchDishTypes = async () => {
     const res = await fetch("/api/categories/dishtypes");
     if (res.ok) {
@@ -31,6 +33,7 @@ export default function AdminDashboard() {
     }
   };
 
+  // Add new value (either cuisines or dishtypes), then fetches the newly updated value
   const handleAdd = async (type, name) => {
     if (!name.trim()) return;
 
@@ -45,6 +48,7 @@ export default function AdminDashboard() {
     }
   };
 
+  // Deleting a category, then refetches the cuisines and dishtypes
   const handleDelete = async (type, id) => {
     const url = `/api/categories/${type === "cuisine" ? "cuisines" : "dishtypes"}`;
     const res = await fetch(url, {
@@ -57,6 +61,7 @@ export default function AdminDashboard() {
     }
   };
 
+  // Updating an existing category, and refetches the updated categories
   const handleEdit = async (type, id, name) => {
     const url = `/api/categories/${type === "cuisine" ? "cuisines" : "dishtypes"}`;
     const res = await fetch(url, {
@@ -82,8 +87,6 @@ export default function AdminDashboard() {
                 handleEdit={handleEdit}
                 handleDelete={handleDelete}
             />
-
-            
         </main>
       
     </div>

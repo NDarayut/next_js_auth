@@ -17,10 +17,10 @@ export default function Dashboard(){
       reviewsCount: 0,
     });
 
-    // Check user role
+  // Check user role
   const role = session?.user?.role;
 
-
+  // If the user is not
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/login"); // Redirect unauthenticated users to the login page

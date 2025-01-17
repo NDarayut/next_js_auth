@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 
-// Your secret for JWT validation
+// Secret key that is used to validate the JWT 
 const secret = process.env.NEXTAUTH_SECRET;
 
 export async function middleware(req) {
@@ -9,7 +9,7 @@ export async function middleware(req) {
   const token = await getToken({ req, secret });
 
   // Check if the user is logged in
-  const isLoggedIn = token != null;
+  const isLoggedIn = token != null; // If the token exist then the user is logged in
 
   // If user is logged in and trying to access /login or /register, redirect them to the homepage
   if (isLoggedIn && (req.nextUrl.pathname === "/login" || req.nextUrl.pathname === "/register")) {
