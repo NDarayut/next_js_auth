@@ -1,8 +1,9 @@
 import { connectMongoDB } from "@/lib/mongodb";
 import Recipe from "@/models/recipe";
 
-export async function GET() {
+export async function GET(req) {
     try {
+        const url = new URL(req.url); // Forces the API to render server side
         // Connect to MongoDB
         await connectMongoDB();
 

@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
@@ -22,7 +23,7 @@ export default function SearchBarMain () {
 
 
         recognition.lang = "en-US" // Use english language first
-        recognition.interimResults = false; // Only final results
+        recognition.interimResults = true; // Only final results
         recognition.maxAlternatives = 1; // Single result
 
         recognition.onstart = () =>{
@@ -63,21 +64,13 @@ export default function SearchBarMain () {
                     />
 
                     {/* Search Icon */}
-
-                    <svg
-                    className="absolute top-1/2 left-3 transform -translate-y-1/2 w-5 h-5 text-gray-500"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    >
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    <Image 
+                        src="/search.png"
+                        alt="search"
+                        width={0}
+                        height={0}
+                        className="absolute top-1/2 left-3 transform -translate-y-1/2 w-6 h-6"
                     />
-                    </svg>
 
                     {/* Microphone Button */}
                     <button
@@ -86,41 +79,21 @@ export default function SearchBarMain () {
                         className="ml-2 p-2 bg-customGreen text-white rounded-full focus:outline-none"
                     >
                         {isListening ? (
-                        <svg
-                            className="w-6 h-6 animate-pulse"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M12 18v-6m0 0V9a3 3 0 00-6 0v3m6 0a3 3 0 016 0v3m-6 0h6"
-                            />
-                        </svg>
+                        <Image 
+                            src="/islistening.png"
+                            alt="listen"
+                            width={0}
+                            height={0}
+                            className="w-8 h-7"
+                        />
                         ) : (
-                        <svg
-                            className="w-6 h-6"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M12 14a4 4 0 004-4V7a4 4 0 00-8 0v3a4 4 0 004 4z"
-                            />
-                            <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M8 14v2a4 4 0 004 4m0-6h8"
-                            />
-                        </svg>
+                        <Image 
+                            src="/notlistening.png"
+                            alt="notlisten"
+                            width={0}
+                            height={0}
+                            className="w-8 h-7"
+                        />
                         )}
                     </button>
                 </div>

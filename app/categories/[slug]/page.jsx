@@ -116,7 +116,7 @@ export default function CategoryPage({params}) {
                   title={recipe.title}
                   isFavorited={favoritedRecipes.includes(recipe._id)}
                   sourceName={recipe.sourceName}
-                  rating={recipe.score}
+                  averageRating={recipe.averageRating}
                   readyInMinutes={recipe.readyInMinutes}
               />
               ))

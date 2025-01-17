@@ -26,7 +26,9 @@ export default function CustomCarousel() {
                 const response = await fetch("/api/recipes/random");
                 const data = await response.json();
                 setRecipes(data);
-            } catch (error) {
+            } 
+            
+            catch (error) {
                 console.error("Error fetching recipes:", error);
             }
         };
